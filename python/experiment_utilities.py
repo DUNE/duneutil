@@ -58,6 +58,8 @@ def get_dropbox(filename):
 
 def get_sam_metadata(project, stage):
     result = 'services.user.FileCatalogMetadataLBNE: {\n'
+    for key in project.parameters:
+        result = result + '  %s: "%s"\n' % (key, project.parameters[key])
     result = result + '}\n'
     return result
 
