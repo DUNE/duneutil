@@ -36,22 +36,16 @@ def get_dropbox(filename):
     # Extract the metadata fields that we need.
     
     file_type = ''
-    group = ''
-    data_tier = ''
 
     if md.has_key('file_type'):
         file_type = md['file_type']
-    if md.has_key('group'):
-        group = md['group']
-    if md.has_key('data_tier'):
-        data_tier = md['data_tier']
 
-    if not file_type or not group or not data_tier:
+    if not file_type:
         raise RuntimeError, 'Missing or invalid metadata for file %s.' % filename
 
     # Construct dropbox path.
 
-    path = '/uboone/data/uboonepro/dropbox/%s/%s/%s' % (file_type, group, data_tier)
+    path = '/lbne/data/lbnepro/dropbox/%s' % file_type
     return path
 
 # Return fcl configuration for experiment-specific sam metadata.
@@ -62,6 +56,8 @@ def get_sam_metadata(project, stage):
         result = result + '  %s: "%s"\n' % (key, project.parameters[key])
     result = result + '}\n'
     return result
+
+# Function to return path to the setup_lbne.sh script
 
 def get_setup_script_path():
 
@@ -76,3 +72,13 @@ def get_setup_script_path():
         raise RuntimeError, "Could not find setup script at "+FERMIAPP_DIR+" or "+OASIS_DIR
 
     return setup_script
+
+# Function to return url of the public samweb server.
+
+def get_public_samweb_url():
+    return 'http://samweb.fnal.gov:8480/sam/lbne/api/'
+
+# Function to return url of the secure samweb server.
+
+def get_secure_samweb_url():
+    return 'https://samweb.fnal.gov:8483/sam/lbne/api/'
