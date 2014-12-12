@@ -72,13 +72,3 @@ def get_setup_script_path():
         raise RuntimeError, "Could not find setup script at "+FERMIAPP_DIR+" or "+OASIS_DIR
 
     return setup_script
-
-# Function to return url of the public samweb server.
-
-def get_public_samweb_url():
-    return 'http://samweb.fnal.gov:8480/sam/lbne/api/'
-
-# Function to return url of the secure samweb server.
-
-def get_secure_samweb_url():
-    return 'https://samweb.fnal.gov:8483/sam/lbne/api/'
