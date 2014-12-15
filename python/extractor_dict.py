@@ -92,35 +92,35 @@ def getmetadata(inputfile):
 			md[mdkey] = mdval[2]
 		elif mdkey == 'last_event':
 			md[mdkey] = mdval[2]
-		elif mdkey == 'MCGenerators':
+		elif mdkey == 'lbneMCGenerators':
 			md['lbne_MC.generators']  = mdval
-		elif mdkey == 'MCOscillationP':
+		elif mdkey == 'lbneMCOscillationP':
 			md['lbne_MC.oscillationP']  = mdval
-		elif mdkey == 'MCTriggerListVersion':
+		elif mdkey == 'lbneMCTriggerListVersion':
 			md['lbne_MC.trigger-list-version']  = mdval
-		elif mdkey == 'MCBeamEnergy':
+		elif mdkey == 'lbneMCBeamEnergy':
 			md['lbne_MC.beam_energy']  = mdval
-		elif mdkey == 'MCBeamFluxID':
+		elif mdkey == 'lbneMCBeamFluxID':
 			md['lbne_MC.beam_flux_ID']  = mdval
-		elif mdkey == 'MCName':
+		elif mdkey == 'lbneMCName':
 			md['lbne_MC.name']  = mdval
-		elif mdkey == 'MCDetectorType':
+		elif mdkey == 'lbneMCDetectorType':
 			md['lbne_MC.detector_type']  = mdval
-		elif mdkey == 'MCNeutrinoFlavors':
+		elif mdkey == 'lbneMCNeutrinoFlavors':
 			md['lbne_MC.neutrino_flavors']  = mdval
-		elif mdkey == 'MCMassHierarchy':
+		elif mdkey == 'lbneMCMassHierarchy':
 			md['lbne_MC.mass_hierarchy']  = mdval
-		elif mdkey == 'MCMiscellaneous':
+		elif mdkey == 'lbneMCMiscellaneous':
 			md['lbne_MC.miscellaneous']  = mdval
-		elif mdkey == 'MCGeometryVersion':
+		elif mdkey == 'lbneMCGeometryVersion':
 			md['lbne_MC.geometry_version']  = mdval
-		elif mdkey == 'MCOverlay':
+		elif mdkey == 'lbneMCOverlay':
 			md['lbne_MC.overlay']  = mdval
-		elif mdkey == 'DataRunMode':
+		elif mdkey == 'lbneDataRunMode':
 			md['lbne_data.run_mode']  = mdval
-		elif mdkey == 'DataDetectorType':
+		elif mdkey == 'lbneDataDetectorType':
 			md['lbne_data.detector_type']  = mdval
-		elif mdkey == 'DataName':
+		elif mdkey == 'lbneDataName':
 			md['lbne_data.name']  = mdval
 
 		# For all other keys, copy art metadata directly to sam metadata.
