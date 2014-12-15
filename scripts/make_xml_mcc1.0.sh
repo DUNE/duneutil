@@ -243,7 +243,7 @@ EOF
 
   <stage name="gen">
     <fcl>$genfcl</fcl>
-    <outdir>/lbne/data2/users/${userdir}/&release;/gen/&name;</outdir>
+    <outdir>/lbne/data2/${userdir}/&release;/gen/&name;</outdir>
     <workdir>/lbne/app/users/${userbase}/&release;/gen/&name;</workdir>
     <numjobs>$njob1</numjobs>
     <datatier>generated</datatier>
@@ -252,7 +252,7 @@ EOF
 
   <stage name="g4">
     <fcl>$g4fcl</fcl>
-    <outdir>/lbne/data2/users/${userdir}/&release;/g4/&name;</outdir>
+    <outdir>/lbne/data2/${userdir}/&release;/g4/&name;</outdir>
     <workdir>/lbne/app/users/${userbase}/&release;/g4/&name;</workdir>
     <numjobs>$njob1</numjobs>
     <datatier>simulated</datatier>
@@ -264,7 +264,7 @@ EOF
     cat <<EOF >> $newxml
   <stage name="detsim">
     <fcl>$detsimfcl</fcl>
-    <outdir>/lbne/data2/users/${userdir}/&release;/detsim/&name;</outdir>
+    <outdir>/lbne/data2/${userdir}/&release;/detsim/&name;</outdir>
     <workdir>/lbne/app/users/${userbase}/&release;/detsim/&name;</workdir>
     <numjobs>$njob2</numjobs>
     <datatier>detector-simulated</datatier>
@@ -277,7 +277,7 @@ EOF
     cat <<EOF >> $newxml
   <stage name="optsim">
     <fcl>$optsimfcl</fcl>
-    <outdir>/lbne/data2/users/${userdir}/&release;/optsim/&name;</outdir>
+    <outdir>/lbne/data2/${userdir}/&release;/optsim/&name;</outdir>
     <workdir>/lbne/app/users/${userbase}/&release;/optsim/&name;</workdir>
     <numjobs>$njob2</numjobs>
     <datatier>optical-simulated</datatier>
@@ -290,7 +290,7 @@ EOF
     cat <<EOF >> $newxml
   <stage name="tpcsim">
     <fcl>$tpcsimfcl</fcl>
-    <outdir>/lbne/data2/users/${userdir}/&release;/tpcsim/&name;</outdir>
+    <outdir>/lbne/data2/${userdir}/&release;/tpcsim/&name;</outdir>
     <workdir>/lbne/app/users/${userbase}/&release;/tpcsim/&name;</workdir>
     <numjobs>$njob2</numjobs>
     <datatier>tpc-simulated</datatier>
@@ -303,7 +303,7 @@ EOF
 <!--
   <stage name="reco2D">
     <fcl>$reco2dfcl</fcl>
-    <outdir>/lbne/data2/users/${userdir}/&release;/reco2D/&name;</outdir>
+    <outdir>/lbne/data2/${userdir}/&release;/reco2D/&name;</outdir>
     <workdir>/lbne/app/users/${userbase}/&release;/reco2D/&name;</workdir>
     <numjobs>$njob2</numjobs>
     <datatier>reconstructed-2d</datatier>
@@ -312,7 +312,7 @@ EOF
 
   <stage name="reco3D">
     <fcl>$reco3dfcl</fcl>
-    <outdir>/lbne/data2/users/${userdir}/&release;/reco3D/&name;</outdir>
+    <outdir>/lbne/data2/${userdir}/&release;/reco3D/&name;</outdir>
     <workdir>/lbne/app/users/${userbase}/&release;/reco3D/&name;</workdir>
     <numjobs>$njob2</numjobs>
     <datatier>reconstructed-3d</datatier>
@@ -321,7 +321,7 @@ EOF
 -->
   <stage name="mergeana">
     <fcl>$mergefcl</fcl>
-    <outdir>/lbne/data2/users/${userdir}/&release;/mergeana/&name;</outdir>
+    <outdir>/lbne/data2/${userdir}/&release;/mergeana/&name;</outdir>
     <workdir>/lbne/app/users/${userbase}/&release;/mergeana/&name;</workdir>
     <numjobs>$njob2</numjobs>
     <targetsize>8000000000</targetsize>
