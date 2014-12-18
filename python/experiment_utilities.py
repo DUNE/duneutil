@@ -54,6 +54,9 @@ def get_sam_metadata(project, stage):
     result = 'services.user.FileCatalogMetadataLBNE: {\n'
     for key in project.parameters:
         result = result + '  %s: "%s"\n' % (key, project.parameters[key])
+    for key in stage.parameters:
+        result = result + '  %s: "%s"\n' % (key, stage.parameters[key])
+    result = result + '  StageName: "%s"\n' % stage.name
     result = result + '}\n'
     return result
 
@@ -72,3 +75,19 @@ def get_setup_script_path():
         raise RuntimeError, "Could not find setup script at "+FERMIAPP_DIR+" or "+OASIS_DIR
 
     return setup_script
+
+# Construct dimension string for project, stage.
+
+def dimensions(project, stage):
+
+    dim = 'file_type %s' % project.file_type
+    dim = dim + ' and data_tier %s' % stage.data_tier
+    for key in project.parameters:
+        if key == 'MCName':
+            dim = dim + ' and lbne_MC.name %s' % project.parameters[key]
+        if key == 'DataName':
+            dim = dim + ' and lbne_data.name %s' % project.parameters[key]
+    dim = dim + ' and version %s' % project.release_tag
+    dim = dim + ' and application %s' % stage.name
+    dim = dim + ' and availability: anylocation'
+    return dim

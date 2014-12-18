@@ -62,13 +62,18 @@ def getmetadata(inputfile):
 		elif mdkey == 'data_stream':
 			pass
 
+		# Ignore process_name for now.
+
+		elif mdkey == 'process_name':
+			pass
+
 		# Application family/name/version.
 
 		elif mdkey == 'applicationFamily':
 			if not md.has_key('application'):
 				md['application'] = {}
 			md['application']['family'] = mdval
-		elif mdkey == 'process_name':
+		elif mdkey == 'StageName':
 			if not md.has_key('application'):
 				md['application'] = {}
 			md['application']['name'] = mdval
