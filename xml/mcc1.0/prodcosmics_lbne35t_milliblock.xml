@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+
+<!-- Production Project -->
+
+<!DOCTYPE project [
+<!ENTITY release "v03_06_00_01">
+<!ENTITY file_type "mc">
+<!ENTITY run_type "physics">
+<!ENTITY name "prodcosmics_lbne35t_milliblock">
+<!ENTITY tag "mcc1.0">
+]>
+
+<project name="&name;">
+
+  <!-- Group -->
+  <group>lbne</group>
+
+  <!-- Project size -->
+  <numevents>1000000</numevents>
+
+  <!-- Operating System -->
+  <os>SL6</os>
+
+  <!-- Batch resources -->
+  <resource>DEDICATED,OPPORTUNISTIC</resource>
+
+  <!-- Larsoft information -->
+  <larsoft>
+    <tag>&release;</tag>
+    <qual>e6:prof</qual>
+  </larsoft>
+
+  <!-- lbne35t metadata parameters -->
+
+  <parameter name ="MCName">prodcosmics_lbne35t_milliblock</parameter>
+  <parameter name ="MCDetectorType">35t</parameter>
+  <parameter name ="MCGenerators">CRY</parameter>
+
+  <!-- Project stages -->
+
+  <stage name="gen">
+    <fcl>prodcosmics_lbne35t_milliblock.fcl</fcl>
+    <outdir>/pnfs/lbne/scratch/lbnepro/&release;/gen/&name;</outdir>
+    <workdir>/lbne/app/users/lbnepro/&release;/gen/&name;</workdir>
+    <numjobs>100</numjobs>
+    <datatier>generated</datatier>
+    <defname>&name;_&tag;_gen</defname>
+  </stage>
+
+  <stage name="g4">
+    <fcl>standard_g4_lbne35t.fcl</fcl>
+    <outdir>/pnfs/lbne/scratch/lbnepro/&release;/g4/&name;</outdir>
+    <workdir>/lbne/app/users/lbnepro/&release;/g4/&name;</workdir>
+    <numjobs>100</numjobs>
+    <datatier>simulated</datatier>
+    <defname>&name;_&tag;_g4</defname>
+  </stage>
+
+  <stage name="detsim">
+    <fcl>standard_detsim_lbne35t_milliblock.fcl</fcl>
+    <outdir>/pnfs/lbne/scratch/lbnepro/&release;/detsim/&name;</outdir>
+    <workdir>/lbne/app/users/lbnepro/&release;/detsim/&name;</workdir>
+    <numjobs>100</numjobs>
+    <datatier>detector-simulated</datatier>
+    <defname>&name;_&tag;_detsim</defname>
+  </stage>
+
+  <stage name="reco">
+    <fcl>standard_reco_lbne35t_milliblock.fcl</fcl>
+    <outdir>/pnfs/lbne/scratch/lbnepro/&release;/reco/&name;</outdir>
+    <workdir>/lbne/app/users/lbnepro/&release;/reco/&name;</workdir>
+    <numjobs>100</numjobs>
+    <datatier>full-reconstructed</datatier>
+    <defname>&name;_&tag;_reco</defname>
+  </stage>
+
+  <stage name="mergeana">
+    <fcl>/lbne/app/users/tjyang/larsoft_dev/srcs/lbnecode/fcl/lbne35t/mergeana/standard_ana_lbne35t.fcl</fcl>
+    <outdir>/pnfs/lbne/scratch/lbnepro/&release;/mergeana/&name;</outdir>
+    <workdir>/lbne/app/users/lbnepro/&release;/mergeana/&name;</workdir>
+    <numjobs>100</numjobs>
+    <targetsize>8000000000</targetsize>
+    <datatier>full-reconstructed</datatier>
+    <defname>&name;_&tag;</defname>
+  </stage>
+
+  <!-- file type -->
+  <filetype>&file_type;</filetype>
+
+  <!-- run type -->
+  <runtype>&run_type;</runtype>
+
+</project>
