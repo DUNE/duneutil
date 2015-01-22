@@ -11,7 +11,7 @@
 #
 # Usage:
 #
-# make_xml_mcc5.0.sh [-h|--help] [-r <release>] [-u|--user <user>] [--local <dir|tar>] [--nev <n>] [--nevjob <n>] [--nevgjob <n>]
+# make_xml_mcc1.0.sh [-h|--help] [-r <release>] [-u|--user <user>] [--local <dir|tar>] [--nev <n>] [--nevjob <n>] [--nevgjob <n>]
 #
 # Options:
 #
@@ -30,11 +30,11 @@
 
 # Parse arguments.
 
-rel=v02_05_01
+rel=v03_06_00_01
 userdir=lbnepro
 userbase=$userdir
 nevarg=0
-nevjob=100
+nevjob=0
 nevgjobarg=0
 local=''
 
@@ -129,6 +129,10 @@ do
     if echo $newprj | grep -q cosmics; then
       generator=CRY
     fi
+    if echo $newprj | grep -q textfile; then
+      generator=TextFileGen
+    fi
+    
     # Make xml file.
 
     echo "Making ${newprj}.xml"
@@ -155,10 +159,28 @@ do
 
 #    reco3dfcl=standard_reco_uboone_3D.fcl
 
+    # Reco
+    recofcl=standard_reco_lbne35t.fcl
+    if echo $newprj | grep -q milliblock; then
+      recofcl=standard_reco_lbne35t_milliblock.fcl
+    fi
+
     # Merge/Analysis
 
     mergefcl=standard_ana_lbne35t.fcl
 
+    # Set number of events per job.
+    if [ $nevjob -eq 0 ]; then
+      if [ $newprj = prodcosmics_lbne35t_milliblock ]; then
+        nevjob=100
+      elif [ $newprj = prodcosmics_lbne35t_onewindow ]; then
+	nevjob=100
+      elif [ $newprj = prodtextfile_lbne35t ]; then
+	nevjob=1000
+      else
+        nevjob=100
+      fi
+    fi
     # Set number of gen/g4 events per job.
 
     nevgjob=$nevgjobarg
@@ -180,6 +202,10 @@ do
     if [ $nev -eq 0 ]; then
       if [ $newprj = prodcosmics_lbne35t_milliblock ]; then
         nev=10000
+      elif [ $newprj = prodcosmics_lbne35t_onewindow ]; then
+	nev=10000
+      elif [ $newprj = prodtextfile_lbne35t ]; then
+	nev=1000000
       else
         nev=10000
       fi
@@ -243,6 +269,12 @@ EOF
 
   <stage name="gen">
     <fcl>$genfcl</fcl>
+EOF
+  if echo $newprj | grep -q textfile; then
+      echo "    <inputmode>textfile</inputmode>" >> $newxml
+      echo "    <inputlist>/lbne/app/users/tjyang/larsoft_dev/job/AntiMuonCutEvents.txt</inputlist>" >> $newxml
+  fi
+  cat <<EOF >> $newxml
     <outdir>/lbne/data2/${userdir}/&release;/gen/&name;</outdir>
     <workdir>/lbne/app/users/${userbase}/&release;/gen/&name;</workdir>
     <numjobs>$njob1</numjobs>
@@ -300,32 +332,22 @@ EOF
 EOF
   fi
   cat <<EOF >> $newxml
-<!--
-  <stage name="reco2D">
-    <fcl>$reco2dfcl</fcl>
-    <outdir>/lbne/data2/${userdir}/&release;/reco2D/&name;</outdir>
-    <workdir>/lbne/app/users/${userbase}/&release;/reco2D/&name;</workdir>
+  <stage name="reco">
+    <fcl>$recofcl</fcl>
+    <outdir>/lbne/data2/${userdir}/&release;/reco/&name;</outdir>
+    <workdir>/lbne/app/users/${userbase}/&release;/reco/&name;</workdir>
     <numjobs>$njob2</numjobs>
-    <datatier>reconstructed-2d</datatier>
-    <defname>&name;_&tag;_reco2D</defname>
+    <datatier>full-reconstructed</datatier>
+    <defname>&name;_&tag;_reco</defname>
   </stage>
 
-  <stage name="reco3D">
-    <fcl>$reco3dfcl</fcl>
-    <outdir>/lbne/data2/${userdir}/&release;/reco3D/&name;</outdir>
-    <workdir>/lbne/app/users/${userbase}/&release;/reco3D/&name;</workdir>
-    <numjobs>$njob2</numjobs>
-    <datatier>reconstructed-3d</datatier>
-    <defname>&name;_&tag;_reco3D</defname>
-  </stage>
--->
   <stage name="mergeana">
     <fcl>$mergefcl</fcl>
     <outdir>/lbne/data2/${userdir}/&release;/mergeana/&name;</outdir>
     <workdir>/lbne/app/users/${userbase}/&release;/mergeana/&name;</workdir>
     <numjobs>$njob2</numjobs>
     <targetsize>8000000000</targetsize>
-    <datatier>reconstructed-3d</datatier>
+    <datatier>full-reconstructed</datatier>
     <defname>&name;_&tag;</defname>
   </stage>
 
