@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+
+<!-- Production Project -->
+
+<!DOCTYPE project [
+<!ENTITY release "v04_00_00_rc1">
+<!ENTITY file_type "mc">
+<!ENTITY run_type "physics">
+<!ENTITY name "AntiMuonCutEvents_LSU_lbne35t">
+<!ENTITY tag "mcc2.0">
+]>
+
+<project name="&name;">
+
+  <!-- Group -->
+  <group>lbne</group>
+
+  <!-- Project size -->
+  <numevents>10000</numevents>
+
+  <!-- Operating System -->
+  <os>SL6</os>
+
+  <!-- Batch resources -->
+  <resource>DEDICATED,OPPORTUNISTIC</resource>
+
+  <!-- Larsoft information -->
+  <larsoft>
+    <tag>&release;</tag>
+    <qual>e6:prof</qual>
+    <local>/lbne/app/users/tjyang/larsoft_dev/localProducts_larsoft_v04_00_00_rc1_e6_prof</local>
+  </larsoft>
+
+  <!-- lbne35t metadata parameters -->
+
+  <parameter name ="MCName">AntiMuonCutEvents_LSU_lbne35t</parameter>
+  <parameter name ="MCDetectorType">35t</parameter>
+  <parameter name ="MCGenerators">TextFileGen</parameter>
+
+  <!-- Project stages -->
+
+  <stage name="gen">
+    <fcl>AntiMuonCutEvents_LSU_lbne35t.fcl</fcl>
+    <inputmode>textfile</inputmode>
+    <inputlist>/lbne/app/users/tjyang/larsoft_dev/srcs/lbneutil/xml/mcc1.0/AntiMuonCutEvents_LSU_100.txt</inputlist>
+    <outdir>/pnfs/lbne/scratch/lbnepro/&release;/gen/&name;</outdir>
+    <workdir>/lbne/app/users/lbnepro/&release;/gen/&name;</workdir>
+    <logdir>/lbne/data/lbnepro/log/&release;/gen/&name;</logdir>
+    <output>AntiMuonCutEvents_LSU_lbne35t_${PROCESS}_%tc_gen.root</output>
+    <numjobs>100</numjobs>
+    <datatier>generated</datatier>
+    <defname>&name;_&tag;_gen</defname>
+  </stage>
+
+  <stage name="g4">
+    <fcl>standard_g4_lbne35t.fcl</fcl>
+    <outdir>/pnfs/lbne/scratch/lbnepro/&release;/g4/&name;</outdir>
+    <workdir>/lbne/app/users/lbnepro/&release;/g4/&name;</workdir>
+    <logdir>/lbne/data/lbnepro/log/&release;/g4/&name;</logdir>
+    <numjobs>100</numjobs>
+    <datatier>simulated</datatier>
+    <defname>&name;_&tag;_g4</defname>
+  </stage>
+
+  <stage name="detsim">
+    <fcl>standard_detsim_lbne35t.fcl</fcl>
+    <outdir>/pnfs/lbne/scratch/lbnepro/&release;/detsim/&name;</outdir>
+    <workdir>/lbne/app/users/lbnepro/&release;/detsim/&name;</workdir>
+    <logdir>/lbne/data/lbnepro/log/&release;/detsim/&name;</logdir>
+    <numjobs>100</numjobs>
+    <datatier>detector-simulated</datatier>
+    <defname>&name;_&tag;_detsim</defname>
+  </stage>
+
+  <stage name="reco">
+    <fcl>standard_reco_lbne35t.fcl</fcl>
+    <outdir>/pnfs/lbne/scratch/lbnepro/&release;/reco/&name;</outdir>
+    <workdir>/lbne/app/users/lbnepro/&release;/reco/&name;</workdir>
+    <logdir>/lbne/data/lbnepro/log/&release;/reco/&name;</logdir>
+    <numjobs>100</numjobs>
+    <datatier>full-reconstructed</datatier>
+    <defname>&name;_&tag;_reco</defname>
+  </stage>
+
+  <stage name="mergeana">
+    <fcl>standard_ana_lbne35t.fcl</fcl>
+    <outdir>/pnfs/lbne/scratch/lbnepro/&release;/mergeana/&name;</outdir>
+    <workdir>/lbne/app/users/lbnepro/&release;/mergeana/&name;</workdir>
+    <logdir>/lbne/data/lbnepro/log/&release;/mergeana/&name;</logdir>
+    <numjobs>100</numjobs>
+    <targetsize>8000000000</targetsize>
+    <datatier>full-reconstructed</datatier>
+    <defname>&name;_&tag;</defname>
+  </stage>
+
+  <!-- file type -->
+  <filetype>&file_type;</filetype>
+
+  <!-- run type -->
+  <runtype>&run_type;</runtype>
+
+</project>
