@@ -3,7 +3,7 @@
 <!-- Production Project -->
 
 <!DOCTYPE project [
-<!ENTITY release "v04_00_00_rc1">
+<!ENTITY release "v04_00_01">
 <!ENTITY file_type "mc">
 <!ENTITY run_type "physics">
 <!ENTITY name "prod_muminus_lbne35t">
@@ -28,7 +28,6 @@
   <larsoft>
     <tag>&release;</tag>
     <qual>e6:prof</qual>
-    <local>/lbne/app/users/tjyang/larsoft_dev/localProducts_larsoft_v04_00_00_rc1_e6_prof</local>
   </larsoft>
 
   <!-- lbne35t metadata parameters -->
