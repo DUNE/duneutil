@@ -272,7 +272,7 @@ EOF
 EOF
   if echo $newprj | grep -q AntiMuonCutEvents_LSU_lbne35t; then
       echo "    <inputmode>textfile</inputmode>" >> $newxml
-      echo "    <inputlist>/lbne/app/users/tjyang/larsoft_dev/srcs/lbneutil/xml/mcc1.0/AntiMuonCutEvents_LSU_100.txt</inputlist>" >> $newxml
+      echo "    <inputlist>/lbne/data2/users/jti3/txtfiles/AntiMuonCutEvents_LSU_100.txt</inputlist>" >> $newxml
   fi
   cat <<EOF >> $newxml
     <outdir>/pnfs/lbne/scratch/${userdir}/&release;/gen/&name;</outdir>

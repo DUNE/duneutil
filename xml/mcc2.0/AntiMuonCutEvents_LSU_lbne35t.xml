@@ -41,7 +41,7 @@
   <stage name="gen">
     <fcl>AntiMuonCutEvents_LSU_lbne35t.fcl</fcl>
     <inputmode>textfile</inputmode>
-    <inputlist>/lbne/app/users/tjyang/larsoft_dev/srcs/lbneutil/xml/mcc1.0/AntiMuonCutEvents_LSU_100.txt</inputlist>
+    <inputlist>/lbne/data2/users/jti3/txtfiles/AntiMuonCutEvents_LSU_100.txt</inputlist>
     <outdir>/pnfs/lbne/scratch/lbnepro/&release;/gen/&name;</outdir>
     <workdir>/lbne/app/users/lbnepro/&release;/gen/&name;</workdir>
     <logdir>/lbne/data/lbnepro/log/&release;/gen/&name;</logdir>
