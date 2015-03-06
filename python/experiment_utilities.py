@@ -45,7 +45,8 @@ def get_dropbox(filename):
 
     # Construct dropbox path.
 
-    path = '/lbne/data/lbnepro/dropbox/%s' % file_type
+    #path = '/lbne/data/lbnepro/dropbox/%s' % file_type
+    path = '/pnfs/lbne/scratch/lbnepro/dropbox/%s' % file_type
     return path
 
 # Return fcl configuration for experiment-specific sam metadata.
