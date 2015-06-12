@@ -87,7 +87,7 @@
     <workdir>/lbne/app/users/lbnepro/&release;/mergeana/&name;</workdir>
     <logdir>/lbne/data/lbnepro/log/&release;/mergeana/&name;</logdir>
     <numjobs>100</numjobs>
-    <targetsize>8000000000</targetsize>
+    <!--<targetsize>8000000000</targetsize>-->
     <datatier>full-reconstructed</datatier>
     <defname>&name;_&tag;</defname>
   </stage>

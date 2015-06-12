@@ -329,7 +329,7 @@ EOF
     <workdir>/lbne/app/users/${userbase}/&release;/mergeana/&name;</workdir>
     <logdir>/lbne/data/${userdir}/log/&release;/mergeana/&name;</logdir>
     <numjobs>$njob2</numjobs>
-    <targetsize>8000000000</targetsize>
+    <!--<targetsize>8000000000</targetsize>-->
     <datatier>full-reconstructed</datatier>
     <defname>&name;_&tag;</defname>
   </stage>
