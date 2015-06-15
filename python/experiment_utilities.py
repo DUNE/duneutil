@@ -79,7 +79,7 @@ def get_setup_script_path():
 
 # Construct dimension string for project, stage.
 
-def dimensions(project, stage):
+def dimensions(project, stage, ana=False):
 
     dim = 'file_type %s' % project.file_type
     dim = dim + ' and data_tier %s' % stage.data_tier
