@@ -10,7 +10,7 @@ import ast
 import project_utilities, root_metadata
 import json
 
-def getmetadata(inputfile):
+def getmetadata(inputfile, md0={}):
         # Set up the experiment name for samweb Python API
 	samweb = samweb_cli.SAMWebClient(experiment=project_utilities.get_experiment())
 
