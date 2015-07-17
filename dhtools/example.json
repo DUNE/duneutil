@@ -1,0 +1,22 @@
+{
+  "file_name": "35t_r000370_s01_test_raw.root",
+  "file_size": 1424739659,
+  "event_count": 5055,
+  "last_event": 5055,
+  "runs": [ [ 370, "test" ] ],
+  "first_event": 1,
+  "file_type": "test-data",
+  "file_format": "root",
+  "data_tier": "raw",
+  "group": "lbne",
+  "application": {
+   "family": "art",
+   "name": "daqag",
+   "version": "v00_00_01"
+  },
+  "start_time": "2015-02-05T20:19:59",
+  "end_time": "2015-02-05T20:20:04",
+  "lbne_data.name": "35t_testdata_201502",
+  "lbne_data.detector_type": "35t",
+  "lbne_data.run_mode": "immediate triggered mode" 
+} 
