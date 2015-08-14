@@ -52,7 +52,7 @@ def get_dropbox(filename):
 # Return fcl configuration for experiment-specific sam metadata.
 
 def get_sam_metadata(project, stage):
-    result = 'services.user.FileCatalogMetadataLBNE: {\n'
+    result = 'services.user.FileCatalogMetadataDUNE: {\n'
     for key in project.parameters:
         result = result + '  %s: "%s"\n' % (key, project.parameters[key])
     for key in stage.parameters:
@@ -60,6 +60,9 @@ def get_sam_metadata(project, stage):
     result = result + '  StageName: "%s"\n' % stage.name
     result = result + '}\n'
     return result
+
+def get_ups_products():
+    return 'dunetpc'
 
 # Function to return path to the setup_lbne.sh script
 

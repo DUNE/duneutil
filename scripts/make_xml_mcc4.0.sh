@@ -5,8 +5,8 @@
 #
 # Purpose: Make xml files for mcc 4.0.  This script loops over all
 #          generator-level fcl files in the source area of the currently 
-#          setup version of lbnecode (that is, under 
-#          $LBNECODE_DIR/source/fcl/lbne35t/gen), and makes a corresponding xml
+#          setup version of dunetpc (that is, under 
+#          $DUNETPC_DIR/source/fcl/dune35t/gen), and makes a corresponding xml
 #          project file in the local directory.
 #
 # Usage:
@@ -16,7 +16,7 @@
 # Options:
 #
 # -h|--help     - Print help.
-# -r <release>  - Use the specified larsoft/lbnecode release.
+# -r <release>  - Use the specified larsoft/dunetpc release.
 # -u|--user <user> - Use users/<user> as working and output directories
 #                    (default is to use lbnepro).
 # --local <dir|tar> - Specify larsoft local directory or tarball (xml 
@@ -30,7 +30,7 @@
 
 # Parse arguments.
 
-rel=v04_17_00
+rel=v04_18_00
 userdir=lbnepro
 userbase=$userdir
 nevarg=0
@@ -119,7 +119,7 @@ fi
 
 rm -f *.xml
 
-find $LBNECODE_DIR/source/fcl/lbne35t/gen $LBNECODE_DIR/source/fcl/dunefd/gen -name \*.fcl | while read fcl
+find $DUNETPC_DIR/source/fcl/dune35t/gen $DUNETPC_DIR/source/fcl/dunefd/gen -name \*.fcl | while read fcl
 do
   if ! echo $fcl | grep -q common; then
     newprj=`basename $fcl .fcl`
@@ -149,11 +149,11 @@ do
 
     # G4
 
-    g4fcl=standard_g4_lbne35t.fcl
+    g4fcl=standard_g4_dune35t.fcl
 
     # Detsim (optical + tpc).
 
-    detsimfcl=standard_detsim_lbne35t.fcl
+    detsimfcl=standard_detsim_dune35t.fcl
 
     # Reco 2D
 
@@ -164,35 +164,39 @@ do
 #    reco3dfcl=standard_reco_uboone_3D.fcl
 
     # Reco
-    recofcl=standard_reco_lbne35t.fcl
+    recofcl=standard_reco_dune35t.fcl
 
     # Merge/Analysis
 
-    mergefcl=standard_ana_lbne35t.fcl
+    mergefcl=standard_ana_dune35t.fcl
 
     if echo $newprj | grep -q milliblock; then
-      detsimfcl=standard_detsim_lbne35t_milliblock.fcl
-      recofcl=standard_reco_lbne35t_milliblock.fcl
-      mergefcl=standard_ana_lbne35t_milliblock.fcl
+      detsimfcl=standard_detsim_dune35t_milliblock.fcl
+      recofcl=standard_reco_dune35t_milliblock.fcl
+      mergefcl=standard_ana_dune35t_milliblock.fcl
     fi
 
     if echo $newprj | grep -q dune10kt; then
       g4fcl=standard_g4_dune10kt.fcl
       detsimfcl=standard_detsim_dune10kt.fcl
+      recofcl=standard_reco_dune10kt.fcl
+      mergefcl=standard_ana_dune10kt.fcl
     fi
 
     if echo $newprj | grep -q dune10kt_workspace; then
       g4fcl=standard_g4_dune10kt_workspace.fcl
       detsimfcl=standard_detsim_dune10kt_workspace.fcl
+      recofcl=standard_reco_dune10kt_workspace.fcl
+      mergefcl=standard_ana_dune10kt_workspace.fcl
     fi
 
     # Set number of events per job.
     if [ $nevjob -eq 0 ]; then
-      if [ $newprj = prodcosmics_lbne35t_milliblock ]; then
+      if [ $newprj = prodcosmics_dune35t_milliblock ]; then
         nevjob=100
-      elif [ $newprj = prodcosmics_lbne35t_onewindow ]; then
+      elif [ $newprj = prodcosmics_dune35t_onewindow ]; then
 	nevjob=100
-      elif [ $newprj = AntiMuonCutEvents_LSU_lbne35t ]; then
+      elif [ $newprj = AntiMuonCutEvents_LSU_dune35t ]; then
 	nevjob=100
       else
         nevjob=100
@@ -217,11 +221,11 @@ do
 
     nev=$nevarg
     if [ $nev -eq 0 ]; then
-      if [ $newprj = prodcosmics_lbne35t_milliblock ]; then
-        nev=1000
-      elif [ $newprj = prodcosmics_lbne35t_onewindow ]; then
+      if [ $newprj = prodcosmics_dune35t_milliblock ]; then
+        nev=10000
+      elif [ $newprj = prodcosmics_dune35t_onewindow ]; then
 	nev=10000
-      elif [ $newprj =  AntiMuonCutEvents_LSU_lbne35t ]; then
+      elif [ $newprj =  AntiMuonCutEvents_LSU_dune35t ]; then
 	nev=10000
       else
         nev=10000
@@ -276,7 +280,7 @@ EOF
   cat <<EOF >> $newxml
   </larsoft>
 
-  <!-- lbne35t metadata parameters -->
+  <!-- dune35t metadata parameters -->
 
   <parameter name ="MCName">${newprj}</parameter>
   <parameter name ="MCDetectorType">${detector}</parameter>
@@ -287,7 +291,7 @@ EOF
   <stage name="gen">
     <fcl>$genfcl</fcl>
 EOF
-  if echo $newprj | grep -q AntiMuonCutEvents_LSU_lbne35t; then
+  if echo $newprj | grep -q AntiMuonCutEvents_LSU_dune35t; then
       echo "    <inputmode>textfile</inputmode>" >> $newxml
       echo "    <inputlist>/lbne/data2/users/jti3/txtfiles/AntiMuonCutEvents_LSU_100.txt</inputlist>" >> $newxml
   fi
