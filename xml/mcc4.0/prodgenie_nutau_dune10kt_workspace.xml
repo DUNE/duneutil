@@ -3,7 +3,7 @@
 <!-- Production Project -->
 
 <!DOCTYPE project [
-<!ENTITY release "v04_18_00">
+<!ENTITY release "v04_19_00">
 <!ENTITY file_type "mc">
 <!ENTITY run_type "physics">
 <!ENTITY name "prodgenie_nutau_dune10kt_workspace">
@@ -70,7 +70,7 @@
   </stage>
 
   <stage name="reco">
-    <fcl>standard_reco_dune35t.fcl</fcl>
+    <fcl>standard_reco_dune10kt_workspace.fcl</fcl>
     <outdir>/pnfs/lbne/persistent/lbnepro/&release;/reco/&name;</outdir>
     <workdir>/lbne/app/users/lbnepro/&release;/reco/&name;</workdir>
     <logdir>/lbne/data/lbnepro/log/&release;/reco/&name;</logdir>
@@ -80,7 +80,7 @@
   </stage>
 
   <stage name="mergeana">
-    <fcl>standard_ana_dune35t.fcl</fcl>
+    <fcl>standard_ana_dune10kt_workspace.fcl</fcl>
     <outdir>/pnfs/lbne/persistent/lbnepro/&release;/mergeana/&name;</outdir>
     <workdir>/lbne/app/users/lbnepro/&release;/mergeana/&name;</workdir>
     <logdir>/lbne/data/lbnepro/log/&release;/mergeana/&name;</logdir>

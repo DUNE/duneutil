@@ -30,7 +30,7 @@
 
 # Parse arguments.
 
-rel=v04_18_00
+rel=v04_19_00
 userdir=lbnepro
 userbase=$userdir
 nevarg=0
