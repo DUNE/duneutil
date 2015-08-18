@@ -35,7 +35,7 @@ userdir=lbnepro
 userbase=$userdir
 nevarg=0
 nevjob=0
-nevgjobarg=0
+nevjobarg=0
 local=''
 
 while [ $# -gt 0 ]; do
@@ -89,16 +89,7 @@ while [ $# -gt 0 ]; do
 
     --nevjob )
     if [ $# -gt 1 ]; then
-      nevjob=$2
-      shift
-    fi
-    ;;
-
-    # Number of events per gen/g4 job.
-
-    --nevgjob )
-    if [ $# -gt 1 ]; then
-      nevgjobarg=$2
+      nevjobarg=$2
       shift
     fi
     ;;
@@ -124,7 +115,6 @@ do
   if ! echo $fcl | grep -q common; then
     newprj=`basename $fcl .fcl`
     newxml=${newprj}.xml
-    filt=1
     generator=SingleGen
     if echo $newprj | grep -q cosmics; then
       generator=CRY
@@ -170,6 +160,14 @@ do
 
     mergefcl=standard_ana_dune35t.fcl
 
+    if echo $newprj | grep -q protonpi0; then
+	g4fcl=standard_g4_dune35t_protonpi0.fcl
+    fi
+
+    if echo $newprj | grep -q countermu; then
+	g4fcl=standard_g4_dune35t_countermu.fcl
+    fi
+
     if echo $newprj | grep -q milliblock; then
       detsimfcl=standard_detsim_dune35t_milliblock.fcl
       recofcl=standard_reco_dune35t_milliblock.fcl
@@ -191,6 +189,7 @@ do
     fi
 
     # Set number of events per job.
+    nevjob=$nevjobarg
     if [ $nevjob -eq 0 ]; then
       if [ $newprj = prodcosmics_dune35t_milliblock ]; then
         nevjob=100
@@ -198,22 +197,12 @@ do
 	nevjob=100
       elif [ $newprj = AntiMuonCutEvents_LSU_dune35t ]; then
 	nevjob=100
+      elif [ $newprj = prodcosmics_dune35t_milliblock_countermu ]; then
+	nevjob=10000
+      elif [ $newprj = prodcosmics_dune35t_milliblock_protonpi0 ]; then
+	nevjob=100
       else
         nevjob=100
-      fi
-    fi
-    # Set number of gen/g4 events per job.
-
-    nevgjob=$nevgjobarg
-    if [ $nevgjob -eq 0 ]; then
-      if echo $newprj | grep -q dirt; then
-        if echo $newprj | grep -q cosmic; then
-          nevgjob=200
-        else
-          nevgjob=2000
-        fi
-      else
-        nevgjob=nevjob
       fi
     fi
 
@@ -225,22 +214,21 @@ do
         nev=10000
       elif [ $newprj = prodcosmics_dune35t_onewindow ]; then
 	nev=10000
-      elif [ $newprj =  AntiMuonCutEvents_LSU_dune35t ]; then
+      elif [ $newprj = AntiMuonCutEvents_LSU_dune35t ]; then
 	nev=10000
+      elif [ $newprj = prodcosmics_dune35t_milliblock_countermu ]; then
+	nev=10000000
+      elif [ $newprj = prodcosmics_dune35t_milliblock_protonpi0 ]; then
+	nev=100000
       else
         nev=10000
       fi
     fi
-    nev=$(( $nev * $filt ))
 
     # Calculate the number of worker jobs.
 
-    njob1=$(( $nev / $nevgjob ))         # Pre-filter (gen, g4)
-    njob2=$(( $nev / $nevjob / $filt ))  # Post-filter (detsim and later)
-    if [ $njob1 -lt $njob2 ]; then
-      njob1=$njob2
-    fi
-
+    njob=$(( $nev / $nevjob ))
+#    echo $newprj, $nev, $nevjob, $njob
   cat <<EOF > $newxml
 <?xml version="1.0"?>
 
@@ -300,7 +288,7 @@ EOF
     <workdir>/lbne/app/users/${userbase}/&release;/gen/&name;</workdir>
     <logdir>/lbne/data/${userdir}/log/&release;/gen/&name;</logdir>
     <output>${newprj}_\${PROCESS}_%tc_gen.root</output>
-    <numjobs>$njob1</numjobs>
+    <numjobs>$njob</numjobs>
     <datatier>generated</datatier>
     <defname>&name;_&tag;_gen</defname>
   </stage>
@@ -310,7 +298,7 @@ EOF
     <outdir>/pnfs/lbne/persistent/${userdir}/&release;/g4/&name;</outdir>
     <workdir>/lbne/app/users/${userbase}/&release;/g4/&name;</workdir>
     <logdir>/lbne/data/${userdir}/log/&release;/g4/&name;</logdir>
-    <numjobs>$njob1</numjobs>
+    <numjobs>$njob</numjobs>
     <datatier>simulated</datatier>
     <defname>&name;_&tag;_g4</defname>
   </stage>
@@ -323,7 +311,7 @@ EOF
     <outdir>/pnfs/lbne/persistent/${userdir}/&release;/detsim/&name;</outdir>
     <workdir>/lbne/app/users/${userbase}/&release;/detsim/&name;</workdir>
     <logdir>/lbne/data/${userdir}/log/&release;/detsim/&name;</logdir>
-    <numjobs>$njob2</numjobs>
+    <numjobs>$njob</numjobs>
     <datatier>detector-simulated</datatier>
     <defname>&name;_&tag;_detsim</defname>
   </stage>
@@ -336,7 +324,7 @@ EOF
     <outdir>/pnfs/lbne/persistent/${userdir}/&release;/reco/&name;</outdir>
     <workdir>/lbne/app/users/${userbase}/&release;/reco/&name;</workdir>
     <logdir>/lbne/data/${userdir}/log/&release;/reco/&name;</logdir>
-    <numjobs>$njob2</numjobs>
+    <numjobs>$njob</numjobs>
     <datatier>full-reconstructed</datatier>
     <defname>&name;_&tag;_reco</defname>
   </stage>
@@ -346,7 +334,7 @@ EOF
     <outdir>/pnfs/lbne/persistent/${userdir}/&release;/mergeana/&name;</outdir>
     <workdir>/lbne/app/users/${userbase}/&release;/mergeana/&name;</workdir>
     <logdir>/lbne/data/${userdir}/log/&release;/mergeana/&name;</logdir>
-    <numjobs>$njob2</numjobs>
+    <numjobs>$njob</numjobs>
     <targetsize>8000000000</targetsize>
     <datatier>full-reconstructed</datatier>
     <defname>&name;_&tag;</defname>
