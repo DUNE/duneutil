@@ -230,6 +230,8 @@ do
 	nev=10000000
       elif [ $newprj = prodcosmics_dune35t_milliblock_protonpi0 ]; then
 	nev=100000
+      elif echo $newprj | grep -q dune10kt; then
+	nev=100000
       else
         nev=10000
       fi
