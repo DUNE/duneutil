@@ -30,7 +30,7 @@
 
 # Parse arguments.
 
-rel=v04_19_00
+rel=v04_20_00
 userdir=lbnepro
 userbase=$userdir
 nevarg=0
@@ -166,6 +166,16 @@ do
 
     if echo $newprj | grep -q countermu; then
 	g4fcl=standard_g4_dune35t_countermu.fcl
+    fi
+
+    if echo $newprj | grep -q 'pi0\|gamma'; then
+      recofcl=reco_dune35t_blur.fcl
+      mergefcl=ana_energyCalib.fcl
+    fi
+
+    if echo $newprj | grep -q 'piminus'; then
+      recofcl=emhits.fcl
+      mergefcl=standard_merge_dune35t.fcl
     fi
 
     if echo $newprj | grep -q milliblock; then
