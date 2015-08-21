@@ -69,12 +69,12 @@ def get_ups_products():
 def get_setup_script_path():
 
     OASIS_DIR="/cvmfs/oasis.opensciencegrid.org/lbne/products/"
-    FERMIAPP_DIR="/grid/fermiapp/lbne/software/"
+    FERMIAPP_DIR="/grid/fermiapp/products/dune/"
 
-    if os.path.isfile(FERMIAPP_DIR+"setup_lbne.sh"):
-        setup_script = FERMIAPP_DIR+"setup_lbne.sh"
-    elif os.path.isfile(OASIS_DIR+"setup_lbne.sh"):
-        setup_script = OASIS_DIR+"setup_lbne.sh"
+    if os.path.isfile(FERMIAPP_DIR+"setup_dune.sh"):
+        setup_script = FERMIAPP_DIR+"setup_dune.sh"
+    elif os.path.isfile(OASIS_DIR+"setup_dune.sh"):
+        setup_script = OASIS_DIR+"setup_dune.sh"
     else:
         raise RuntimeError, "Could not find setup script at "+FERMIAPP_DIR+" or "+OASIS_DIR
 
