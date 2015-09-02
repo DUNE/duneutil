@@ -40,9 +40,9 @@
 
   <stage name="gen">
     <fcl>prodgenie_nu_dune10kt.fcl</fcl>
-    <outdir>/pnfs/lbne/persistent/lbnepro/&release;/gen/&name;</outdir>
-    <workdir>/lbne/app/users/lbnepro/&release;/gen/&name;</workdir>
-    <logdir>/lbne/data/lbnepro/log/&release;/gen/&name;</logdir>
+    <outdir>/pnfs/lbne/persistent/dunepro/&release;/gen/&name;</outdir>
+    <workdir>/lbne/app/users/dunepro/&release;/gen/&name;</workdir>
+    <logdir>/lbne/data/users/dunepro/log/&release;/gen/&name;</logdir>
     <output>prodgenie_nu_dune10kt_${PROCESS}_%tc_gen.root</output>
     <numjobs>1000</numjobs>
     <datatier>generated</datatier>
@@ -51,9 +51,9 @@
 
   <stage name="g4">
     <fcl>standard_g4_dune10kt.fcl</fcl>
-    <outdir>/pnfs/lbne/persistent/lbnepro/&release;/g4/&name;</outdir>
-    <workdir>/lbne/app/users/lbnepro/&release;/g4/&name;</workdir>
-    <logdir>/lbne/data/lbnepro/log/&release;/g4/&name;</logdir>
+    <outdir>/pnfs/lbne/persistent/dunepro/&release;/g4/&name;</outdir>
+    <workdir>/lbne/app/users/dunepro/&release;/g4/&name;</workdir>
+    <logdir>/lbne/data/users/dunepro/log/&release;/g4/&name;</logdir>
     <numjobs>1000</numjobs>
     <datatier>simulated</datatier>
     <defname>&name;_&tag;_g4</defname>
@@ -61,9 +61,9 @@
 
   <stage name="detsim">
     <fcl>standard_detsim_dune10kt.fcl</fcl>
-    <outdir>/pnfs/lbne/persistent/lbnepro/&release;/detsim/&name;</outdir>
-    <workdir>/lbne/app/users/lbnepro/&release;/detsim/&name;</workdir>
-    <logdir>/lbne/data/lbnepro/log/&release;/detsim/&name;</logdir>
+    <outdir>/pnfs/lbne/persistent/dunepro/&release;/detsim/&name;</outdir>
+    <workdir>/lbne/app/users/dunepro/&release;/detsim/&name;</workdir>
+    <logdir>/lbne/data/users/dunepro/log/&release;/detsim/&name;</logdir>
     <numjobs>1000</numjobs>
     <datatier>detector-simulated</datatier>
     <defname>&name;_&tag;_detsim</defname>
@@ -71,9 +71,9 @@
 
   <stage name="reco">
     <fcl>standard_reco_dune10kt.fcl</fcl>
-    <outdir>/pnfs/lbne/persistent/lbnepro/&release;/reco/&name;</outdir>
-    <workdir>/lbne/app/users/lbnepro/&release;/reco/&name;</workdir>
-    <logdir>/lbne/data/lbnepro/log/&release;/reco/&name;</logdir>
+    <outdir>/pnfs/lbne/persistent/dunepro/&release;/reco/&name;</outdir>
+    <workdir>/lbne/app/users/dunepro/&release;/reco/&name;</workdir>
+    <logdir>/lbne/data/users/dunepro/log/&release;/reco/&name;</logdir>
     <numjobs>1000</numjobs>
     <datatier>full-reconstructed</datatier>
     <defname>&name;_&tag;_reco</defname>
@@ -81,9 +81,9 @@
 
   <stage name="mergeana">
     <fcl>standard_ana_dune10kt.fcl</fcl>
-    <outdir>/pnfs/lbne/persistent/lbnepro/&release;/mergeana/&name;</outdir>
-    <workdir>/lbne/app/users/lbnepro/&release;/mergeana/&name;</workdir>
-    <logdir>/lbne/data/lbnepro/log/&release;/mergeana/&name;</logdir>
+    <outdir>/pnfs/lbne/persistent/dunepro/&release;/mergeana/&name;</outdir>
+    <workdir>/lbne/app/users/dunepro/&release;/mergeana/&name;</workdir>
+    <logdir>/lbne/data/users/dunepro/log/&release;/mergeana/&name;</logdir>
     <numjobs>1000</numjobs>
     <targetsize>8000000000</targetsize>
     <datatier>full-reconstructed</datatier>

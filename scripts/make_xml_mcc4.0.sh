@@ -31,7 +31,7 @@
 # Parse arguments.
 
 rel=v04_20_00
-userdir=lbnepro
+userdir=dunepro
 userbase=$userdir
 nevarg=0
 nevjob=0
@@ -298,7 +298,7 @@ EOF
   cat <<EOF >> $newxml
     <outdir>/pnfs/lbne/persistent/${userdir}/&release;/gen/&name;</outdir>
     <workdir>/lbne/app/users/${userbase}/&release;/gen/&name;</workdir>
-    <logdir>/lbne/data/${userdir}/log/&release;/gen/&name;</logdir>
+    <logdir>/lbne/data/users/${userbase}/log/&release;/gen/&name;</logdir>
     <output>${newprj}_\${PROCESS}_%tc_gen.root</output>
     <numjobs>$njob</numjobs>
     <datatier>generated</datatier>
@@ -309,7 +309,7 @@ EOF
     <fcl>$g4fcl</fcl>
     <outdir>/pnfs/lbne/persistent/${userdir}/&release;/g4/&name;</outdir>
     <workdir>/lbne/app/users/${userbase}/&release;/g4/&name;</workdir>
-    <logdir>/lbne/data/${userdir}/log/&release;/g4/&name;</logdir>
+    <logdir>/lbne/data/users/${userbase}/log/&release;/g4/&name;</logdir>
     <numjobs>$njob</numjobs>
     <datatier>simulated</datatier>
     <defname>&name;_&tag;_g4</defname>
@@ -322,7 +322,7 @@ EOF
     <fcl>$detsimfcl</fcl>
     <outdir>/pnfs/lbne/persistent/${userdir}/&release;/detsim/&name;</outdir>
     <workdir>/lbne/app/users/${userbase}/&release;/detsim/&name;</workdir>
-    <logdir>/lbne/data/${userdir}/log/&release;/detsim/&name;</logdir>
+    <logdir>/lbne/data/users/${userbase}/log/&release;/detsim/&name;</logdir>
     <numjobs>$njob</numjobs>
     <datatier>detector-simulated</datatier>
     <defname>&name;_&tag;_detsim</defname>
@@ -335,7 +335,7 @@ EOF
     <fcl>$recofcl</fcl>
     <outdir>/pnfs/lbne/persistent/${userdir}/&release;/reco/&name;</outdir>
     <workdir>/lbne/app/users/${userbase}/&release;/reco/&name;</workdir>
-    <logdir>/lbne/data/${userdir}/log/&release;/reco/&name;</logdir>
+    <logdir>/lbne/data/users/${userbase}/log/&release;/reco/&name;</logdir>
     <numjobs>$njob</numjobs>
     <datatier>full-reconstructed</datatier>
     <defname>&name;_&tag;_reco</defname>
@@ -345,7 +345,7 @@ EOF
     <fcl>$mergefcl</fcl>
     <outdir>/pnfs/lbne/persistent/${userdir}/&release;/mergeana/&name;</outdir>
     <workdir>/lbne/app/users/${userbase}/&release;/mergeana/&name;</workdir>
-    <logdir>/lbne/data/${userdir}/log/&release;/mergeana/&name;</logdir>
+    <logdir>/lbne/data/users/${userbase}/log/&release;/mergeana/&name;</logdir>
     <numjobs>$njob</numjobs>
     <targetsize>8000000000</targetsize>
     <datatier>full-reconstructed</datatier>
