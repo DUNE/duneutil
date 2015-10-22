@@ -72,3 +72,6 @@ add_subdirectory(python)
 
 # packaging utility
 include(UseCPack)
+
+# Scripts and utilities.
+add_subdirectory(dhtools)
