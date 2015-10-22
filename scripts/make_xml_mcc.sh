@@ -1,9 +1,9 @@
 #! /bin/bash
 #----------------------------------------------------------------------
 #
-# Name: make_xml_mcc4.0.sh
+# Name: make_xml_mcc.sh
 #
-# Purpose: Make xml files for mcc 4.0.  This script loops over all
+# Purpose: Make xml files for mcc.  This script loops over all
 #          generator-level fcl files in the source area of the currently 
 #          setup version of dunetpc (that is, under 
 #          $DUNETPC_DIR/source/fcl/dune35t/gen), and makes a corresponding xml
@@ -100,7 +100,7 @@ done
 
 # Get qualifier.
 
-qual=e7
+qual=e9
 ver=`echo $rel | cut -c2-3`
 if [ $ver -gt 2 ]; then
   qual=e7
@@ -247,7 +247,7 @@ do
 	nev=100000
       elif echo $newprj | grep -q dune10kt; then
 	if echo $newprj | grep -q _nu_; then
-	    nev=100000
+	    nev=10000
 	else
 	    nev=10000
 	fi
@@ -270,13 +270,13 @@ do
 <!ENTITY file_type "mc">
 <!ENTITY run_type "physics">
 <!ENTITY name "$newprj">
-<!ENTITY tag "mcc4.0">
+<!ENTITY tag "mcc5.0">
 ]>
 
 <project name="&name;">
 
   <!-- Group -->
-  <group>lbne</group>
+  <group>dune</group>
 
   <!-- Project size -->
   <numevents>$nev</numevents>
