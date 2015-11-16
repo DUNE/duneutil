@@ -191,7 +191,7 @@ do
       mergefcl=standard_ana_dune10kt.fcl
     fi
 
-    if echo $newprj | grep -q dune10kt_workspace; then
+    if echo $newprj | grep -q 'dune10kt_workspace\|dune10kt_r10deg_workspace'; then
       g4fcl=standard_g4_dune10kt_workspace.fcl
       detsimfcl=standard_detsim_dune10kt_workspace.fcl
       recofcl=standard_reco_dune10kt_workspace.fcl
