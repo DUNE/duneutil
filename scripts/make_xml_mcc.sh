@@ -125,6 +125,9 @@ do
     if echo $newprj | grep -q genie; then
       generator=GENIE
     fi
+    if echo$newprj | grep -q MUSUN; then
+	generator=MUSUN
+    fi
     detector=35t
     if echo $newprj | grep -q dune10kt; then
       detector=10kt
