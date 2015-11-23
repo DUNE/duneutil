@@ -103,7 +103,7 @@ done
 qual=e9
 ver=`echo $rel | cut -c2-3`
 if [ $ver -gt 2 ]; then
-  qual=e7
+  qual=e9
 fi
 
 # Delete existing xml files.
