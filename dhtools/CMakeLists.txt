@@ -5,10 +5,16 @@
 LIST(APPEND exes declare_files.sh )
 LIST(APPEND exes make_json_lbne.sh )
 LIST(APPEND exes get_files.py )
+LIST(APPEND exes dbjson.py )
+LIST(APPEND exes runsumdbquery.py )
+LIST(APPEND exes dtr35t1.sh )
+LIST(APPEND exes dtranslog35t.sh )
+LIST(APPEND exes make_metadata35t_declare.sh )
 
 # Non-executable python files.
 
 LIST(APPEND nonexes example.json ) 
+LIST(APPEND nonexes example2.json ) 
 
 message(STATUS "Executable data handling scripts ${exes}")
 message(STATUS "Non-executable data handling files ${nonexes}")
