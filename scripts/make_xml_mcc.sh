@@ -375,7 +375,7 @@ EOF
   <stage name="mergeana">
     <fcl>$mergefcl</fcl>
     <outdir>/pnfs/lbne/persistent/${userdir}/&release;/mergeana/&name;</outdir>
-    <output>&name;_${PROCESS}_%tc_merged.root</output>
+    <output>&name;_\${PROCESS}_%tc_merged.root</output>
     <workdir>/lbne/app/users/${userbase}/work/&release;/mergeana/&name;</workdir>
     <numjobs>$njob</numjobs>
     <targetsize>8000000000</targetsize>
