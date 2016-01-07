@@ -8,6 +8,8 @@ inputremoteuser=lbnedaq@lbnedaq6
 inputremote=/storage/data
 inputtransferred=/storage/data/transferred
 localincomingdir=/data/lbnedaq/data/incoming_files
+# the same directory but its name as mounted on lbnedaq6 and lbnedaq7
+localincomingdir_rem=/data2/lbnedaq/data/incoming_files
 localtransdir=/data/lbnedaq/data/transferring_files
 localdonedir=/data/lbnedaq/data/transferred_files
 locallogdir=/data/lbnedaq/data/transfer_logs
@@ -53,7 +55,8 @@ do
 	checksumsize_inputremote=`echo $remotechecksum | cut -f 2 -d " "`
 	success=0
 
-	scp -q ${inputremoteuser}:${filename} $localincomingdir/
+#	scp -q ${inputremoteuser}:${filename} $localincomingdir/
+	ssh ${inputremoteuser} cp ${filename} ${localincomingdir_rem}/
 	if [ $? -ne 0 ]
         then
             continue

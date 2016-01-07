@@ -105,7 +105,9 @@ do
 	fi
     echo "$root $size $run $nev" >> $filelistdir/filelist.txt
     echo "Declaring metadata to SAM: $json"
-    samweb -e lbne declare-file --cert=${DHDIR}/duneprocert.pem --key=${DHDIR}/duneprokey.pem $json
+# old certificate -- switch to new one Dec. 11, 2015
+#    samweb -e lbne declare-file --cert=${DHDIR}/duneprocert.pem --key=${DHDIR}/duneprokey.pem $json
+    samweb -e lbne declare-file --cert=${DHDIR}/duneprocert_dec2015.pem --key=${DHDIR}/duneprokey_dec2015.pem $json
     echo "Finished declaring $json"
     fi
 
