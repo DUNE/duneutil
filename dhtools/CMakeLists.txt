@@ -10,6 +10,8 @@ LIST(APPEND exes runsumdbquery.py )
 LIST(APPEND exes dtr35t1.sh )
 LIST(APPEND exes dtranslog35t.sh )
 LIST(APPEND exes make_metadata35t_declare.sh )
+LIST(APPEND exes daq6deleter.sh )
+LIST(APPEND exes gwtdeleter.sh )
 
 # Non-executable python files.
 
