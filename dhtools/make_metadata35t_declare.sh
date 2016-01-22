@@ -103,12 +103,23 @@ do
 	    mv $json $fdir/$json.failed
 	    continue
 	fi
-    echo "$root $size $run $nev" >> $filelistdir/filelist.txt
-    echo "Declaring metadata to SAM: $json"
+
+
+        echo "Declaring metadata to SAM: $json"
 # old certificate -- switch to new one Dec. 11, 2015
 #    samweb -e lbne declare-file --cert=${DHDIR}/duneprocert.pem --key=${DHDIR}/duneprokey.pem $json
-    samweb -e lbne declare-file --cert=${DHDIR}/duneprocert_dec2015.pem --key=${DHDIR}/duneprokey_dec2015.pem $json
-    echo "Finished declaring $json"
+        samweb -e lbne declare-file --cert=${DHDIR}/duneprocert_dec2015.pem --key=${DHDIR}/duneprokey_dec2015.pem $json
+	if [ $? -ne 0 ]; then
+	    mv $root $fdir
+	    echo "$0 Failed to declare metadata to SAM"
+	    mv $json $fdir/$json.failed
+	    continue
+	fi
+        echo "Finished declaring $json"
+
+        echo "$root $size $run $nev" >> $filelistdir/filelist.txt
+        cp $filelistdir/filelist.txt /web/sites/dune-data.fnal.gov/htdocs/data/35t/testfiles/
+
     fi
 
 done
