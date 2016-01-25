@@ -56,7 +56,7 @@ do
 	success=0
 
 #	scp -q ${inputremoteuser}:${filename} $localincomingdir/
-	ssh ${inputremoteuser} cp ${filename} ${localincomingdir_rem}/
+	ssh ${inputremoteuser} cp -f ${filename} ${localincomingdir_rem}/
 	if [ $? -ne 0 ]
         then
             continue
@@ -99,7 +99,7 @@ $scriptdir/make_metadata35t_declare.sh $localtransdir $localfaildir $scriptdir $
 cd $localtransdir
 for filename in `ls *.root`
 do
-  cp -v $filename $dropboxdir
+  cp -v -f $filename $dropboxdir
   if [ $? -eq 0 ]
   then
     mv -v $filename $localdonedir
