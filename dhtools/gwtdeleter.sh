@@ -9,10 +9,10 @@ source $scriptdir/senv.sh
 
 cd $localdonedir
 
-for filename in `ls *.root`
+for filename in `find . -mtime +3 -name *.root`
 do
   fbase=`basename $filename`
-  samlocation=`samweb -e lbne locate-file $filename`
+  samlocation=`samweb -e lbne locate-file $fbase`
   if [ $? -ne 0 ]
   then
     continue
