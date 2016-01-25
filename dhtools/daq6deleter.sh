@@ -13,8 +13,6 @@ dirtoclean2=/storage/data
 
 source $scriptdir/senv.sh
 
-cd $localdonedir
-
 for filename in `ssh lbnedaq@${remotenode} find ${dirtoclean} -mtime +3 -name lbne*.root`
 do
   fbase=`basename $filename`
