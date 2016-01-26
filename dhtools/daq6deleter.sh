@@ -40,5 +40,5 @@ ssh lbnedaq@${remotenode} rm -f ${dirtoclean2}/lbne_r-_sr-_*.root
 
 for filename in `ssh lbnedaq@${remotenode} find ${dirtoclean2} -mtime +3 -name RootOutput*.root`
 do
-  rm -f $filename
+  ssh lbnedaq@${remotenode} rm -f $filename
 done
