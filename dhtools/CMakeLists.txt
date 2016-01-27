@@ -12,6 +12,7 @@ LIST(APPEND exes dtranslog35t.sh )
 LIST(APPEND exes make_metadata35t_declare.sh )
 LIST(APPEND exes daq6deleter.sh )
 LIST(APPEND exes gwtdeleter.sh )
+LIST(APPEND exes senv.sh )
 
 # Non-executable python files.
 
