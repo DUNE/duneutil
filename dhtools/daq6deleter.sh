@@ -13,7 +13,7 @@ dirtoclean2=/storage/data
 
 source $scriptdir/senv.sh
 
-for filename in `ssh lbnedaq@${remotenode} find ${dirtoclean} -mtime +3 -name lbne*.root`
+for filename in `ssh lbnedaq@${remotenode} find ${dirtoclean} -mtime +3 -name "lbne*.root"`
 do
   fbase=`basename $filename`
   samlocation=`samweb -e lbne locate-file $fbase`
@@ -38,7 +38,7 @@ ssh lbnedaq@${remotenode} rm -f ${dirtoclean2}/lbne_r-_sr-_*.root
 
 # clean up files that were not closed properly
 
-for filename in `ssh lbnedaq@${remotenode} find ${dirtoclean2} -mtime +3 -name RootOutput*.root`
+for filename in `ssh lbnedaq@${remotenode} find ${dirtoclean2} -mtime +3 -name "RootOutput*.root"`
 do
   ssh lbnedaq@${remotenode} rm -f $filename
 done
