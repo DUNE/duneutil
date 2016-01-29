@@ -11,6 +11,8 @@
 #----------------------------------------------------------------------
 
 import os
+import project_utilities
+import subprocess
 
 # Don't fail (on import) if samweb is not available.
 
@@ -95,3 +97,46 @@ def dimensions(project, stage, ana=False):
     dim = dim + ' and application %s' % stage.name
     dim = dim + ' and availability: anylocation'
     return dim
+
+# Get grid proxy.
+
+def get_proxy():
+
+    global proxy_ok
+    proxy_ok = False
+
+    # Make sure we have a valid certificate.
+
+    project_utilities.test_kca()
+
+    # Get proxy using either specified cert+key or default cert.
+
+    if os.environ.has_key('X509_USER_CERT') and os.environ.has_key('X509_USER_KEY'):
+        cmd=['voms-proxy-init',
+             '-rfc',
+             '-cert', os.environ['X509_USER_CERT'],
+             '-key', os.environ['X509_USER_KEY'],
+             '-voms', '%s:/%s/Role=%s' % (project_utilities.get_experiment(), project_utilities.get_experiment(), project_utilities.get_role())]
+        try:
+            subprocess.check_call(cmd, stdout=-1, stderr=-1)
+            proxy_ok = True
+        except:
+            pass
+        pass
+    else:
+        cmd=['voms-proxy-init',
+             '-noregen',
+             '-rfc',
+             '-voms',
+             '%s:/%s/Role=%s' % (project_utilities.get_experiment(), project_utilities.get_experiment(), project_utilities.get_role())]
+        jobinfo = subprocess.Popen(cmd, stdout=subprocess.PIPE,
+                                   stderr=subprocess.PIPE)
+        jobout, joberr = jobinfo.communicate()
+        rc = jobinfo.poll()
+        if rc != 0 and rc!= 1:
+            proxy_ok = False
+        else:
+            proxy_ok = True
+    # Done
+
+    return proxy_ok

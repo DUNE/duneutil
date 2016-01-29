@@ -2,7 +2,7 @@
 
 # The *parent* line must the first non-commented line and defines this product and version
 # The version should be of the form vxx_yy_zz (e.g. v01_02_03)
-parent duneutil v01_20_05
+parent duneutil v01_20_06
 defaultqual e9
 
 # These optional lines define the installed directories where headers,
@@ -33,7 +33,7 @@ table_fragment_begin
     #envSet(GROUP, uboone)
     envSet(JOBSUB_GROUP, dune)
     envSet(EXPERIMENT, dune)
-    envSet(SAM_EXPERIMENT, lbne)
+    envSet(SAM_EXPERIMENT, dune)
     pathPrepend(PYTHONPATH, ${UPS_PROD_DIR}/python)
 table_fragment_end
 
@@ -41,10 +41,10 @@ table_fragment_end
 # Add the dependent product and version
 
 product          version
-art             v1_17_06
-larbatch        v01_20_02
+art             v1_17_07
+larbatch        v01_20_03
 
-cetbuildtools	v4_18_01	-	only_for_build
+cetbuildtools	v4_18_02	-	only_for_build
 end_product_list
 
 

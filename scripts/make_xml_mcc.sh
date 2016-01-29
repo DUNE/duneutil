@@ -331,8 +331,8 @@ EOF
       echo "    <inputlist>/dune/data2/users/jti3/txtfiles/AntiMuonCutEvents_LSU_100.txt</inputlist>" >> $newxml
   fi
   cat <<EOF >> $newxml
-    <outdir>/pnfs/lbne/persistent/${userdir}/&release;/gen/&name;</outdir>
-    <workdir>/lbne/app/users/${userbase}/work/&release;/gen/&name;</workdir>
+    <outdir>/pnfs/dune/persistent/${userdir}/&release;/gen/&name;</outdir>
+    <workdir>/dune/app/users/${userbase}/work/&release;/gen/&name;</workdir>
     <output>${newprj}_\${PROCESS}_%tc_gen.root</output>
     <numjobs>$njob</numjobs>
     <datatier>generated</datatier>
@@ -341,8 +341,8 @@ EOF
 
   <stage name="g4">
     <fcl>$g4fcl</fcl>
-    <outdir>/pnfs/lbne/persistent/${userdir}/&release;/g4/&name;</outdir>
-    <workdir>/lbne/app/users/${userbase}/work/&release;/g4/&name;</workdir>
+    <outdir>/pnfs/dune/persistent/${userdir}/&release;/g4/&name;</outdir>
+    <workdir>/dune/app/users/${userbase}/work/&release;/g4/&name;</workdir>
     <numjobs>$njob</numjobs>
     <datatier>simulated</datatier>
     <defname>&name;_&tag;_g4</defname>
@@ -353,8 +353,8 @@ EOF
     cat <<EOF >> $newxml
   <stage name="detsim">
     <fcl>$detsimfcl</fcl>
-    <outdir>/pnfs/lbne/persistent/${userdir}/&release;/detsim/&name;</outdir>
-    <workdir>/lbne/app/users/${userbase}/work/&release;/detsim/&name;</workdir>
+    <outdir>/pnfs/dune/persistent/${userdir}/&release;/detsim/&name;</outdir>
+    <workdir>/dune/app/users/${userbase}/work/&release;/detsim/&name;</workdir>
     <numjobs>$njob</numjobs>
     <datatier>detector-simulated</datatier>
     <defname>&name;_&tag;_detsim</defname>
@@ -365,8 +365,8 @@ EOF
   cat <<EOF >> $newxml
   <stage name="reco">
     <fcl>$recofcl</fcl>
-    <outdir>/pnfs/lbne/persistent/${userdir}/&release;/reco/&name;</outdir>
-    <workdir>/lbne/app/users/${userbase}/work/&release;/reco/&name;</workdir>
+    <outdir>/pnfs/dune/persistent/${userdir}/&release;/reco/&name;</outdir>
+    <workdir>/dune/app/users/${userbase}/work/&release;/reco/&name;</workdir>
     <numjobs>$njob</numjobs>
     <datatier>full-reconstructed</datatier>
     <defname>&name;_&tag;_reco</defname>
@@ -374,9 +374,9 @@ EOF
 
   <stage name="mergeana">
     <fcl>$mergefcl</fcl>
-    <outdir>/pnfs/lbne/persistent/${userdir}/&release;/mergeana/&name;</outdir>
+    <outdir>/pnfs/dune/persistent/${userdir}/&release;/mergeana/&name;</outdir>
     <output>&name;_\${PROCESS}_%tc_merged.root</output>
-    <workdir>/lbne/app/users/${userbase}/work/&release;/mergeana/&name;</workdir>
+    <workdir>/dune/app/users/${userbase}/work/&release;/mergeana/&name;</workdir>
     <numjobs>$njob</numjobs>
     <targetsize>8000000000</targetsize>
     <datatier>full-reconstructed</datatier>
