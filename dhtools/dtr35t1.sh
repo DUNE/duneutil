@@ -4,7 +4,10 @@
 # the name but not being edited
 
 scriptdir=/home/lbnedaq/trj
-inputremoteuser=lbnedaq@lbnedaq6
+remotemachine=lbnedaq6
+remoteuser=lbnedaq
+inputremoteuser=${remoteuser}@${remotemachine}
+ftpuser=lbnedata
 inputremote=/storage/data
 inputtransferred=/storage/data/transferred
 localincomingdir=/data/lbnedaq/data/incoming_files
@@ -14,7 +17,8 @@ localtransdir=/data/lbnedaq/data/transferring_files
 localdonedir=/data/lbnedaq/data/transferred_files
 locallogdir=/data/lbnedaq/data/transfer_logs
 localfaildir=/data/lbnedaq/data/failed_files
-dropboxdir=/pnfs/lbne/scratch/lbnepro/dropbox/data
+#dropboxdir=/pnfs/lbne/scratch/lbnepro/dropbox/data
+dropboxdir=/data/lbnepro/dropbox/data
 filelistdir=/data/lbnedaq/data/filelist
 
 ntrylimit=10
@@ -42,9 +46,13 @@ KEYUSE=`/usr/krb5/bin/klist -k ${KEYTAB} | grep FNAL.GOV | head -1 | cut -c 5- |
 
 phost=lbnedaq@lbnegpvm01.fnal.gov
 
+read tmpstring < ${scriptdir}/fstring.txt
 
 for filename in `ssh ${inputremoteuser} ls ${inputremote}/lbne_r*.root | grep -v lbne_r-_sr-_`
 do
+
+# needed for ftp -- put files in the right directory
+    cd ${localincomingdir}
 
     fbase=`basename $filename`
     for itry in `seq 1 $ntrylimit`
@@ -55,8 +63,21 @@ do
 	checksumsize_inputremote=`echo $remotechecksum | cut -f 2 -d " "`
 	success=0
 
+# first attempt -- use scp to pull the file
 #	scp -q ${inputremoteuser}:${filename} $localincomingdir/
-	ssh ${inputremoteuser} cp -f ${filename} ${localincomingdir_rem}/
+
+# second attempt -- push the file with cp using the disk mount on the gateway
+#	ssh ${inputremoteuser} cp -f ${filename} ${localincomingdir_rem}/
+
+# third attempt -- use ftp
+
+ftp -n $remotemachine <<EOF
+quote USER ${ftpuser}
+quote PASS ${tmpstring}
+binary
+get ${fbase}
+exit
+EOF
 	if [ $? -ne 0 ]
         then
             continue
@@ -99,10 +120,16 @@ $scriptdir/make_metadata35t_declare.sh $localtransdir $localfaildir $scriptdir $
 cd $localtransdir
 for filename in `ls *.root`
 do
-  cp -v -f $filename $dropboxdir
+# temporary hack to keep a copy for the nearline monitor in the done directory
+  fbase=`basename $filename`
+  ln $fbase $localdonedir/$fbase
+# the dropbox is read and cleaned up by user lbnepro so make sure it has permission to do so
+  chmod g+w $filename
+  mv -v $filename $dropboxdir
   if [ $? -eq 0 ]
   then
-    mv -v $filename $localdonedir
+
+#    mv -v $filename $localdonedir
     mv -v $filename.json $localdonedir
   fi
 done
