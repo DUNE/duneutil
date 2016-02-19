@@ -82,18 +82,9 @@ while [ $# -gt 0 ]; do
 
     # Total number of events.
 
-    --nev )
+    -n|--nev )
     if [ $# -gt 1 ]; then
       nev=$2
-      shift
-    fi
-    ;;
-
-    # Number of events per job.
-
-    --nevjob )
-    if [ $# -gt 1 ]; then
-      nevjobarg=$2
       shift
     fi
     ;;
@@ -117,9 +108,11 @@ rm -f newxml
 slicefcl=RunSplitterDefault.fcl
 
 kx509
+echo samweb delete-definition rawdata35t_run_${run}
 samweb delete-definition rawdata35t_run_${run}
-samweb create-definition rawdata35t_run_${run} "run_number=${run} and data_tier=raw and lbne_data.detector_type like 35t"
-
+echo samweb -e lbne create-definition rawdata35t_run_${run} "run_number=${run} and data_tier=raw and lbne_data.detector_type like %35t%"
+samweb -e lbne create-definition rawdata35t_run_${run} "run_number=${run} and data_tier=raw and lbne_data.detector_type like %35t%"
+samweb list-definition-files rawdata35t_run_${run}
 cat <<EOF > $newxml
 <?xml version="1.0"?>
 
@@ -127,7 +120,7 @@ cat <<EOF > $newxml
 
 <!DOCTYPE project [
 <!ENTITY release "$rel">
-<!ENTITY file_type "data">
+<!ENTITY file_type "test-data">
 <!ENTITY run_type "physics">
 <!ENTITY name "$newprj">
 <!ENTITY tag "35tdata">
