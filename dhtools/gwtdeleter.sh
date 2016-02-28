@@ -9,7 +9,7 @@ source $scriptdir/senv.sh
 
 cd $localdonedir
 
-for filename in `find . -mtime +3 -name "*.root"`
+for filename in `find . -mtime +2 -name "*.root"`
 do
   fbase=`basename $filename`
   samlocation=`samweb -e lbne locate-file $fbase`
