@@ -58,7 +58,7 @@ do
     for itry in `seq 1 $ntrylimit`
     do 
 
-	remotechecksum=`ssh ${inputremoteuser} cksum ${filename}`
+	remotechecksum=`ssh ${inputremoteuser} nice cksum ${filename}`
 	checksumvalue_inputremote=`echo $remotechecksum | cut -f 1 -d " "`
 	checksumsize_inputremote=`echo $remotechecksum | cut -f 2 -d " "`
 	success=0
