@@ -1,0 +1,16 @@
+{
+  "file_name": "lbne_r015159_sr01_20160308T145442_20160308T203207_split.root",
+  "file_size": 1424739659,
+  "event_count": 5055,
+  "last_event": 5055,
+  "runs": [ [ 370, "test" ] ],
+  "first_event": 1,
+  "file_type": "test-data",
+  "file_format": "root",
+  "data_tier": "sliced",
+  "group": "lbne",
+  "application": {
+   "family": "art",
+   "name": "sliced",
+   "version": "v05_02_01"
+  },
