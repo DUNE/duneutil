@@ -228,6 +228,36 @@ do
       fi
     fi
 
+    if echo $newprj | grep -q 'dune10kt_1x2x6\|dune10kt_r90deg_1x2x6'; then
+      g4fcl=standard_g4_dune10kt_1x2x6.fcl
+      detsimfcl=standard_detsim_dune10kt_1x2x6.fcl
+      recofcl=standard_reco_dune10kt_1x2x6.fcl
+      mergefcl=standard_ana_dune10kt_1x2x6.fcl
+      if echo $newprj | grep -q genie; then
+	recofcl=standard_reco_dune10kt_nu_1x2x6.fcl
+      fi
+    fi
+
+    if echo $newprj | grep -q dune10kt_3mmpitch_1x2x6; then
+      g4fcl=standard_g4_dune10kt_3mmpitch_1x2x6.fcl
+      detsimfcl=standard_detsim_dune10kt_3mmpitch_1x2x6.fcl
+      recofcl=standard_reco_dune10kt_3mmpitch_1x2x6.fcl
+      mergefcl=standard_ana_dune10kt_3mmpitch_1x2x6.fcl
+      if echo $newprj | grep -q genie; then
+	recofcl=standard_reco_dune10kt_3mmpitch_nu_1x2x6.fcl
+      fi
+     fi
+
+    if echo $newprj | grep -q dune10kt_45deg_1x2x6; then
+      g4fcl=standard_g4_dune10kt_45deg_1x2x6.fcl
+      detsimfcl=standard_detsim_dune10kt_45deg_1x2x6.fcl
+      recofcl=standard_reco_dune10kt_45deg_1x2x6.fcl
+      mergefcl=standard_ana_dune10kt_45deg_1x2x6.fcl
+      if echo $newprj | grep -q genie; then
+	recofcl=standard_reco_dune10kt_45deg_nu_1x2x6.fcl
+      fi
+    fi
+
 
     # Set number of events per job.
     nevjob=$nevjobarg
@@ -265,7 +295,7 @@ do
 	if echo $newprj | grep -q _nu_; then
 	    nev=10000
 	else
-	    nev=10000
+	    nev=100000
 	fi
       else
         nev=10000
