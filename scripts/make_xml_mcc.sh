@@ -110,9 +110,9 @@ fi
 
 rm -f *.xml
 
-find $DUNETPC_DIR/source/fcl/dune35t/gen $DUNETPC_DIR/source/fcl/dunefd/gen -name \*.fcl | while read fcl
+find $DUNETPC_DIR/source/fcl/dune35t/gen $DUNETPC_DIR/source/fcl/dunefd/gen $DUNETPC_DIR/source/fcl/protodune/gen -name \*.fcl | while read fcl
 do
-  if ! echo $fcl | grep -q common; then
+  if ! echo $fcl | grep -q 'common\|protoDUNE_gensingle'; then
     newprj=`basename $fcl .fcl`
     newxml=${newprj}.xml
     generator=SingleGen
@@ -136,6 +136,10 @@ do
     if echo $newprj | grep -q dune10kt; then
       detector=10kt
     fi
+    if echo $newprj | grep -q protoDune; then
+      detector=protoDune
+    fi
+
     # Make xml file.
 
     echo "Making ${newprj}.xml"
@@ -258,6 +262,13 @@ do
       fi
     fi
 
+    if echo $newprj | grep -q protoDune; then
+      g4fcl=protoDUNE_g4single.fcl
+      detsimfcl=protoDUNE_detsim_single.fcl
+      recofcl=protoDUNE_reco.fcl
+      mergefcl=protoDUNE_ana.fcl
+    fi
+
 
     # Set number of events per job.
     nevjob=$nevjobarg
@@ -297,6 +308,8 @@ do
 	else
 	    nev=10000
 	fi
+      elif echo $newprj | grep -q protoDune; then
+        nev=30000
       else
         nev=10000
       fi
