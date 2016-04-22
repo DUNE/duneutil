@@ -292,10 +292,10 @@ do
       elif [ $newprj = prodcosmics_dune35t_milliblock_protonpi0 ]; then
 	nev=100000
       elif echo $newprj | grep -q dune10kt; then
-	if echo $newprj | grep -q _nu_; then
-	    nev=10000
-	else
+	if echo $newprj | grep -q genie; then
 	    nev=100000
+	else
+	    nev=10000
 	fi
       else
         nev=10000
