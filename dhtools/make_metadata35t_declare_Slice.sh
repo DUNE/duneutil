@@ -17,7 +17,7 @@
 #------------------------------------------------------------------
 
 source /grid/fermiapp/products/dune/setup_dune.sh
-setup dunetpc v05_01_02 -q e9:prof
+setup dunetpc v05_07_00 -q e9:prof
 
 rdir=''
 fdir=''
@@ -131,7 +131,7 @@ do
 
 
     echo "Declaring metadata to SAM: $json"
-    samweb -e lbne declare-file $json
+    samweb -e lbne declare-file --cert=/dune/app/home/dunepro/trj/service_cert_dec9_2015/duneprocert_dec2015.pem --key=/dune/app/home/dunepro/trj/service_cert_dec9_2015/duneprokey_dec2015.pem $json
     echo "Tried to declare"
     if [ $? -ne 0 ]; then
     	mv $root $fdir
