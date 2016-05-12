@@ -26,7 +26,7 @@ def get_dropbox(filename):
     # Get metadata.
     
     md = {}
-    exp = 'lbne'
+    exp = 'dune'
     if os.environ.has_key('SAM_EXPERIMENT'):
         exp = os.environ['SAM_EXPERIMENT']
     samweb = samweb_cli.SAMWebClient(experiment=exp)
@@ -47,8 +47,8 @@ def get_dropbox(filename):
 
     # Construct dropbox path.
 
-    #path = '/lbne/data/lbnepro/dropbox/%s' % file_type
-    path = '/pnfs/lbne/scratch/lbnepro/dropbox/%s' % file_type
+    #path = '/dune/data/dunepro/dropbox/%s' % file_type
+    path = '/pnfs/dune/scratch/dunepro/dropbox/%s' % file_type
     return path
 
 # Return fcl configuration for experiment-specific sam metadata.
@@ -66,11 +66,11 @@ def get_sam_metadata(project, stage):
 def get_ups_products():
     return 'dunetpc'
 
-# Function to return path to the setup_lbne.sh script
+# Function to return path to the setup_dune.sh script
 
 def get_setup_script_path():
 
-    OASIS_DIR="/cvmfs/oasis.opensciencegrid.org/lbne/products/"
+    OASIS_DIR="/cvmfs/oasis.opensciencegrid.org/dune/products/"
     FERMIAPP_DIR="/grid/fermiapp/products/dune/"
 
     if os.path.isfile(FERMIAPP_DIR+"setup_dune.sh"):
