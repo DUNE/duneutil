@@ -31,8 +31,6 @@ set(CMAKE_MODULE_PATH $ENV{CANVAS_DIR}/Modules
 include(CetCMakeEnv)
 cet_cmake_env()
 
-set_install_root()
-
 cet_set_compiler_flags(DIAGS CAUTIOUS
   WERROR
   NO_UNDEFINED
