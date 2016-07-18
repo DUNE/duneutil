@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #----------------------------------------------------------------------
 #
-# Name: project_utilities.py
+# Name: experiment_utilities.py
 #
 # Purpose: A python module containing various experiment-specific
 #          python utility functions.
@@ -11,7 +11,7 @@
 #----------------------------------------------------------------------
 
 import os
-import project_utilities
+#import project_utilities
 import subprocess
 
 # Don't fail (on import) if samweb is not available.
