@@ -11,7 +11,7 @@
 #----------------------------------------------------------------------
 
 import os
-#import project_utilities
+import larbatch_utilities
 import subprocess
 
 # Don't fail (on import) if samweb is not available.
@@ -107,7 +107,7 @@ def get_proxy():
 
     # Make sure we have a valid certificate.
 
-    project_utilities.test_kca()
+    larbatch_utilities.test_kca()
 
     # Get proxy using either specified cert+key or default cert.
 
@@ -116,7 +116,7 @@ def get_proxy():
              '-rfc',
              '-cert', os.environ['X509_USER_CERT'],
              '-key', os.environ['X509_USER_KEY'],
-             '-voms', '%s:/%s/Role=%s' % (project_utilities.get_experiment(), project_utilities.get_experiment(), project_utilities.get_role())]
+             '-voms', '%s:/%s/Role=%s' % (larbatch_utilities.get_experiment(), larbatch_utilities.get_experiment(), larbatch_utilities.get_role())]
         try:
             subprocess.check_call(cmd, stdout=-1, stderr=-1)
             proxy_ok = True
@@ -128,7 +128,7 @@ def get_proxy():
              '-noregen',
              '-rfc',
              '-voms',
-             '%s:/%s/Role=%s' % (project_utilities.get_experiment(), project_utilities.get_experiment(), project_utilities.get_role())]
+             '%s:/%s/Role=%s' % (larbatch_utilities.get_experiment(), larbatch_utilities.get_experiment(), larbatch_utilities.get_role())]
         jobinfo = subprocess.Popen(cmd, stdout=subprocess.PIPE,
                                    stderr=subprocess.PIPE)
         jobout, joberr = jobinfo.communicate()
