@@ -17,7 +17,7 @@
 #------------------------------------------------------------------
 
 source /grid/fermiapp/products/dune/setup_dune.sh
-setup dunetpc v05_07_00 -q e9:prof
+setup dunetpc v05_14_00 -q e9:prof
 
 rdir=''
 fdir=''
@@ -131,7 +131,7 @@ do
 
 
     echo "Declaring metadata to SAM: $json"
-    samweb -e lbne declare-file --cert=/dune/app/home/dunepro/trj/service_cert_dec9_2015/duneprocert_dec2015.pem --key=/dune/app/home/dunepro/trj/service_cert_dec9_2015/duneprokey_dec2015.pem $json
+    samweb -e dune declare-file --cert=/dune/app/home/dunepro/trj/service_cert_dec9_2015/duneprocert_dec2015.pem --key=/dune/app/home/dunepro/trj/service_cert_dec9_2015/duneprokey_dec2015.pem $json
     echo "Tried to declare"
     if [ $? -ne 0 ]; then
     	mv $root $fdir
@@ -145,8 +145,8 @@ do
     echo "Moved $root to dropbox"
 
     rm -f TempRunning.txt
-    RunningFile=/dune/data2/users/warburton/AutoSlice/GoodFileList/RunningList.txt
     echo "$root $size $run $nev" >> $filelistdir/GoodFileList.txt
+    RunningFile=/dune/data2/lbnepro/AutoSlice/GoodFileList/RunningList.txt
     printf "%06d\n" $run >> $RunningFile
     sort --version-sort $RunningFile > TempRunning.txt
     uniq -u TempRunning.txt > $RunningFile
