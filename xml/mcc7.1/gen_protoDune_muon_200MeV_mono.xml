@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+
+<!-- Production Project -->
+
+<!DOCTYPE project [
+<!ENTITY release "v06_04_01">
+<!ENTITY file_type "mc">
+<!ENTITY run_type "physics">
+<!ENTITY name "gen_protoDune_muon_200MeV_mono">
+<!ENTITY tag "mcc7.1">
+]>
+
+<project name="&name;">
+
+  <!-- Group -->
+  <group>dune</group>
+
+  <!-- Project size -->
+  <numevents>30000</numevents>
+
+  <!-- Operating System -->
+  <os>SL6</os>
+
+  <!-- Batch resources -->
+  <resource>DEDICATED,OPPORTUNISTIC</resource>
+
+  <!-- Larsoft information -->
+  <larsoft>
+    <tag>&release;</tag>
+    <qual>e10:prof</qual>
+  </larsoft>
+
+  <!-- dune35t metadata parameters -->
+
+  <parameter name ="MCName">gen_protoDune_muon_200MeV_mono</parameter>
+  <parameter name ="MCDetectorType">protoDune</parameter>
+  <parameter name ="MCGenerators">SingleGen</parameter>
+
+  <!-- Project stages -->
+
+  <stage name="gen">
+    <fcl>gen_protoDune_muon_200MeV_mono.fcl</fcl>
+    <outdir>/pnfs/dune/scratch/dunepro/&release;/gen/&name;</outdir>
+    <workdir>/dune/app/users/dunepro/work/&release;/gen/&name;</workdir>
+    <output>gen_protoDune_muon_200MeV_mono_${PROCESS}_%tc_gen.root</output>
+    <numjobs>300</numjobs>
+    <datatier>generated</datatier>
+    <defname>&name;_&tag;_gen</defname>
+  </stage>
+
+  <stage name="g4">
+    <fcl>protoDUNE_g4single.fcl</fcl>
+    <outdir>/pnfs/dune/scratch/dunepro/&release;/g4/&name;</outdir>
+    <workdir>/dune/app/users/dunepro/work/&release;/g4/&name;</workdir>
+    <numjobs>300</numjobs>
+    <datatier>simulated</datatier>
+    <defname>&name;_&tag;_g4</defname>
+  </stage>
+
+  <stage name="detsim">
+    <fcl>protoDUNE_detsim_single.fcl</fcl>
+    <outdir>/pnfs/dune/scratch/dunepro/&release;/detsim/&name;</outdir>
+    <workdir>/dune/app/users/dunepro/work/&release;/detsim/&name;</workdir>
+    <numjobs>300</numjobs>
+    <datatier>detector-simulated</datatier>
+    <defname>&name;_&tag;_detsim</defname>
+  </stage>
+
+  <stage name="reco">
+    <fcl>protoDUNE_reco.fcl</fcl>
+    <outdir>/pnfs/dune/scratch/dunepro/&release;/reco/&name;</outdir>
+    <workdir>/dune/app/users/dunepro/work/&release;/reco/&name;</workdir>
+    <numjobs>300</numjobs>
+    <datatier>full-reconstructed</datatier>
+    <defname>&name;_&tag;_reco</defname>
+  </stage>
+
+  <stage name="mergeana">
+    <fcl>protoDUNE_ana.fcl</fcl>
+    <outdir>/pnfs/dune/scratch/dunepro/&release;/mergeana/&name;</outdir>
+    <output>&name;_${PROCESS}_%tc_merged.root</output>
+    <workdir>/dune/app/users/dunepro/work/&release;/mergeana/&name;</workdir>
+    <numjobs>300</numjobs>
+    <targetsize>8000000000</targetsize>
+    <datatier>full-reconstructed</datatier>
+    <defname>&name;_&tag;</defname>
+  </stage>
+
+  <!-- file type -->
+  <filetype>&file_type;</filetype>
+
+  <!-- run type -->
+  <runtype>&run_type;</runtype>
+
+</project>
