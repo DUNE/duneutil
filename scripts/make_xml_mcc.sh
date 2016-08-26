@@ -30,7 +30,7 @@
 
 # Parse arguments.
 
-rel=v06_02_00
+rel=v06_04_01
 userdir=dunepro
 userbase=$userdir
 nevarg=0
@@ -243,6 +243,9 @@ do
       if echo $newprj | grep -q genie; then
 	recofcl=standard_reco_dune10kt_nu_1x2x6.fcl
       fi
+      if echo $newprj | grep -q 'supernova\|marley'; then
+        g4fcl=supernova_g4_dune10kt_1x2x6.fcl
+      fi
     fi
 
     if echo $newprj | grep -q dune10kt_3mmpitch_1x2x6; then
@@ -253,6 +256,9 @@ do
       if echo $newprj | grep -q genie; then
 	recofcl=standard_reco_dune10kt_3mmpitch_nu_1x2x6.fcl
       fi
+      if echo $newprj | grep -q 'supernova\|marley'; then
+        g4fcl=supernova_g4_dune10kt_3mmpitch_1x2x6.fcl
+      fi
      fi
 
     if echo $newprj | grep -q dune10kt_45deg_1x2x6; then
@@ -262,6 +268,9 @@ do
       mergefcl=standard_ana_dune10kt_45deg_1x2x6.fcl
       if echo $newprj | grep -q genie; then
 	recofcl=standard_reco_dune10kt_45deg_nu_1x2x6.fcl
+      fi
+      if echo $newprj | grep -q 'supernova\|marley'; then
+        g4fcl=supernova_g4_dune10kt_45deg_1x2x6.fcl
       fi
     fi
 
@@ -332,7 +341,7 @@ do
 <!ENTITY file_type "mc">
 <!ENTITY run_type "physics">
 <!ENTITY name "$newprj">
-<!ENTITY tag "mcc7.0">
+<!ENTITY tag "mcc7.1">
 ]>
 
 <project name="&name;">
