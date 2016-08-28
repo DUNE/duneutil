@@ -134,6 +134,12 @@ do
     if echo $newprj | grep -q prodndk; then
       generator=NDKGen
     fi
+    if echo $newprj | grep -q prodmarley; then
+      generator=MARLEY
+    fi
+    if echo $newprj | grep -q prodbackground_ar39; then
+      generator=RadioGen
+    fi
 
     detector=35t
     if echo $newprj | grep -q dune10kt; then
