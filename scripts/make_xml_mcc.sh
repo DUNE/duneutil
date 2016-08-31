@@ -287,6 +287,14 @@ do
       mergefcl=protoDUNE_ana.fcl
     fi
 
+    if echo $newprj | grep -q dphase; then
+      g4fcl=standard_g4_dune10kt_dp.fcl
+      detsimfcl=standard_detsim_dune10kt_dp.fcl
+      recofcl=standard_reco_dune10ktdphase.fcl
+      mergefcl=standard_ana_dune10kt_dp.fcl
+    fi
+
+
 
     # Set number of events per job.
     nevjob=$nevjobarg
@@ -323,6 +331,9 @@ do
       elif echo $newprj | grep -q dune10kt; then
 	if echo $newprj | grep -q genie; then
 	    nev=100000
+          if echo $newprj | grep -q dphase; then
+            nev=10000
+          fi
 	else
 	    nev=10000
 	fi
