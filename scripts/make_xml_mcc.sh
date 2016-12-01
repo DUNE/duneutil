@@ -30,13 +30,16 @@
 
 # Parse arguments.
 
-rel=v06_05_00
+rs=v06_16_00
+rr=v06_16_00
 userdir=dunepro
 userbase=$userdir
 nevarg=0
 nevjob=0
 nevjobarg=0
-local=''
+ls=''
+lr=''
+tag=devel
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -44,15 +47,34 @@ while [ $# -gt 0 ]; do
     # User directory.
 
     -h|--help )
-      echo "Usage: make_xml_mcc.sh [-h|--help] [-r <release>] [-u|--user <user>] [--local <dir|tar>] [--nev <n>] [--nevjob <n>]"
+      echo "Usage: make_xml_mcc.sh [-h|--help] [-r <release>] [-t|--tag <tag>] [-u|--user <user>] [--local <dir|tar>] [--nev <n>] [--nevjob <n>]"
       exit
     ;;
 
-    # Release.
+    # Simulation release.
 
-    -r )
+    -rs )
     if [ $# -gt 1 ]; then
-      rel=$2
+      rs=$2
+      shift
+    fi
+    ;;
+
+    # Reconstruction release.
+
+    -rr )
+    if [ $# -gt 1 ]; then
+      rr=$2
+      shift
+    fi
+    ;;
+
+    # All stages release.
+
+    -r|--release )
+    if [ $# -gt 1 ]; then
+      rs=$2
+      rr=$2
       shift
     fi
     ;;
@@ -67,11 +89,30 @@ while [ $# -gt 0 ]; do
     fi
     ;;
 
+    # Local simulation release.
+
+    -ls )
+    if [ $# -gt 1 ]; then
+      ls=$2
+      shift
+    fi
+    ;;
+
+    # Local reconstruction release.
+
+    -lr )
+    if [ $# -gt 1 ]; then
+      lr=$2
+      shift
+    fi
+    ;;
+
     # Local release.
 
     --local )
     if [ $# -gt 1 ]; then
-      local=$2
+      ls=$2
+      lr=$2
       shift
     fi
     ;;
@@ -90,6 +131,15 @@ while [ $# -gt 0 ]; do
     --nevjob )
     if [ $# -gt 1 ]; then
       nevjobarg=$2
+      shift
+    fi
+    ;;
+
+    # Sample tag.
+
+    -t|--tag )
+    if [ $# -gt 1 ]; then
+      tag=$2
       shift
     fi
     ;;
@@ -115,6 +165,10 @@ do
   if ! echo $fcl | grep -q 'common\|protoDUNE_gensingle'; then
     newprj=`basename $fcl .fcl`
     newxml=${newprj}.xml
+    samprj=${newprj}
+    if [ $userbase != dunepro ]; then
+	samprj=${userbase}_$newprj
+    fi
     generator=SingleGen
     if echo $newprj | grep -q cosmics; then
       generator=CRY
@@ -174,7 +228,7 @@ do
 #    reco3dfcl=standard_reco_uboone_3D.fcl
 
     # Reco
-    recofcl=standard_reco_dune35t.fcl
+    recofcl=standard_reco_dune35tsim.fcl
 
     # Merge/Analysis
 
@@ -354,12 +408,15 @@ do
 <!-- Production Project -->
 
 <!DOCTYPE project [
-<!ENTITY release "$rel">
+<!ENTITY relsim "$rs">
+<!ENTITY relreco "$rr">
 <!ENTITY file_type "mc">
 <!ENTITY run_type "physics">
-<!ENTITY name "$newprj">
-<!ENTITY tag "mcc7.2">
+<!ENTITY name "$samprj">
+<!ENTITY tag "$tag">
 ]>
+
+<job>
 
 <project name="&name;">
 
@@ -375,23 +432,23 @@ do
   <!-- Batch resources -->
   <resource>DEDICATED,OPPORTUNISTIC</resource>
 
+  <!-- metadata parameters -->
+
+  <parameter name ="MCName">${samprj}</parameter>
+  <parameter name ="MCDetectorType">${detector}</parameter>
+  <parameter name ="MCGenerators">${generator}</parameter>
+
   <!-- Larsoft information -->
   <larsoft>
-    <tag>&release;</tag>
+    <tag>&relsim;</tag>
     <qual>${qual}:prof</qual>
 EOF
-  echo "local=$local"
-  if [ x$local != x ]; then
-    echo "    <local>${local}</local>" >> $newxml
+  if [ x$ls != x ]; then
+    echo "ls=$ls"
+    echo "    <local>${ls}</local>" >> $newxml
   fi
   cat <<EOF >> $newxml
   </larsoft>
-
-  <!-- dune35t metadata parameters -->
-
-  <parameter name ="MCName">${newprj}</parameter>
-  <parameter name ="MCDetectorType">${detector}</parameter>
-  <parameter name ="MCGenerators">${generator}</parameter>
 
   <!-- Project stages -->
 
@@ -400,11 +457,11 @@ EOF
 EOF
   if echo $newprj | grep -q AntiMuonCutEvents_LSU_dune35t; then
       echo "    <inputmode>textfile</inputmode>" >> $newxml
-      echo "    <inputlist>/dune/data2/users/jti3/txtfiles/AntiMuonCutEvents_LSU_100.txt</inputlist>" >> $newxml
+      echo "    <inputlist>/pnfs/dune/persistent/dunepro/AntiMuonCutEvents_LSU_100.txt</inputlist>" >> $newxml
   fi
   cat <<EOF >> $newxml
-    <outdir>/pnfs/dune/scratch/${userdir}/&release;/gen/&name;</outdir>
-    <workdir>/pnfs/dune/scratch/${userdir}/work/&release;/gen/&name;</workdir>
+    <outdir>/pnfs/dune/scratch/${userdir}/&relsim;/gen/&name;</outdir>
+    <workdir>/pnfs/dune/scratch/${userdir}/work/&relsim;/gen/&name;</workdir>
     <output>${newprj}_\${PROCESS}_%tc_gen.root</output>
     <numjobs>$njob</numjobs>
     <datatier>generated</datatier>
@@ -413,32 +470,65 @@ EOF
 
   <stage name="g4">
     <fcl>$g4fcl</fcl>
-    <outdir>/pnfs/dune/scratch/${userdir}/&release;/g4/&name;</outdir>
-    <workdir>/pnfs/dune/scratch/${userdir}/work/&release;/g4/&name;</workdir>
+    <outdir>/pnfs/dune/scratch/${userdir}/&relsim;/g4/&name;</outdir>
+    <workdir>/pnfs/dune/scratch/${userdir}/work/&relsim;/g4/&name;</workdir>
     <numjobs>$njob</numjobs>
     <datatier>simulated</datatier>
     <defname>&name;_&tag;_g4</defname>
   </stage>
 
-EOF
-  if [ x$detsimfcl != x ]; then
-    cat <<EOF >> $newxml
   <stage name="detsim">
     <fcl>$detsimfcl</fcl>
-    <outdir>/pnfs/dune/scratch/${userdir}/&release;/detsim/&name;</outdir>
-    <workdir>/pnfs/dune/scratch/${userdir}/work/&release;/detsim/&name;</workdir>
+    <outdir>/pnfs/dune/scratch/${userdir}/&relsim;/detsim/&name;</outdir>
+    <workdir>/pnfs/dune/scratch/${userdir}/work/&relsim;/detsim/&name;</workdir>
     <numjobs>$njob</numjobs>
     <datatier>detector-simulated</datatier>
     <defname>&name;_&tag;_detsim</defname>
   </stage>
 
+  <!-- file type -->
+  <filetype>&file_type;</filetype>
+
+  <!-- run type -->
+  <runtype>&run_type;</runtype>
+
+</project>
+
+<project name="&name;_reco">
+
+  <!-- Project size -->
+  <numevents>$nev</numevents>
+
+  <!-- Operating System -->
+  <os>SL6</os>
+
+  <!-- Batch resources -->
+  <resource>DEDICATED,OPPORTUNISTIC</resource>
+
+  <!-- metadata parameters -->
+
+  <parameter name ="MCName">${samprj}</parameter>
+  <parameter name ="MCDetectorType">${detector}</parameter>
+  <parameter name ="MCGenerators">${generator}</parameter>
+
+  <!-- Larsoft information -->
+  <larsoft>
+    <tag>&relreco;</tag>
+    <qual>${qual}:prof</qual>
 EOF
+  if [ x$lr != x ]; then
+    echo "lr=$lr"
+    echo "    <local>${lr}</local>" >> $newxml
   fi
   cat <<EOF >> $newxml
+  </larsoft>
+
+  <!-- Project stages -->
+
   <stage name="reco">
     <fcl>$recofcl</fcl>
-    <outdir>/pnfs/dune/scratch/${userdir}/&release;/reco/&name;</outdir>
-    <workdir>/pnfs/dune/scratch/${userdir}/work/&release;/reco/&name;</workdir>
+    <outdir>/pnfs/dune/scratch/${userdir}/&relreco;/reco/&name;</outdir>
+    <workdir>/pnfs/dune/scratch/${userdir}/work/&relreco;/reco/&name;</workdir>
     <numjobs>$njob</numjobs>
     <datatier>full-reconstructed</datatier>
     <defname>&name;_&tag;_reco</defname>
@@ -446,9 +536,9 @@ EOF
 
   <stage name="mergeana">
     <fcl>$mergefcl</fcl>
-    <outdir>/pnfs/dune/scratch/${userdir}/&release;/mergeana/&name;</outdir>
+    <outdir>/pnfs/dune/scratch/${userdir}/&relreco;/mergeana/&name;</outdir>
     <output>&name;_\${PROCESS}_%tc_merged.root</output>
-    <workdir>/pnfs/dune/scratch/${userdir}/work/&release;/mergeana/&name;</workdir>
+    <workdir>/pnfs/dune/scratch/${userdir}/work/&relreco;/mergeana/&name;</workdir>
     <numjobs>$njob</numjobs>
     <targetsize>8000000000</targetsize>
     <datatier>full-reconstructed</datatier>
@@ -462,8 +552,8 @@ EOF
   <runtype>&run_type;</runtype>
 
 </project>
+</job>
+
 EOF
-
   fi
-
 done
