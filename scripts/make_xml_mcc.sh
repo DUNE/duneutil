@@ -450,37 +450,23 @@ EOF
   cat <<EOF >> $newxml
   </larsoft>
 
+  <check>1</check>
+
   <!-- Project stages -->
 
-  <stage name="gen">
+  <stage name="detsim">
     <fcl>$genfcl</fcl>
+    <fcl>$g4fcl</fcl>
+    <fcl>$detsimfcl</fcl>
 EOF
   if echo $newprj | grep -q AntiMuonCutEvents_LSU_dune35t; then
       echo "    <inputmode>textfile</inputmode>" >> $newxml
       echo "    <inputlist>/pnfs/dune/persistent/dunepro/AntiMuonCutEvents_LSU_100.txt</inputlist>" >> $newxml
   fi
   cat <<EOF >> $newxml
-    <outdir>/pnfs/dune/scratch/${userdir}/&relsim;/gen/&name;</outdir>
-    <workdir>/pnfs/dune/scratch/${userdir}/work/&relsim;/gen/&name;</workdir>
-    <output>${newprj}_\${PROCESS}_%tc_gen.root</output>
-    <numjobs>$njob</numjobs>
-    <datatier>generated</datatier>
-    <defname>&name;_&tag;_gen</defname>
-  </stage>
-
-  <stage name="g4">
-    <fcl>$g4fcl</fcl>
-    <outdir>/pnfs/dune/scratch/${userdir}/&relsim;/g4/&name;</outdir>
-    <workdir>/pnfs/dune/scratch/${userdir}/work/&relsim;/g4/&name;</workdir>
-    <numjobs>$njob</numjobs>
-    <datatier>simulated</datatier>
-    <defname>&name;_&tag;_g4</defname>
-  </stage>
-
-  <stage name="detsim">
-    <fcl>$detsimfcl</fcl>
     <outdir>/pnfs/dune/scratch/${userdir}/&relsim;/detsim/&name;</outdir>
     <workdir>/pnfs/dune/scratch/${userdir}/work/&relsim;/detsim/&name;</workdir>
+    <output>${newprj}_\${PROCESS}_%tc_detsim.root</output>
     <numjobs>$njob</numjobs>
     <datatier>detector-simulated</datatier>
     <defname>&name;_&tag;_detsim</defname>
@@ -522,6 +508,8 @@ EOF
   fi
   cat <<EOF >> $newxml
   </larsoft>
+
+  <check>1</check>
 
   <!-- Project stages -->
 
