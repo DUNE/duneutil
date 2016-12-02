@@ -140,3 +140,23 @@ def get_proxy():
     # Done
 
     return proxy_ok
+
+class MetaDataKey:
+
+   def __init__(self):
+     self.expname = ''
+
+   def metadataList(self):
+     return [self.expname + elt for elt in ('lbneMCGenerators','lbneMCName','lbneMCDetectorType','StageName')]
+
+
+   def translateKey(self, key):
+       if key == 'lbneMCDetectorType':
+           return 'lbne_MC.detector_type'
+       elif key == 'StageName':
+           return 'lbne_MC.miscellaneous'
+       else:
+           prefix = key[:4]
+           stem = key[4:]
+           projNoun = stem.split("MC")
+           return prefix + "_MC." + projNoun[1]
