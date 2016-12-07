@@ -464,8 +464,8 @@ EOF
       echo "    <inputlist>/pnfs/dune/persistent/dunepro/AntiMuonCutEvents_LSU_100.txt</inputlist>" >> $newxml
   fi
   cat <<EOF >> $newxml
-    <outdir>/pnfs/dune/scratch/${userdir}/&relsim;/detsim/&name;</outdir>
-    <workdir>/pnfs/dune/scratch/${userdir}/work/&relsim;/detsim/&name;</workdir>
+    <outdir>/pnfs/dune/persistent/${userdir}/&relsim;/detsim/&name;</outdir>
+    <workdir>/pnfs/dune/persistent/${userdir}/work/&relsim;/detsim/&name;</workdir>
     <output>${newprj}_\${PROCESS}_%tc_detsim.root</output>
     <numjobs>$njob</numjobs>
     <datatier>detector-simulated</datatier>
