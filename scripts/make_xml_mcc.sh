@@ -265,42 +265,12 @@ do
       mergefcl=standard_ana_dune10kt.fcl
     fi
 
-    if echo $newprj | grep -q 'dune10kt_workspace\|dune10kt_r10deg_workspace'; then
-      g4fcl=standard_g4_dune10kt_workspace.fcl
-      detsimfcl=standard_detsim_dune10kt_workspace.fcl
-      recofcl=standard_reco_dune10kt_workspace.fcl
-      mergefcl=standard_ana_dune10kt_workspace.fcl
-      if echo $newprj | grep -q genie; then
-	recofcl=standard_reco_dune10kt_nu_workspace.fcl
-      fi
-    fi
-
-    if echo $newprj | grep -q dune10kt_3mmpitch_workspace; then
-      g4fcl=standard_g4_dune10kt_3mmpitch_workspace.fcl
-      detsimfcl=standard_detsim_dune10kt_3mmpitch_workspace.fcl
-      recofcl=standard_reco_dune10kt_3mmpitch_workspace.fcl
-      mergefcl=standard_ana_dune10kt_3mmpitch_workspace.fcl
-      if echo $newprj | grep -q genie; then
-	recofcl=standard_reco_dune10kt_3mmpitch_nu_workspace.fcl
-      fi
-     fi
-
-    if echo $newprj | grep -q dune10kt_45deg_workspace; then
-      g4fcl=standard_g4_dune10kt_45deg_workspace.fcl
-      detsimfcl=standard_detsim_dune10kt_45deg_workspace.fcl
-      recofcl=standard_reco_dune10kt_45deg_workspace.fcl
-      mergefcl=standard_ana_dune10kt_45deg_workspace.fcl
-      if echo $newprj | grep -q genie; then
-	recofcl=standard_reco_dune10kt_45deg_nu_workspace.fcl
-      fi
-    fi
-
     if echo $newprj | grep -q 'dune10kt_1x2x6\|dune10kt_r90deg_1x2x6'; then
       g4fcl=standard_g4_dune10kt_1x2x6.fcl
       detsimfcl=standard_detsim_dune10kt_1x2x6.fcl
       recofcl=standard_reco_dune10kt_1x2x6.fcl
       mergefcl=standard_ana_dune10kt_1x2x6.fcl
-      if echo $newprj | grep -q genie; then
+      if echo $newprj | grep -q 'genie_nu\|genie_anu'; then
 	recofcl=standard_reco_dune10kt_nu_1x2x6.fcl
       fi
       if echo $newprj | grep -q 'supernova\|marley'; then
@@ -313,7 +283,7 @@ do
       detsimfcl=standard_detsim_dune10kt_3mmpitch_1x2x6.fcl
       recofcl=standard_reco_dune10kt_3mmpitch_1x2x6.fcl
       mergefcl=standard_ana_dune10kt_3mmpitch_1x2x6.fcl
-      if echo $newprj | grep -q genie; then
+      if echo $newprj | grep -q 'genie_nu\|genie_anu'; then
 	recofcl=standard_reco_dune10kt_3mmpitch_nu_1x2x6.fcl
       fi
       if echo $newprj | grep -q 'supernova\|marley'; then
@@ -326,7 +296,7 @@ do
       detsimfcl=standard_detsim_dune10kt_45deg_1x2x6.fcl
       recofcl=standard_reco_dune10kt_45deg_1x2x6.fcl
       mergefcl=standard_ana_dune10kt_45deg_1x2x6.fcl
-      if echo $newprj | grep -q genie; then
+      if echo $newprj | grep -q 'genie_nu\|genie_anu'; then
 	recofcl=standard_reco_dune10kt_45deg_nu_1x2x6.fcl
       fi
       if echo $newprj | grep -q 'supernova\|marley'; then
@@ -383,7 +353,7 @@ do
       elif [ $newprj = prodcosmics_dune35t_milliblock_protonpi0 ]; then
 	nev=100000
       elif echo $newprj | grep -q dune10kt; then
-	if echo $newprj | grep -q genie; then
+	if echo $newprj | grep -q 'genie_nu\|genie_anu'; then
 	    nev=100000
           if echo $newprj | grep -q dphase; then
             nev=10000
@@ -450,37 +420,23 @@ EOF
   cat <<EOF >> $newxml
   </larsoft>
 
+  <check>1</check>
+
   <!-- Project stages -->
 
-  <stage name="gen">
+  <stage name="detsim">
     <fcl>$genfcl</fcl>
+    <fcl>$g4fcl</fcl>
+    <fcl>$detsimfcl</fcl>
 EOF
   if echo $newprj | grep -q AntiMuonCutEvents_LSU_dune35t; then
       echo "    <inputmode>textfile</inputmode>" >> $newxml
       echo "    <inputlist>/pnfs/dune/persistent/dunepro/AntiMuonCutEvents_LSU_100.txt</inputlist>" >> $newxml
   fi
   cat <<EOF >> $newxml
-    <outdir>/pnfs/dune/scratch/${userdir}/&relsim;/gen/&name;</outdir>
-    <workdir>/pnfs/dune/scratch/${userdir}/work/&relsim;/gen/&name;</workdir>
-    <output>${newprj}_\${PROCESS}_%tc_gen.root</output>
-    <numjobs>$njob</numjobs>
-    <datatier>generated</datatier>
-    <defname>&name;_&tag;_gen</defname>
-  </stage>
-
-  <stage name="g4">
-    <fcl>$g4fcl</fcl>
-    <outdir>/pnfs/dune/scratch/${userdir}/&relsim;/g4/&name;</outdir>
-    <workdir>/pnfs/dune/scratch/${userdir}/work/&relsim;/g4/&name;</workdir>
-    <numjobs>$njob</numjobs>
-    <datatier>simulated</datatier>
-    <defname>&name;_&tag;_g4</defname>
-  </stage>
-
-  <stage name="detsim">
-    <fcl>$detsimfcl</fcl>
-    <outdir>/pnfs/dune/scratch/${userdir}/&relsim;/detsim/&name;</outdir>
-    <workdir>/pnfs/dune/scratch/${userdir}/work/&relsim;/detsim/&name;</workdir>
+    <outdir>/pnfs/dune/persistent/${userdir}/&relsim;/detsim/&name;</outdir>
+    <workdir>/pnfs/dune/persistent/${userdir}/work/&relsim;/detsim/&name;</workdir>
+    <output>${newprj}_\${PROCESS}_%tc_detsim.root</output>
     <numjobs>$njob</numjobs>
     <datatier>detector-simulated</datatier>
     <defname>&name;_&tag;_detsim</defname>
@@ -522,6 +478,8 @@ EOF
   fi
   cat <<EOF >> $newxml
   </larsoft>
+
+  <check>1</check>
 
   <!-- Project stages -->
 
