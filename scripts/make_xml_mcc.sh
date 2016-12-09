@@ -151,7 +151,8 @@ done
 # Get qualifier.
 
 qual=e10
-ver=`echo $rel | cut -c2-3`
+ver=`echo $rs | cut -c2-3`
+echo ver=$ver
 if [ $ver -gt 2 ]; then
   qual=e10
 fi
@@ -354,7 +355,7 @@ do
 	nev=100000
       elif echo $newprj | grep -q dune10kt; then
 	if echo $newprj | grep -q 'genie_nu\|genie_anu'; then
-	    nev=100000
+	    nev=1000000
           if echo $newprj | grep -q dphase; then
             nev=10000
           fi
@@ -435,7 +436,7 @@ EOF
   fi
   cat <<EOF >> $newxml
     <outdir>/pnfs/dune/persistent/${userdir}/&relsim;/detsim/&name;</outdir>
-    <workdir>/pnfs/dune/persistent/${userdir}/work/&relsim;/detsim/&name;</workdir>
+    <workdir>/pnfs/dune/scratch/${userdir}/work/&relsim;/detsim/&name;</workdir>
     <output>${newprj}_\${PROCESS}_%tc_detsim.root</output>
     <numjobs>$njob</numjobs>
     <datatier>detector-simulated</datatier>
