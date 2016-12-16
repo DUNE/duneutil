@@ -31,14 +31,16 @@
 # Parse arguments.
 
 rs=v06_16_00
-rr=v06_16_00
+rr1=v06_16_00
+rr2=v06_16_00
 userdir=dunepro
 userbase=$userdir
 nevarg=0
 nevjob=0
 nevjobarg=0
 ls=''
-lr=''
+lr1=''
+lr2=''
 tag=devel
 
 while [ $# -gt 0 ]; do
@@ -60,11 +62,20 @@ while [ $# -gt 0 ]; do
     fi
     ;;
 
-    # Reconstruction release.
+    # Reconstruction 1 release.
 
-    -rr )
+    -rr1 )
     if [ $# -gt 1 ]; then
-      rr=$2
+      rr1=$2
+      shift
+    fi
+    ;;
+
+    # Reconstruction 1 release.
+
+    -rr2 )
+    if [ $# -gt 1 ]; then
+      rr2=$2
       shift
     fi
     ;;
@@ -74,7 +85,8 @@ while [ $# -gt 0 ]; do
     -r|--release )
     if [ $# -gt 1 ]; then
       rs=$2
-      rr=$2
+      rr1=$2
+      rr2=$2
       shift
     fi
     ;;
@@ -100,9 +112,16 @@ while [ $# -gt 0 ]; do
 
     # Local reconstruction release.
 
-    -lr )
+    -lr1 )
     if [ $# -gt 1 ]; then
-      lr=$2
+      lr1=$2
+      shift
+    fi
+    ;;
+
+    -lr2 )
+    if [ $# -gt 1 ]; then
+      lr2=$2
       shift
     fi
     ;;
@@ -112,7 +131,8 @@ while [ $# -gt 0 ]; do
     --local )
     if [ $# -gt 1 ]; then
       ls=$2
-      lr=$2
+      lr1=$2
+      lr2=$2
       shift
     fi
     ;;
@@ -229,7 +249,8 @@ do
 #    reco3dfcl=standard_reco_uboone_3D.fcl
 
     # Reco
-    recofcl=standard_reco_dune35tsim.fcl
+    recofcl1=standard_reco_dune35tsim.fcl
+    recofcl2=''
 
     # Merge/Analysis
 
@@ -244,35 +265,36 @@ do
     fi
 
 #    if echo $newprj | grep -q 'pi0\|gamma'; then
-#      recofcl=reco_dune35t_blur.fcl
+#      recofcl1=reco_dune35t_blur.fcl
 #      mergefcl=ana_energyCalib.fcl
 #    fi
 
 #    if echo $newprj | grep -q 'piminus'; then
-#      recofcl=emhits.fcl
+#      recofcl1=emhits.fcl
 #      mergefcl=standard_merge_dune35t.fcl
 #    fi
 
     if echo $newprj | grep -q milliblock; then
       detsimfcl=standard_detsim_dune35t_milliblock.fcl
-      recofcl=standard_reco_dune35t_milliblock.fcl
+      recofcl1=standard_reco_dune35t_milliblock.fcl
       mergefcl=standard_ana_dune35t_milliblock.fcl
     fi
 
     if echo $newprj | grep -q dune10kt; then
       g4fcl=standard_g4_dune10kt.fcl
       detsimfcl=standard_detsim_dune10kt.fcl
-      recofcl=standard_reco_dune10kt.fcl
+      recofcl1=standard_reco_dune10kt.fcl
       mergefcl=standard_ana_dune10kt.fcl
     fi
 
     if echo $newprj | grep -q 'dune10kt_1x2x6\|dune10kt_r90deg_1x2x6'; then
       g4fcl=standard_g4_dune10kt_1x2x6.fcl
       detsimfcl=standard_detsim_dune10kt_1x2x6.fcl
-      recofcl=standard_reco_dune10kt_1x2x6.fcl
+      recofcl1=standard_reco_dune10kt_1x2x6.fcl
       mergefcl=standard_ana_dune10kt_1x2x6.fcl
       if echo $newprj | grep -q 'genie_nu\|genie_anu'; then
-	recofcl=standard_reco_dune10kt_nu_1x2x6.fcl
+	recofcl1=standard_reco1_dune10kt_nu_1x2x6.fcl
+	recofcl2=standard_reco2_dune10kt_nu_1x2x6.fcl
       fi
       if echo $newprj | grep -q 'supernova\|marley'; then
         g4fcl=supernova_g4_dune10kt_1x2x6.fcl
@@ -282,10 +304,11 @@ do
     if echo $newprj | grep -q dune10kt_3mmpitch_1x2x6; then
       g4fcl=standard_g4_dune10kt_3mmpitch_1x2x6.fcl
       detsimfcl=standard_detsim_dune10kt_3mmpitch_1x2x6.fcl
-      recofcl=standard_reco_dune10kt_3mmpitch_1x2x6.fcl
+      recofcl1=standard_reco_dune10kt_3mmpitch_1x2x6.fcl
       mergefcl=standard_ana_dune10kt_3mmpitch_1x2x6.fcl
       if echo $newprj | grep -q 'genie_nu\|genie_anu'; then
-	recofcl=standard_reco_dune10kt_3mmpitch_nu_1x2x6.fcl
+	recofcl1=standard_reco1_dune10kt_3mmpitch_nu_1x2x6.fcl
+	recofcl2=standard_reco2_dune10kt_3mmpitch_nu_1x2x6.fcl
       fi
       if echo $newprj | grep -q 'supernova\|marley'; then
         g4fcl=supernova_g4_dune10kt_3mmpitch_1x2x6.fcl
@@ -295,10 +318,11 @@ do
     if echo $newprj | grep -q dune10kt_45deg_1x2x6; then
       g4fcl=standard_g4_dune10kt_45deg_1x2x6.fcl
       detsimfcl=standard_detsim_dune10kt_45deg_1x2x6.fcl
-      recofcl=standard_reco_dune10kt_45deg_1x2x6.fcl
+      recofcl1=standard_reco_dune10kt_45deg_1x2x6.fcl
       mergefcl=standard_ana_dune10kt_45deg_1x2x6.fcl
       if echo $newprj | grep -q 'genie_nu\|genie_anu'; then
-	recofcl=standard_reco_dune10kt_45deg_nu_1x2x6.fcl
+	recofcl1=standard_reco1_dune10kt_45deg_nu_1x2x6.fcl
+	recofcl2=standard_reco2_dune10kt_45deg_nu_1x2x6.fcl
       fi
       if echo $newprj | grep -q 'supernova\|marley'; then
         g4fcl=supernova_g4_dune10kt_45deg_1x2x6.fcl
@@ -308,14 +332,14 @@ do
     if echo $newprj | grep -q protoDune; then
       g4fcl=protoDUNE_g4single.fcl
       detsimfcl=protoDUNE_detsim_single.fcl
-      recofcl=protoDUNE_reco.fcl
+      recofcl1=protoDUNE_reco.fcl
       mergefcl=protoDUNE_ana.fcl
     fi
 
     if echo $newprj | grep -q dphase; then
       g4fcl=standard_g4_dune10kt_dp.fcl
       detsimfcl=standard_detsim_dune10kt_dp.fcl
-      recofcl=standard_reco_dune10ktdphase.fcl
+      recofcl1=standard_reco_dune10ktdphase.fcl
       mergefcl=standard_ana_dune10kt_dp.fcl
     fi
 
@@ -380,7 +404,8 @@ do
 
 <!DOCTYPE project [
 <!ENTITY relsim "$rs">
-<!ENTITY relreco "$rr">
+<!ENTITY relreco1 "$rr1">
+<!ENTITY relreco2 "$rr2">
 <!ENTITY file_type "mc">
 <!ENTITY run_type "physics">
 <!ENTITY name "$samprj">
@@ -450,6 +475,9 @@ EOF
   <runtype>&run_type;</runtype>
 
 </project>
+EOF
+  if [ x$recofcl2 == x ]; then
+  cat <<EOF >> $newxml
 
 <project name="&name;_reco">
 
@@ -470,12 +498,12 @@ EOF
 
   <!-- Larsoft information -->
   <larsoft>
-    <tag>&relreco;</tag>
+    <tag>&relreco1;</tag>
     <qual>${qual}:prof</qual>
 EOF
-  if [ x$lr != x ]; then
-    echo "lr=$lr"
-    echo "    <local>${lr}</local>" >> $newxml
+  if [ x$lr1 != x ]; then
+    echo "lr1=$lr1"
+    echo "    <local>${lr1}</local>" >> $newxml
   fi
   cat <<EOF >> $newxml
   </larsoft>
@@ -483,11 +511,10 @@ EOF
   <check>1</check>
 
   <!-- Project stages -->
-
   <stage name="reco">
-    <fcl>$recofcl</fcl>
-    <outdir>/pnfs/dune/scratch/${userdir}/&relreco;/reco/&name;</outdir>
-    <workdir>/pnfs/dune/scratch/${userdir}/work/&relreco;/reco/&name;</workdir>
+    <fcl>$recofcl1</fcl>
+    <outdir>/pnfs/dune/scratch/${userdir}/&relreco1;/reco/&name;</outdir>
+    <workdir>/pnfs/dune/scratch/${userdir}/work/&relreco1;/reco/&name;</workdir>
     <numjobs>$njob</numjobs>
     <datatier>full-reconstructed</datatier>
     <defname>&name;_&tag;_reco</defname>
@@ -495,14 +522,122 @@ EOF
 
   <stage name="mergeana">
     <fcl>$mergefcl</fcl>
-    <outdir>/pnfs/dune/scratch/${userdir}/&relreco;/mergeana/&name;</outdir>
+    <outdir>/pnfs/dune/scratch/${userdir}/&relreco1;/mergeana/&name;</outdir>
     <output>&name;_\${PROCESS}_%tc_merged.root</output>
-    <workdir>/pnfs/dune/scratch/${userdir}/work/&relreco;/mergeana/&name;</workdir>
+    <workdir>/pnfs/dune/scratch/${userdir}/work/&relreco1;/mergeana/&name;</workdir>
     <numjobs>$njob</numjobs>
     <targetsize>8000000000</targetsize>
     <datatier>full-reconstructed</datatier>
     <defname>&name;_&tag;</defname>
   </stage>
+EOF
+  else
+cat <<EOF >> $newxml
+
+<project name="&name;_reco1">
+
+  <!-- Project size -->
+  <numevents>$nev</numevents>
+
+  <!-- Operating System -->
+  <os>SL6</os>
+
+  <!-- Batch resources -->
+  <resource>DEDICATED,OPPORTUNISTIC</resource>
+
+  <!-- metadata parameters -->
+
+  <parameter name ="MCName">${samprj}</parameter>
+  <parameter name ="MCDetectorType">${detector}</parameter>
+  <parameter name ="MCGenerators">${generator}</parameter>
+
+  <!-- Larsoft information -->
+  <larsoft>
+    <tag>&relreco1;</tag>
+    <qual>${qual}:prof</qual>
+EOF
+  if [ x$lr1 != x ]; then
+    echo "lr1=$lr1"
+    echo "    <local>${lr1}</local>" >> $newxml
+  fi
+  cat <<EOF >> $newxml
+  </larsoft>
+
+  <check>1</check>
+
+  <!-- Project stages -->
+  <stage name="reco1">
+    <fcl>$recofcl1</fcl>
+    <outdir>/pnfs/dune/scratch/${userdir}/&relreco1;/reco1/&name;</outdir>
+    <workdir>/pnfs/dune/scratch/${userdir}/work/&relreco1;/reco1/&name;</workdir>
+    <numjobs>$njob</numjobs>
+    <datatier>hit-reconstructed</datatier>
+    <defname>&name;_&tag;_reco1</defname>
+  </stage>
+
+  <!-- file type -->
+  <filetype>&file_type;</filetype>
+
+  <!-- run type -->
+  <runtype>&run_type;</runtype>
+
+</project>
+
+<project name="&name;_reco2">
+
+  <!-- Project size -->
+  <numevents>$nev</numevents>
+
+  <!-- Operating System -->
+  <os>SL6</os>
+
+  <!-- Batch resources -->
+  <resource>DEDICATED,OPPORTUNISTIC</resource>
+
+  <!-- metadata parameters -->
+
+  <parameter name ="MCName">${samprj}</parameter>
+  <parameter name ="MCDetectorType">${detector}</parameter>
+  <parameter name ="MCGenerators">${generator}</parameter>
+
+  <!-- Larsoft information -->
+  <larsoft>
+    <tag>&relreco2;</tag>
+    <qual>${qual}:prof</qual>
+EOF
+  if [ x$lr2 != x ]; then
+    echo "lr2=$lr2"
+    echo "    <local>${lr2}</local>" >> $newxml
+  fi
+  cat <<EOF >> $newxml
+  </larsoft>
+
+  <check>1</check>
+
+  <!-- Project stages -->
+  <stage name="reco2">
+    <fcl>$recofcl2</fcl>
+    <outdir>/pnfs/dune/scratch/${userdir}/&relreco2;/reco2/&name;</outdir>
+    <workdir>/pnfs/dune/scratch/${userdir}/work/&relreco2;/reco2/&name;</workdir>
+    <numjobs>$njob</numjobs>
+    <datatier>full-reconstructed</datatier>
+    <defname>&name;_&tag;_reco2</defname>
+  </stage>
+
+  <stage name="mergeana">
+    <fcl>$mergefcl</fcl>
+    <outdir>/pnfs/dune/scratch/${userdir}/&relreco2;/mergeana/&name;</outdir>
+    <output>&name;_\${PROCESS}_%tc_merged.root</output>
+    <workdir>/pnfs/dune/scratch/${userdir}/work/&relreco2;/mergeana/&name;</workdir>
+    <numjobs>$njob</numjobs>
+    <targetsize>8000000000</targetsize>
+    <datatier>full-reconstructed</datatier>
+    <defname>&name;_&tag;</defname>
+  </stage>
+EOF
+  fi
+  
+  cat <<EOF >> $newxml
 
   <!-- file type -->
   <filetype>&file_type;</filetype>
