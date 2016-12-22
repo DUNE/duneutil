@@ -1,0 +1,168 @@
+<?xml version="1.0"?>
+
+<!-- Production Project -->
+
+<!DOCTYPE project [
+<!ENTITY relsim "v06_17_00">
+<!ENTITY relreco1 "v06_18_00">
+<!ENTITY relreco2 "v06_18_00">
+<!ENTITY file_type "mc">
+<!ENTITY run_type "physics">
+<!ENTITY name "prodgenie_anue_dune10kt_1x2x6">
+<!ENTITY tag "mcc8.0">
+]>
+
+<job>
+
+<project name="&name;">
+
+  <!-- Group -->
+  <group>dune</group>
+
+  <!-- Project size -->
+  <numevents>1000000</numevents>
+
+  <!-- Operating System -->
+  <os>SL6</os>
+
+  <!-- Batch resources -->
+  <resource>DEDICATED,OPPORTUNISTIC</resource>
+
+  <!-- metadata parameters -->
+
+  <parameter name ="MCName">prodgenie_anue_dune10kt_1x2x6</parameter>
+  <parameter name ="MCDetectorType">10kt</parameter>
+  <parameter name ="MCGenerators">GENIE</parameter>
+
+  <!-- Larsoft information -->
+  <larsoft>
+    <tag>&relsim;</tag>
+    <qual>e10:prof</qual>
+    <local>/pnfs/dune/scratch/dunepro/work/local_v06_18_00.tar</local>
+  </larsoft>
+
+  <check>1</check>
+
+  <!-- Project stages -->
+
+  <stage name="detsim">
+    <fcl>prodgenie_anue_dune10kt_1x2x6.fcl</fcl>
+    <fcl>standard_g4_dune10kt_1x2x6.fcl</fcl>
+    <fcl>standard_detsim_dune10kt_1x2x6.fcl</fcl>
+    <outdir>/pnfs/dune/persistent/dunepro/&relsim;/detsim/&name;</outdir>
+    <workdir>/pnfs/dune/scratch/dunepro/work/&relsim;/detsim/&name;</workdir>
+    <output>prodgenie_anue_dune10kt_1x2x6_${PROCESS}_%tc_detsim.root</output>
+    <numjobs>10000</numjobs>
+    <datatier>detector-simulated</datatier>
+    <defname>&name;_&tag;_detsim</defname>
+  </stage>
+
+  <!-- file type -->
+  <filetype>&file_type;</filetype>
+
+  <!-- run type -->
+  <runtype>&run_type;</runtype>
+
+</project>
+
+<project name="&name;_reco1">
+
+  <!-- Project size -->
+  <numevents>1000000</numevents>
+
+  <!-- Operating System -->
+  <os>SL6</os>
+
+  <!-- Batch resources -->
+  <resource>DEDICATED,OPPORTUNISTIC</resource>
+
+  <!-- metadata parameters -->
+
+  <parameter name ="MCName">prodgenie_anue_dune10kt_1x2x6</parameter>
+  <parameter name ="MCDetectorType">10kt</parameter>
+  <parameter name ="MCGenerators">GENIE</parameter>
+
+  <!-- Larsoft information -->
+  <larsoft>
+    <tag>&relreco1;</tag>
+    <qual>e10:prof</qual>
+    <local>/pnfs/dune/scratch/dunepro/work/local_v06_18_00.tar</local>
+  </larsoft>
+
+  <check>1</check>
+
+  <!-- Project stages -->
+  <stage name="reco1">
+    <fcl>standard_reco1_dune10kt_nu_1x2x6.fcl</fcl>
+    <outdir>/pnfs/dune/scratch/dunepro/&relreco1;/reco1/&name;</outdir>
+    <workdir>/pnfs/dune/scratch/dunepro/work/&relreco1;/reco1/&name;</workdir>
+    <numjobs>10000</numjobs>
+    <datatier>hit-reconstructed</datatier>
+    <defname>&name;_&tag;_reco1</defname>
+  </stage>
+
+  <!-- file type -->
+  <filetype>&file_type;</filetype>
+
+  <!-- run type -->
+  <runtype>&run_type;</runtype>
+
+</project>
+
+<project name="&name;_reco2">
+
+  <!-- Project size -->
+  <numevents>1000000</numevents>
+
+  <!-- Operating System -->
+  <os>SL6</os>
+
+  <!-- Batch resources -->
+  <resource>DEDICATED,OPPORTUNISTIC</resource>
+
+  <!-- metadata parameters -->
+
+  <parameter name ="MCName">prodgenie_anue_dune10kt_1x2x6</parameter>
+  <parameter name ="MCDetectorType">10kt</parameter>
+  <parameter name ="MCGenerators">GENIE</parameter>
+
+  <!-- Larsoft information -->
+  <larsoft>
+    <tag>&relreco2;</tag>
+    <qual>e10:prof</qual>
+    <local>/pnfs/dune/scratch/dunepro/work/local_v06_18_00.tar</local>
+  </larsoft>
+
+  <check>1</check>
+
+  <!-- Project stages -->
+  <stage name="reco2">
+    <maxfilesperjob>1</maxfilesperjob>
+    <fcl>standard_reco2_dune10kt_nu_1x2x6.fcl</fcl>
+    <outdir>/pnfs/dune/scratch/dunepro/&relreco2;/reco2/&name;</outdir>
+    <workdir>/pnfs/dune/scratch/dunepro/work/&relreco2;/reco2/&name;</workdir>
+    <numjobs>1000</numjobs>
+    <datatier>full-reconstructed</datatier>
+    <defname>&name;_&tag;_reco2</defname>
+  </stage>
+
+  <stage name="mergeana">
+    <fcl>standard_ana_dune10kt_1x2x6.fcl</fcl>
+    <outdir>/pnfs/dune/scratch/dunepro/&relreco2;/mergeana/&name;</outdir>
+    <output>&name;_${PROCESS}_%tc_merged.root</output>
+    <workdir>/pnfs/dune/scratch/dunepro/work/&relreco2;/mergeana/&name;</workdir>
+    <numjobs>10000</numjobs>
+    <targetsize>8000000000</targetsize>
+    <datatier>full-reconstructed</datatier>
+    <defname>&name;_&tag;</defname>
+  </stage>
+
+  <!-- file type -->
+  <filetype>&file_type;</filetype>
+
+  <!-- run type -->
+  <runtype>&run_type;</runtype>
+
+</project>
+</job>
+
