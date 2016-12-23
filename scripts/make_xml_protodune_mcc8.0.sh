@@ -30,8 +30,8 @@
 
 # Parse arguments.
 
-rs=v06_18_01
-rr1=v06_18_01
+rs=v06_18_01_01
+rr1=v06_18_01_01
 userdir=dunepro
 userbase=$userdir
 nevarg=0
@@ -175,7 +175,7 @@ rm -f *.xml
 
 for topname in beamcosmics singlep
 do
-    find $DUNETPC_DIR/fcl/protodune/mcc/mcc8/$topname -name "gen*.fcl" | while read fcl
+    find $DUNETPC_DIR/source/fcl/protodune/mcc/mcc8/$topname -name "gen*.fcl" | while read fcl
     do
 	if [ $topname == beamcosmics ]; then
 	    if echo $fcl | grep -q -v beam_2GeV; then
@@ -183,15 +183,15 @@ do
 	    fi
 	fi
 
-	find  $DUNETPC_DIR/fcl/protodune/mcc/mcc8/$topname -name "*g4*.fcl" | while read g4fcl_v
+	find  $DUNETPC_DIR/source/fcl/protodune/mcc/mcc8/$topname -name "*g4*.fcl" | while read g4fcl_v
 	do
 
 	    if echo $g4fcl_v | grep -q 6ms; then
 		continue
 	    fi
 
-#	    find  $DUNETPC_DIR/fcl/protodune/mcc/mcc8/$topname -name "*detsim*.fcl" ; find  $DUNETPC_DIR/fcl/protodune/detsim/protoDUNE_detsim.fcl | while read detsimfcl_v
-	    for detsimfcl_v in $(find $DUNETPC_DIR/fcl/protodune/mcc/mcc8/$topname -name "*detsim*.fcl" ; find  $DUNETPC_DIR/fcl/protodune/detsim/protoDUNE_detsim.fcl);
+#	    find  $DUNETPC_DIR/source/fcl/protodune/mcc/mcc8/$topname -name "*detsim*.fcl" ; find  $DUNETPC_DIR/source/fcl/protodune/detsim/protoDUNE_detsim.fcl | while read detsimfcl_v
+	    for detsimfcl_v in $(find $DUNETPC_DIR/source/fcl/protodune/mcc/mcc8/$topname -name "*detsim*.fcl" ; find  $DUNETPC_DIR/source/fcl/protodune/detsim/protoDUNE_detsim.fcl);
 	    do 
 
 		if [ $topname == singlep ]; then
