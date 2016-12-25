@@ -267,7 +267,7 @@ do
     # Reco default
 		recofcl1=''
 	        if echo $topname | grep -q singlep; then
-	           recofcl1=reco_protoDUNE_3ms.fcl
+	           recofcl1=reco_protoDune_3ms.fcl
          	fi
 
     # Set number of events.
