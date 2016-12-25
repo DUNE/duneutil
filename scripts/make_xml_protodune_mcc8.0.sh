@@ -427,7 +427,7 @@ cat <<EOF >> $newxml
 <numjobs>$njob</numjobs>
 <datatier>full-reconstructed</datatier>
 <defname>&name;_&tag;_reco</defname>
-<jobsub>--expected_lifetime=$recolifetime</jobsub>
+<jobsub>--expected-lifetime=$recolifetime</jobsub>
 </stage>
 
 <stage name="mergeana">
