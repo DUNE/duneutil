@@ -181,6 +181,7 @@ do
 	    if echo $fcl | grep -q -v beam_2GeV; then
 	    continue
 	    fi
+	    fcl=/dune/app/users/tjyang/xml/gen_protoDune_beam_2GeVc_cosmics.fcl
 	fi
 
 	find  $DUNETPC_DIR/source/fcl/protodune/mcc/mcc8/$topname -name "*g4*.fcl" | while read g4fcl_v
@@ -273,17 +274,26 @@ do
     # Set number of events.
 		nev=10000
 
+    # Set number of events per job.
+		nevjob=100
+
+    # default memory limit
+
+		memlimit=2000
+
     # special logic for Dorota
 
 		if [ $topname == beamcosmics ]; then
+		   memlimit=4000
+		   nevjob=10
 		   if echo $g4fcl_v | grep -q sce; then
 		      if echo $detsimfcl_v | grep -q low; then
 			 recofcl1=protoDUNE_reco.fcl
-			 nev=10000
+			 nev=1000
 			 recolifetime=24h
 		      elif echo $detsimfcl_v | grep -q med; then
 			 recofcl1=''
-			 nev=10000
+			 nev=1000
 		      elif echo $detsimfcl_v | grep -q high; then
 			 continue
 		      else
@@ -296,7 +306,7 @@ do
 			    nev=1000
 			 elif echo $g4fcl_v | grep -q 3ms; then
 			    recofcl1=protoDUNE_reco.fcl
-			    nev=10000
+			    nev=1000
 			    recolifetime=24h
 			 else
 			    echo Unexpected g4 option: $g4fcl_v with low noise no SCE beam cosmics
@@ -309,7 +319,7 @@ do
 			    nev=1000
 			 elif echo $g4fcl_v | grep -q 3ms; then
 			    recofcl1=''
-			    nev=10000
+			    nev=1000
 			 else
 			    echo Unexpected g4 option: $g4fcl_v with med noise no SCE beam cosmics
 			    exit
@@ -336,10 +346,6 @@ do
     # Merge/Analysis
 
 		mergefcl=protoDUNE_ana.fcl
-
-
-    # Set number of events per job.
-		nevjob=100
 
 
     # Calculate the number of worker jobs.
@@ -412,6 +418,7 @@ EOF
 <workdir>/pnfs/dune/scratch/${userdir}/work/&relsim;/detsim/&name;</workdir>
 <output>${newprj}_\${PROCESS}_%tc_detsim.root</output>
 <numjobs>$njob</numjobs>
+<jobsub>--memory=$memlimit</jobsub>
 <datatier>detector-simulated</datatier>
 <defname>&name;_&tag;_detsim</defname>
 </stage>
@@ -427,7 +434,7 @@ cat <<EOF >> $newxml
 <numjobs>$njob</numjobs>
 <datatier>full-reconstructed</datatier>
 <defname>&name;_&tag;_reco</defname>
-<jobsub>--expected-lifetime=$recolifetime</jobsub>
+<jobsub>--memory=$memlimit --expected-lifetime=$recolifetime</jobsub>
 </stage>
 
 <stage name="mergeana">
@@ -436,6 +443,7 @@ cat <<EOF >> $newxml
 <output>&name;_\${PROCESS}_%tc_merged.root</output>
 <workdir>/pnfs/dune/scratch/${userdir}/work/&relreco;/mergeana/&name;</workdir>
 <numjobs>$njob</numjobs>
+<jobsub>--memory=$memlimit</jobsub>
 <targetsize>8000000000</targetsize>
 <datatier>full-reconstructed</datatier>
 <defname>&name;_&tag;</defname>
