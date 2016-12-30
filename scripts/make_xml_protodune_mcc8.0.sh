@@ -181,7 +181,6 @@ do
 	    if echo $fcl | grep -q -v beam_2GeV; then
 	    continue
 	    fi
-	    fcl=/dune/app/users/tjyang/xml/gen_protoDune_beam_2GeVc_cosmics.fcl
 	fi
 
 	find  $DUNETPC_DIR/source/fcl/protodune/mcc/mcc8/$topname -name "*g4*.fcl" | while read g4fcl_v
@@ -255,6 +254,9 @@ do
     # Generator
 
 		genfcl=`basename $fcl`
+		if [ $topname == beamcosmics ]; then
+	          genfcl=/dune/app/users/tjyang/xml/gen_protoDune_beam_2GeVc_cosmics.fcl
+		fi
 
     # G4
 
