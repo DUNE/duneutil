@@ -33,8 +33,8 @@
 rs=v06_16_00
 rr1=v06_16_00
 rr2=v06_16_00
-userdir=dunepro
-userbase=$userdir
+userdir=persistent/dunepro
+userbase=dunepro
 nevarg=0
 nevjob=0
 nevjobarg=0
@@ -95,7 +95,7 @@ while [ $# -gt 0 ]; do
 
     -u|--user )
     if [ $# -gt 1 ]; then
-      userdir=users/$2
+      userdir=scratch/users/$2
       userbase=$2
       shift
     fi
@@ -460,8 +460,8 @@ EOF
       echo "    <inputlist>/pnfs/dune/persistent/dunepro/AntiMuonCutEvents_LSU_100.txt</inputlist>" >> $newxml
   fi
   cat <<EOF >> $newxml
-    <outdir>/pnfs/dune/persistent/${userdir}/&relsim;/detsim/&name;</outdir>
-    <workdir>/pnfs/dune/scratch/${userdir}/work/&relsim;/detsim/&name;</workdir>
+    <outdir>/pnfs/dune/${userdir}/&relsim;/detsim/&name;</outdir>
+    <workdir>/pnfs/dune/${userdir}/work/&relsim;/detsim/&name;</workdir>
     <output>${newprj}_\${PROCESS}_%tc_detsim.root</output>
     <numjobs>$njob</numjobs>
     <datatier>detector-simulated</datatier>
@@ -513,8 +513,8 @@ EOF
   <!-- Project stages -->
   <stage name="reco">
     <fcl>$recofcl1</fcl>
-    <outdir>/pnfs/dune/scratch/${userdir}/&relreco1;/reco/&name;</outdir>
-    <workdir>/pnfs/dune/scratch/${userdir}/work/&relreco1;/reco/&name;</workdir>
+    <outdir>/pnfs/dune/${userdir}/&relreco1;/reco/&name;</outdir>
+    <workdir>/pnfs/dune/${userdir}/work/&relreco1;/reco/&name;</workdir>
     <numjobs>$njob</numjobs>
     <datatier>full-reconstructed</datatier>
     <defname>&name;_&tag;_reco</defname>
@@ -522,9 +522,9 @@ EOF
 
   <stage name="mergeana">
     <fcl>$mergefcl</fcl>
-    <outdir>/pnfs/dune/scratch/${userdir}/&relreco1;/mergeana/&name;</outdir>
+    <outdir>/pnfs/dune/${userdir}/&relreco1;/mergeana/&name;</outdir>
     <output>&name;_\${PROCESS}_%tc_merged.root</output>
-    <workdir>/pnfs/dune/scratch/${userdir}/work/&relreco1;/mergeana/&name;</workdir>
+    <workdir>/pnfs/dune/${userdir}/work/&relreco1;/mergeana/&name;</workdir>
     <numjobs>$njob</numjobs>
     <targetsize>8000000000</targetsize>
     <datatier>full-reconstructed</datatier>
@@ -568,8 +568,8 @@ EOF
   <!-- Project stages -->
   <stage name="reco1">
     <fcl>$recofcl1</fcl>
-    <outdir>/pnfs/dune/scratch/${userdir}/&relreco1;/reco1/&name;</outdir>
-    <workdir>/pnfs/dune/scratch/${userdir}/work/&relreco1;/reco1/&name;</workdir>
+    <outdir>/pnfs/dune/${userdir}/&relreco1;/reco1/&name;</outdir>
+    <workdir>/pnfs/dune/${userdir}/work/&relreco1;/reco1/&name;</workdir>
     <numjobs>$njob</numjobs>
     <datatier>hit-reconstructed</datatier>
     <defname>&name;_&tag;_reco1</defname>
@@ -617,8 +617,8 @@ EOF
   <!-- Project stages -->
   <stage name="reco2">
     <fcl>$recofcl2</fcl>
-    <outdir>/pnfs/dune/scratch/${userdir}/&relreco2;/reco2/&name;</outdir>
-    <workdir>/pnfs/dune/scratch/${userdir}/work/&relreco2;/reco2/&name;</workdir>
+    <outdir>/pnfs/dune/${userdir}/&relreco2;/reco2/&name;</outdir>
+    <workdir>/pnfs/dune/${userdir}/work/&relreco2;/reco2/&name;</workdir>
     <numjobs>$njob</numjobs>
     <datatier>full-reconstructed</datatier>
     <defname>&name;_&tag;_reco2</defname>
@@ -626,9 +626,9 @@ EOF
 
   <stage name="mergeana">
     <fcl>$mergefcl</fcl>
-    <outdir>/pnfs/dune/scratch/${userdir}/&relreco2;/mergeana/&name;</outdir>
+    <outdir>/pnfs/dune/${userdir}/&relreco2;/mergeana/&name;</outdir>
     <output>&name;_\${PROCESS}_%tc_merged.root</output>
-    <workdir>/pnfs/dune/scratch/${userdir}/work/&relreco2;/mergeana/&name;</workdir>
+    <workdir>/pnfs/dune/${userdir}/work/&relreco2;/mergeana/&name;</workdir>
     <numjobs>$njob</numjobs>
     <targetsize>8000000000</targetsize>
     <datatier>full-reconstructed</datatier>
