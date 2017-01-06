@@ -449,6 +449,7 @@ cat <<EOF >> $newxml
 <targetsize>8000000000</targetsize>
 <datatier>full-reconstructed</datatier>
 <defname>&name;_&tag;</defname>
+<jobsub>--expected-lifetime=$recolifetime</jobsub>
 </stage>
 EOF
 fi
