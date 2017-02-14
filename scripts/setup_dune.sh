@@ -3,18 +3,18 @@
 
 FERMIAPP_LARSOFT_DIR="/grid/fermiapp/products/larsoft/"
 FERMIOSG_LARSOFT_DIR="/cvmfs/fermilab.opensciencegrid.org/products/larsoft/"
-OASIS_LARSOFT_DIR="/cvmfs/oasis.opensciencegrid.org/fermilab/products/larsoft/"
+#OASIS_LARSOFT_DIR="/cvmfs/oasis.opensciencegrid.org/fermilab/products/larsoft/"
 
 FERMIAPP_DUNE_DIR="/grid/fermiapp/products/dune/"
 FERMIOSG_DUNE_DIR="/cvmfs/dune.opensciencegrid.org/products/dune/"
-OASIS_DUNE_DIR="/cvmfs/oasis.opensciencegrid.org/lbne/products"
+#OASIS_DUNE_DIR="/cvmfs/oasis.opensciencegrid.org/lbne/products"
 
 DUNE_BLUEARC_DATA="/dune/data/"
 
 # Set up ups for LArSoft
 # Sourcing this setup will add larsoft and common to $PRODUCTS
 
-for dir in $FERMIAPP_LARSOFT_DIR $FERMIOSG_LARSOFT_DIR $OASIS_LARSOFT_DIR;
+for dir in $FERMIOSG_LARSOFT_DIR $FERMIAPP_LARSOFT_DIR;
 do
   if [[ -f $dir/setup ]]; then
     echo "Setting up larsoft UPS area... ${dir}"
@@ -29,7 +29,7 @@ done
 
 # Set up ups for DUNE
 
-for dir in $FERMIAPP_DUNE_DIR $FERMIOSG_DUNE_DIR $OASIS_DUNE_DIR;
+for dir in $FERMIOSG_DUNE_DIR $FERMIAPP_DUNE_DIR;
 do
   if [[ -f $dir/setup ]]; then
     echo "Setting up DUNE UPS area... ${dir}"
