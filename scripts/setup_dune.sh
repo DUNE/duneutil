@@ -1,3 +1,54 @@
+# Look for obsolete lines in login scripts
+checkthesefiles=
+for file in ~/.bash_profile ~/.bash_login ~/.profile ~/.shrc ~/.bashrc;
+do
+    if [[ -f $file ]]; then
+        found=0
+        while IFS= read -r line; do
+            if [[ $line == *"setup login"* && $line != *"#"* ]]; then
+                #echo $line in $file
+                found=1
+            fi
+            if [[ $line == *"setup shrc"* && $line != *"#"* ]]; then
+                #echo $line in $file
+                found=1
+            fi
+        done < "$file"
+        #echo $found
+        if [[ $found == 1 ]]; then
+            #echo file $file
+            checkthesefiles="$file $checkthesefiles"
+            #echo checkthesefiles $checkthesefiles
+        fi
+    fi
+done
+if [[ -n $checkthesefiles ]]; then
+    echo -e "\033[0;31mIMPORTANT! We detect obsolete lines in your login scripts $checkthesefiles \033[0m"
+    echo "Please look for the following lines or something similar in $checkthesefiles and comment those lines out and relogin. Those lines may cause a conflict with cvmfs later."
+    echo "pa=/grid/fermiapp/products/common/etc"
+    echo "if [  -r \"$pa/setups.sh\" ]"
+    echo "then"
+    echo "  . \"$pa/setups.sh\" "
+    echo "  if ups exist login"
+    echo "  then"
+    echo "      setup login"
+    echo "  fi"
+    echo "fi"
+    echo or
+    echo "pa=/grid/fermiapp/products/common/etc"
+    echo "if [ -r \"$pa/setups.sh\" ]"
+    echo "then"
+    echo " . \"$pa/setups.sh\" "
+    echo "fi"
+    echo ""
+    echo "if ups exist shrc"
+    echo "then"
+    echo " setup shrc"
+    echo "fi"
+    echo 
+    echo "For more information, please check https://cdcvs.fnal.gov/redmine/issues/15028 or contact Tingjun (tjyang@fnal.gov) or Tom (trj@fnal.gov)."
+fi
+
 # Source this file to set the basic configuration needed by LArSoft 
 # and for the DUNE-specific software that interfaces to LArSoft.
 
