@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+
+<!-- Production Project -->
+
+<!DOCTYPE project [
+    <!ENTITY relsim "v06_25_00">
+    <!ENTITY relreco "v06_25_00">
+    <!ENTITY file_type "mc">
+    <!ENTITY run_type "physics">
+    <!ENTITY name "ProtoDUNE_SP_cosmics_mcc8.1_nosce">
+    <!ENTITY tag "mcc8.1">
+    ]>
+
+<job>
+
+<project name="&name;">
+
+<!-- Group -->
+<group>dune</group>
+
+<!-- Project size -->
+<numevents>10000</numevents>
+
+<!-- Operating System -->
+<os>SL6</os>
+
+<!-- Batch resources -->
+<resource>DEDICATED,OPPORTUNISTIC</resource>
+
+<!-- metadata parameters -->
+
+<parameter name ="MCName">ProtoDUNE_SP_cosmics_mcc8.1_nosce</parameter>
+<parameter name ="MCDetectorType">protoDune</parameter>
+<parameter name ="MCGenerators">CORSIKA</parameter>
+
+<!-- Larsoft information -->
+<larsoft>
+<tag>&relsim;</tag>
+<qual>e10:prof</qual>
+</larsoft>
+
+<check>1</check>
+
+
+<stage name="detsim">
+<fcl>gen_protoDune_cosmics.fcl</fcl>
+<fcl>protoDUNE_g4_3ms.fcl</fcl>
+<fcl>protoDUNE_detsim.fcl</fcl>
+<outdir>/pnfs/dune/persistent/dunepro/&relsim;/detsim/&name;</outdir>
+<workdir>/pnfs/dune/scratch/dunepro/work/&relsim;/detsim/&name;</workdir>
+<output>ProtoDUNE_SP_cosmics_mcc8.1_nosce_${PROCESS}_%tc_detsim.root</output>
+<numjobs>1000</numjobs>
+<jobsub>--memory=4000</jobsub>
+<datatier>detector-simulated</datatier>
+<defname>&name;_&tag;_detsim</defname>
+<maxfluxfilemb>0</maxfluxfilemb>
+</stage>
+
+
+<stage name="reco">
+<fcl>protoDUNE_reco_3ms.fcl</fcl>
+<outdir>/pnfs/dune/scratch/dunepro/&relreco;/reco/&name;</outdir>
+<workdir>/pnfs/dune/scratch/dunepro/work/&relreco;/reco/&name;</workdir>
+<numjobs>1000</numjobs>
+<datatier>full-reconstructed</datatier>
+<defname>&name;_&tag;_reco</defname>
+<jobsub>--memory=4000 --expected-lifetime=8h</jobsub>
+</stage>
+
+<stage name="mergeana">
+<fcl>protoDUNE_ana.fcl</fcl>
+<outdir>/pnfs/dune/scratch/dunepro/&relreco;/mergeana/&name;</outdir>
+<output>&name;_${PROCESS}_%tc_merged.root</output>
+<workdir>/pnfs/dune/scratch/dunepro/work/&relreco;/mergeana/&name;</workdir>
+<numjobs>1000</numjobs>
+<jobsub>--memory=4000 --expected-lifetime=8h</jobsub>
+<!-- <targetsize>8000000000</targetsize> -->
+<datatier>full-reconstructed</datatier>
+<defname>&name;_&tag;</defname>
+</stage>
+<filetype>&file_type;</filetype>
+<runtype>&run_type;</runtype>
+</project>
+</job>
