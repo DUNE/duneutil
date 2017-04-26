@@ -446,8 +446,6 @@ EOF
   cat <<EOF >> $newxml
   </larsoft>
 
-  <check>1</check>
-
   <!-- Project stages -->
 
   <stage name="detsim">
@@ -508,8 +506,6 @@ EOF
   cat <<EOF >> $newxml
   </larsoft>
 
-  <check>1</check>
-
   <!-- Project stages -->
   <stage name="reco">
     <fcl>$recofcl1</fcl>
@@ -563,8 +559,6 @@ EOF
   cat <<EOF >> $newxml
   </larsoft>
 
-  <check>1</check>
-
   <!-- Project stages -->
   <stage name="reco1">
     <fcl>$recofcl1</fcl>
@@ -611,8 +605,6 @@ EOF
   fi
   cat <<EOF >> $newxml
   </larsoft>
-
-  <check>1</check>
 
   <!-- Project stages -->
   <stage name="reco2">
