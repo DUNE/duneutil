@@ -42,6 +42,7 @@ ls=''
 lr1=''
 lr2=''
 tag=devel
+splitreco=0
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -76,6 +77,7 @@ while [ $# -gt 0 ]; do
     -rr2 )
     if [ $# -gt 1 ]; then
       rr2=$2
+      splitreco=1
       shift
     fi
     ;;
@@ -170,12 +172,22 @@ done
 
 # Get qualifier.
 
-qual=e10
-ver=`echo $rs | cut -c2-3`
-echo ver=$ver
-if [ $ver -gt 2 ]; then
-  qual=e10
+quals=e14
+if [[ $rs < 'v06_32_00'  ]]; then
+  quals=e10
 fi
+
+qualr1=e14
+if [[ $rr1 < 'v06_32_00'  ]]; then
+  qualr1=e10
+fi
+
+qualr2=e14
+if [[ $rr2 < 'v06_32_00'  ]]; then
+  qualr2=e10
+fi
+
+echo $quals $qualr1 $qualr2
 
 # Delete existing xml files.
 
@@ -293,8 +305,11 @@ do
       recofcl1=standard_reco_dune10kt_1x2x6.fcl
       mergefcl=standard_ana_dune10kt_1x2x6.fcl
       if echo $newprj | grep -q 'genie_nu\|genie_anu'; then
-	recofcl1=standard_reco1_dune10kt_nu_1x2x6.fcl
-	recofcl2=standard_reco2_dune10kt_nu_1x2x6.fcl
+	recofcl1=standard_reco_dune10kt_nu_1x2x6.fcl
+        if [ $splitreco -eq 1 ]; then
+	  recofcl1=standard_reco1_dune10kt_nu_1x2x6.fcl
+	  recofcl2=standard_reco2_dune10kt_nu_1x2x6.fcl
+        fi
       fi
       if echo $newprj | grep -q 'supernova\|marley'; then
         g4fcl=supernova_g4_dune10kt_1x2x6.fcl
@@ -307,8 +322,11 @@ do
       recofcl1=standard_reco_dune10kt_3mmpitch_1x2x6.fcl
       mergefcl=standard_ana_dune10kt_3mmpitch_1x2x6.fcl
       if echo $newprj | grep -q 'genie_nu\|genie_anu'; then
-	recofcl1=standard_reco1_dune10kt_3mmpitch_nu_1x2x6.fcl
-	recofcl2=standard_reco2_dune10kt_3mmpitch_nu_1x2x6.fcl
+	recofcl1=standard_reco_dune10kt_3mmpitch_nu_1x2x6.fcl
+        if [ $splitreco -eq 1 ]; then
+	  recofcl1=standard_reco1_dune10kt_3mmpitch_nu_1x2x6.fcl
+	  recofcl2=standard_reco2_dune10kt_3mmpitch_nu_1x2x6.fcl
+        fi
       fi
       if echo $newprj | grep -q 'supernova\|marley'; then
         g4fcl=supernova_g4_dune10kt_3mmpitch_1x2x6.fcl
@@ -321,8 +339,11 @@ do
       recofcl1=standard_reco_dune10kt_45deg_1x2x6.fcl
       mergefcl=standard_ana_dune10kt_45deg_1x2x6.fcl
       if echo $newprj | grep -q 'genie_nu\|genie_anu'; then
-	recofcl1=standard_reco1_dune10kt_45deg_nu_1x2x6.fcl
-	recofcl2=standard_reco2_dune10kt_45deg_nu_1x2x6.fcl
+	recofcl1=standard_reco_dune10kt_45deg_nu_1x2x6.fcl
+        if [ $splitreco -eq 1 ]; then
+	  recofcl1=standard_reco1_dune10kt_45deg_nu_1x2x6.fcl
+	  recofcl2=standard_reco2_dune10kt_45deg_nu_1x2x6.fcl
+        fi
       fi
       if echo $newprj | grep -q 'supernova\|marley'; then
         g4fcl=supernova_g4_dune10kt_45deg_1x2x6.fcl
@@ -437,7 +458,7 @@ do
   <!-- Larsoft information -->
   <larsoft>
     <tag>&relsim;</tag>
-    <qual>${qual}:prof</qual>
+    <qual>${quals}:prof</qual>
 EOF
   if [ x$ls != x ]; then
     echo "ls=$ls"
@@ -445,8 +466,6 @@ EOF
   fi
   cat <<EOF >> $newxml
   </larsoft>
-
-  <check>1</check>
 
   <!-- Project stages -->
 
@@ -462,6 +481,7 @@ EOF
   cat <<EOF >> $newxml
     <outdir>/pnfs/dune/${userdir}/&relsim;/detsim/&name;</outdir>
     <workdir>/pnfs/dune/${userdir}/work/&relsim;/detsim/&name;</workdir>
+    <bookdir>/dune/data/${userdir}/book/&relsim;/detsim/&name;</bookdir>
     <output>${newprj}_\${PROCESS}_%tc_detsim.root</output>
     <numjobs>$njob</numjobs>
     <datatier>detector-simulated</datatier>
@@ -499,7 +519,7 @@ EOF
   <!-- Larsoft information -->
   <larsoft>
     <tag>&relreco1;</tag>
-    <qual>${qual}:prof</qual>
+    <qual>${qualr1}:prof</qual>
 EOF
   if [ x$lr1 != x ]; then
     echo "lr1=$lr1"
@@ -508,13 +528,12 @@ EOF
   cat <<EOF >> $newxml
   </larsoft>
 
-  <check>1</check>
-
   <!-- Project stages -->
   <stage name="reco">
     <fcl>$recofcl1</fcl>
     <outdir>/pnfs/dune/${userdir}/&relreco1;/reco/&name;</outdir>
     <workdir>/pnfs/dune/${userdir}/work/&relreco1;/reco/&name;</workdir>
+    <bookdir>/dune/data/${userdir}/book/&relreco1;/reco/&name;</bookdir>
     <numjobs>$njob</numjobs>
     <datatier>full-reconstructed</datatier>
     <defname>&name;_&tag;_reco</defname>
@@ -525,6 +544,7 @@ EOF
     <outdir>/pnfs/dune/${userdir}/&relreco1;/mergeana/&name;</outdir>
     <output>&name;_\${PROCESS}_%tc_merged.root</output>
     <workdir>/pnfs/dune/${userdir}/work/&relreco1;/mergeana/&name;</workdir>
+    <bookdir>/dune/data/${userdir}/book/&relreco1;/mergeana/&name;</bookdir>
     <numjobs>$njob</numjobs>
     <targetsize>8000000000</targetsize>
     <datatier>full-reconstructed</datatier>
@@ -554,7 +574,7 @@ cat <<EOF >> $newxml
   <!-- Larsoft information -->
   <larsoft>
     <tag>&relreco1;</tag>
-    <qual>${qual}:prof</qual>
+    <qual>${qualr1}:prof</qual>
 EOF
   if [ x$lr1 != x ]; then
     echo "lr1=$lr1"
@@ -563,13 +583,12 @@ EOF
   cat <<EOF >> $newxml
   </larsoft>
 
-  <check>1</check>
-
   <!-- Project stages -->
   <stage name="reco1">
     <fcl>$recofcl1</fcl>
     <outdir>/pnfs/dune/${userdir}/&relreco1;/reco1/&name;</outdir>
     <workdir>/pnfs/dune/${userdir}/work/&relreco1;/reco1/&name;</workdir>
+    <bookdir>/dune/data/${userdir}/book/&relreco1;/reco1/&name;</bookdir>
     <numjobs>$njob</numjobs>
     <datatier>hit-reconstructed</datatier>
     <defname>&name;_&tag;_reco1</defname>
@@ -603,7 +622,7 @@ EOF
   <!-- Larsoft information -->
   <larsoft>
     <tag>&relreco2;</tag>
-    <qual>${qual}:prof</qual>
+    <qual>${qualr2}:prof</qual>
 EOF
   if [ x$lr2 != x ]; then
     echo "lr2=$lr2"
@@ -612,13 +631,12 @@ EOF
   cat <<EOF >> $newxml
   </larsoft>
 
-  <check>1</check>
-
   <!-- Project stages -->
   <stage name="reco2">
     <fcl>$recofcl2</fcl>
     <outdir>/pnfs/dune/${userdir}/&relreco2;/reco2/&name;</outdir>
     <workdir>/pnfs/dune/${userdir}/work/&relreco2;/reco2/&name;</workdir>
+    <bookdir>/dune/data/${userdir}/book/&relreco2;/reco2/&name;</bookdir>
     <numjobs>$njob</numjobs>
     <datatier>full-reconstructed</datatier>
     <defname>&name;_&tag;_reco2</defname>
@@ -629,6 +647,7 @@ EOF
     <outdir>/pnfs/dune/${userdir}/&relreco2;/mergeana/&name;</outdir>
     <output>&name;_\${PROCESS}_%tc_merged.root</output>
     <workdir>/pnfs/dune/${userdir}/work/&relreco2;/mergeana/&name;</workdir>
+    <bookdir>/dune/data/${userdir}/book/&relreco2;/mergeana/&name;</bookdir>
     <numjobs>$njob</numjobs>
     <targetsize>8000000000</targetsize>
     <datatier>full-reconstructed</datatier>

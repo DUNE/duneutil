@@ -409,9 +409,6 @@ EOF
 		cat <<EOF >> $newxml
 </larsoft>
 
-<check>1</check>
-
-
 <stage name="detsim">
 <fcl>$genfcl</fcl>
 <fcl>$g4fcl</fcl>
