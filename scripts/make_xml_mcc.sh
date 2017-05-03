@@ -481,7 +481,7 @@ EOF
   cat <<EOF >> $newxml
     <outdir>/pnfs/dune/${userdir}/&relsim;/detsim/&name;</outdir>
     <workdir>/pnfs/dune/${userdir}/work/&relsim;/detsim/&name;</workdir>
-    <bookdir>/dune/data/${userdir}/book/&relsim;/detsim/&name;</bookdir>
+    <bookdir>/dune/data/users/${userbase}/book/&relsim;/detsim/&name;</bookdir>
     <output>${newprj}_\${PROCESS}_%tc_detsim.root</output>
     <numjobs>$njob</numjobs>
     <datatier>detector-simulated</datatier>
@@ -533,7 +533,7 @@ EOF
     <fcl>$recofcl1</fcl>
     <outdir>/pnfs/dune/${userdir}/&relreco1;/reco/&name;</outdir>
     <workdir>/pnfs/dune/${userdir}/work/&relreco1;/reco/&name;</workdir>
-    <bookdir>/dune/data/${userdir}/book/&relreco1;/reco/&name;</bookdir>
+    <bookdir>/dune/data/users/${userbase}/book/&relreco1;/reco/&name;</bookdir>
     <numjobs>$njob</numjobs>
     <datatier>full-reconstructed</datatier>
     <defname>&name;_&tag;_reco</defname>
@@ -544,7 +544,7 @@ EOF
     <outdir>/pnfs/dune/${userdir}/&relreco1;/mergeana/&name;</outdir>
     <output>&name;_\${PROCESS}_%tc_merged.root</output>
     <workdir>/pnfs/dune/${userdir}/work/&relreco1;/mergeana/&name;</workdir>
-    <bookdir>/dune/data/${userdir}/book/&relreco1;/mergeana/&name;</bookdir>
+    <bookdir>/dune/data/users/${userbase}/book/&relreco1;/mergeana/&name;</bookdir>
     <numjobs>$njob</numjobs>
     <targetsize>8000000000</targetsize>
     <datatier>full-reconstructed</datatier>
@@ -588,7 +588,7 @@ EOF
     <fcl>$recofcl1</fcl>
     <outdir>/pnfs/dune/${userdir}/&relreco1;/reco1/&name;</outdir>
     <workdir>/pnfs/dune/${userdir}/work/&relreco1;/reco1/&name;</workdir>
-    <bookdir>/dune/data/${userdir}/book/&relreco1;/reco1/&name;</bookdir>
+    <bookdir>/dune/data/users/${userbase}/book/&relreco1;/reco1/&name;</bookdir>
     <numjobs>$njob</numjobs>
     <datatier>hit-reconstructed</datatier>
     <defname>&name;_&tag;_reco1</defname>
@@ -636,7 +636,7 @@ EOF
     <fcl>$recofcl2</fcl>
     <outdir>/pnfs/dune/${userdir}/&relreco2;/reco2/&name;</outdir>
     <workdir>/pnfs/dune/${userdir}/work/&relreco2;/reco2/&name;</workdir>
-    <bookdir>/dune/data/${userdir}/book/&relreco2;/reco2/&name;</bookdir>
+    <bookdir>/dune/data/users/${userbase}/book/&relreco2;/reco2/&name;</bookdir>
     <numjobs>$njob</numjobs>
     <datatier>full-reconstructed</datatier>
     <defname>&name;_&tag;_reco2</defname>
@@ -647,7 +647,7 @@ EOF
     <outdir>/pnfs/dune/${userdir}/&relreco2;/mergeana/&name;</outdir>
     <output>&name;_\${PROCESS}_%tc_merged.root</output>
     <workdir>/pnfs/dune/${userdir}/work/&relreco2;/mergeana/&name;</workdir>
-    <bookdir>/dune/data/${userdir}/book/&relreco2;/mergeana/&name;</bookdir>
+    <bookdir>/dune/data/users/${userbase}/book/&relreco2;/mergeana/&name;</bookdir>
     <numjobs>$njob</numjobs>
     <targetsize>8000000000</targetsize>
     <datatier>full-reconstructed</datatier>
