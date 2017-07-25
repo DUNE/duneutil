@@ -1,3 +1,8 @@
+case `uname -r` in
+3.*) export UPS_OVERRIDE="-H Linux64bit+2.6-2.12";;
+4.*) export UPS_OVERRIDE="-H Linux64bit+2.6-2.12";;
+esac
+
 # Look for obsolete lines in login scripts
 checkthesefiles=
 for file in ~/.bash_profile ~/.bash_login ~/.profile ~/.shrc ~/.bashrc;
