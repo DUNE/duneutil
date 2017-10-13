@@ -1,7 +1,35 @@
-case `uname -r` in
-3.*) export UPS_OVERRIDE="-H Linux64bit+2.6-2.12";;
-4.*) export UPS_OVERRIDE="-H Linux64bit+2.6-2.12";;
-esac
+
+# look for cases where the environment is Scientific Linux 6 running
+# a 3.x or a 4.x kernel and set the UPS_OVERRIDE variable to force
+# the SL6 version
+
+osversionvendorid=`lsb_release -i 2> /dev/null`
+if [[ x$osversionvendorid = x ]]; then
+  osversionvendorid=`grep -i scientific /etc/redhat-release 2>/dev/null`
+fi
+if [[ x$osversionvendorid = x ]]; then
+  osversionvendorid=`grep -i scientific /etc/issue 2>/dev/null`
+fi
+
+osversionrelease=`lsb_release -r 2> /dev/null | cut -f 2`
+if [[ x$osversionrelease = x ]]; then
+  osversionrelease=`grep -F "6." /etc/redhat-release 2>/dev/null` 
+fi 
+if [[ x$osversionrelease = x ]]; then
+  osversionrelease=`grep -F "6." /etc/issue 2>/dev/null` 
+fi 
+
+#echo $osversionvendorid
+#echo $osversionrelease
+
+if [[ x`echo $osversionvendorid | grep -i scientific` != x ]]; then
+  if [[ x`echo $osversionrelease | grep -F "6."` != x ]]; then
+    case `uname -r` in
+      3.*) export UPS_OVERRIDE="-H Linux64bit+2.6-2.12";;
+      4.*) export UPS_OVERRIDE="-H Linux64bit+2.6-2.12";;
+    esac
+  fi
+fi
 
 # Look for obsolete lines in login scripts
 checkthesefiles=
