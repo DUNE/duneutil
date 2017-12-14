@@ -7,6 +7,7 @@
 #          python utility functions.
 #
 # Created: 28-Oct-2013  H. Greenlee
+#    Updated:  T. Yang, T. Junk
 #
 #----------------------------------------------------------------------
 
@@ -61,6 +62,7 @@ def get_sam_metadata(project, stage):
         result = result + '  %s: "%s"\n' % (key, stage.parameters[key])
     result = result + '  StageName: "%s"\n' % stage.name
     result = result + '}\n'
+    result = result + 'services.TFileMetadataDUNE: @local::dune_tfile_metadata\n'
     return result
 
 def get_ups_products():
