@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+
+<!-- Production project -->
+
+<!DOCTYPE project [
+<!ENTITY release "v06_60_00">
+<!ENTITY file_type "mc">
+<!ENTITY run_type "physics">
+<!ENTITY name "snb_timedep_dune10kt_1x2x6">
+<!ENTITY tag "snb_timedep_bkg">
+]>
+
+<project name="&name;">
+
+  <!-- Group -->
+  <group>dune</group>
+
+  <!-- project size -->
+  <numevents>1000000</numevents>
+
+  <!-- Operating System -->
+  <os>SL6</os>
+
+  <!-- Batch resources -->
+  <resource>DEDICATED,OPPORTUNISTIC</resource>
+
+  <!-- Jobsub commands -->
+  <jobsub>--role=Production --subgroup=prod</jobsub>
+
+  <!-- Larsoft information -->
+  <larsoft>
+    <tag>&release;</tag>
+    <qual>e14:prof</qual>
+  </larsoft>
+
+  <!-- metadata parameters -->
+
+  <parameter name ="MCName">&name;</parameter>
+  <parameter name ="MCDetectorType">dune10kt_1x2x6</parameter>
+  <parameter name ="MCGenerators">MARLEY</parameter>
+
+  <!-- project stages -->
+
+  <stage name="gen_g4_detsim">
+    <fcl>prodmarley_nue_spectrum_timedep_hudepohl_11.2M_dune10kt_1x2x6.fcl</fcl>
+    <fcl>supernova_g4_dune10kt_1x2x6.fcl</fcl>
+    <fcl>standard_detsim_supernova_dune10kt_1x2x6.fcl</fcl>
+    <memory>2500</memory>
+    <maxfluxfilemb>0</maxfluxfilemb>
+    <outdir>/pnfs/dune/scratch/dunepro/MCC10-Production/SuperNovaSamples/&release;/gen_g4_detsim/&name;</outdir>
+    <workdir>/pnfs/dune/scratch/dunepro/MCC10-Production/SuperNovaSamples/work/&release;/gen_g4_detsim/&name;</workdir>
+    <output>&name;_${PROCESS}_%tc_detsim.root</output>
+    <numjobs>10000</numjobs>
+    <datatier>simulated</datatier>
+    <defname>&name;_&tag;_gen_g4_detsim</defname>
+  </stage>
+
+  <stage name="reco">
+    <fcl>standard_reco_fasthitfinder_dune10kt_1x2x6.fcl</fcl>
+    <outdir>/pnfs/dune/scratch/dunepro/MCC10-Production/SuperNovaSamples/&release;/reco/&name;</outdir>
+    <workdir>/pnfs/dune/scratch/dunepro/MCC10-Production/SuperNovaSamples/work/&release;/reco/&name;</workdir>
+    <output>&name;_${PROCESS}_%tc_reco.root</output>
+    <numjobs>10000</numjobs>
+    <datatier>full-reconstructed</datatier>
+    <defname>&name;_&tag;_reco</defname>
+  </stage>
+
+
+  <!-- file type -->
+  <filetype>&file_type;</filetype>
+
+  <!-- run type -->
+  <runtype>&run_type;</runtype>
+
+</project>
