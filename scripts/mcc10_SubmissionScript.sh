@@ -7,12 +7,13 @@
 #	
 # Purpose: Launch batch job using project.py and different stages
 #	
-# Usage: sh mcc10_SubmissionScript.sh --xml <xmlfile> --stage <stage> [--test]
+# Usage: sh mcc10_SubmissionScript.sh --xmld <xmldir> --xml <xmlfile> --stage <stage> [--test]
 #	
 #
 #  OPTIONS:
 #
 #  --xml           <xmlfile>
+#  --xmld          <xmldir>
 #  --stage         <stage>; accepted values: detsim, reco, mergeana, finalize
 #  --dataset       <dataset>; NOT USED
 #  --mode          <mode>; NOT USED
@@ -32,6 +33,7 @@ while :
 do
    case "x$1" in
    x--|x)            break;;
+   x--xmld)          xmldir="$2"; 	shift; shift;;
    x--xml)           xmlfile="$2"; 	shift; shift;;
    x--stage)         stage="$2"; 	shift; shift;;
    x--dataset)       dataset="$2"; shift; shift;;
@@ -51,7 +53,9 @@ wrap_proj=/grid/fermiapp/products/common/prd/poms_client/v2_0_0/NULL/bin/wrap_pr
 
 echo -e "\nRunning\n `basename $0` $@"
 
-cd /dune/app/home/dunepro/anna/MCC10/xml/
+cd ${xmldir}
+
+if [[ $? -ne 0 ]]; then echo -e "\n dir $xmldir doesn't exist\n"; exit 1; fi
 
 
 
