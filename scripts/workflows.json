@@ -1,0 +1,20 @@
+{
+    "workflows": {
+        "w1":{
+            "stages": ["gen", "g4", "detsim", "reco", "mergeana", "finalize"],
+            "actions": ["submit", "submit", "submit", "submit", "submit", "declare"]
+        },
+        "w1b":{
+            "stages": ["gen", "g4", "detsim", "reco", "finalize"],
+            "actions": ["submit", "submit", "submit", "submit", "declare"]
+        },
+        "w2":{
+            "stages": ["gen_g4_detsim", "reco", "mergeana", "finalize"],
+            "actions": ["submit", "submit", "submit", "declare"]
+        },
+        "w2b":{
+            "stages": ["gen_g4_detsim", "reco", "finalize"],
+            "actions": ["submit", "submit", "declare"]
+        }
+    }
+}
