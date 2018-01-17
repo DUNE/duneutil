@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+
+<!-- Production Project -->
+
+<!DOCTYPE project [
+<!ENTITY relsim "v06_60_00_02">
+<!ENTITY relreco1 "v06_60_00_02">
+<!ENTITY relreco2 "v06_60_00_02">
+<!ENTITY file_type "mc">
+<!ENTITY run_type "physics">
+<!ENTITY name "prodgenie_anu_dune10kt_1x2x6">
+<!ENTITY tag "mcc10.0">
+]>
+
+<job>
+
+<project name="&name;">
+
+  <!-- Group -->
+  <group>dune</group>
+
+  <!-- Project size -->
+  <numevents>1000000</numevents>
+
+  <!-- Operating System -->
+  <os>SL6</os>
+
+  <!-- Batch resources -->
+  <resource>DEDICATED,OPPORTUNISTIC</resource>
+
+  <!-- metadata parameters -->
+
+  <parameter name ="MCName">prodgenie_anu_dune10kt_1x2x6</parameter>
+  <parameter name ="MCDetectorType">10kt</parameter>
+  <parameter name ="MCGenerators">GENIE</parameter>
+
+  <!-- Larsoft information -->
+  <larsoft>
+    <tag>&relsim;</tag>
+    <qual>e14:prof</qual>
+  </larsoft>
+
+  <!-- Project stages -->
+
+  <stage name="detsim">
+    <jobsub>--subgroup=prod</jobsub>
+    <fcl>prodgenie_anu_dune10kt_1x2x6.fcl</fcl>
+    <fcl>standard_g4_dune10kt_1x2x6.fcl</fcl>
+    <fcl>standard_detsim_dune10kt_1x2x6.fcl</fcl>
+    <outdir>/pnfs/dune/scratch/dunepro/MCC10-Production/BeamNeutrinoSamples/&relsim;/detsim/&name;</outdir>
+    <workdir>/pnfs/dune/scratch/dunepro/MCC10-Production/BeamNeutrinoSamples/work/&relsim;/detsim/&name;</workdir>
+    <output>prodgenie_anu_dune10kt_1x2x6_${PROCESS}_%tc_detsim.root</output>
+    <numjobs>10000</numjobs>
+    <datatier>detector-simulated</datatier>
+    <defname>&name;_&tag;_detsim</defname>
+  </stage>
+
+  <!-- file type -->
+  <filetype>&file_type;</filetype>
+
+  <!-- run type -->
+  <runtype>&run_type;</runtype>
+
+</project>
+
+<project name="&name;_reco">
+
+  <!-- Project size -->
+  <numevents>1000000</numevents>
+
+  <!-- Operating System -->
+  <os>SL6</os>
+
+  <!-- Batch resources -->
+  <resource>DEDICATED,OPPORTUNISTIC</resource>
+
+  <!-- metadata parameters -->
+
+  <parameter name ="MCName">prodgenie_anu_dune10kt_1x2x6</parameter>
+  <parameter name ="MCDetectorType">10kt</parameter>
+  <parameter name ="MCGenerators">GENIE</parameter>
+
+  <!-- Larsoft information -->
+  <larsoft>
+    <tag>&relreco1;</tag>
+    <qual>e14:prof</qual>
+  </larsoft>
+
+  <!-- Project stages -->
+  <stage name="reco">
+    <jobsub>--subgroup=prod --expected-lifetime=24h</jobsub>
+    <fcl>standard_reco_dune10kt_nu_1x2x6.fcl</fcl>
+    <outdir>/pnfs/dune/scratch/dunepro/MCC10-Production/BeamNeutrinoSamples/&relreco1;/reco/&name;</outdir>
+    <workdir>/pnfs/dune/scratch/dunepro/MCC10-Production/BeamNeutrinoSamples/work/&relreco1;/reco/&name;</workdir>
+    <numjobs>10000</numjobs>
+    <datatier>full-reconstructed</datatier>
+    <defname>&name;_&tag;_reco</defname>
+  </stage>
+
+  <stage name="mergeana">
+    <jobsub>--subgroup=prod --memory=4000 --expected-lifetime=24h</jobsub>
+    <fcl>select_ana_dune10kt_anu.fcl</fcl>
+    <fcl>standard_ana_dune10kt_1x2x6.fcl</fcl>
+    <outdir>/pnfs/dune/scratch/dunepro/dropbox/mcc10/BeamNeutrinoSamples/&relreco1;/mergeana/&name;</outdir>
+    <output>&name;_${PROCESS}_%tc_merged.root</output>
+    <workdir>/pnfs/dune/scratch/dunepro/MCC10-Production/BeamNeutrinoSamples/work/&relreco1;/mergeana/&name;</workdir>
+    <numjobs>10000</numjobs>
+    <targetsize>8000000000</targetsize>
+    <datatier>full-reconstructed</datatier>
+    <defname>&name;_&tag;</defname>
+  </stage>
+
+  <!-- file type -->
+  <filetype>&file_type;</filetype>
+
+  <!-- run type -->
+  <runtype>&run_type;</runtype>
+
+</project>
+</job>
+
