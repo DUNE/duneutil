@@ -197,7 +197,7 @@ find $DUNETPC_DIR/source/fcl/dune35t/gen $DUNETPC_DIR/source/fcl/dunefd/gen $DUN
 do
   if ! echo $fcl | grep -q 'common\|protoDUNE_gensingle'; then
     newprj=`basename $fcl .fcl`
-    newxml=${newprj}.xml
+    newxml=${newprj}_${tag}.xml
     samprj=${newprj}
     if [ $userbase != dunepro ]; then
 	samprj=${userbase}_$newprj
@@ -238,7 +238,7 @@ do
 
     # Make xml file.
 
-    echo "Making ${newprj}.xml"
+    echo "Making ${newxml}"
 
     # Generator
 
