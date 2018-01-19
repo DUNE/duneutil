@@ -30,9 +30,9 @@
 
 # Parse arguments.
 
-rs=v06_16_00
-rr1=v06_16_00
-rr2=v06_16_00
+rs=v06_60_00_02
+rr1=v06_60_00_02
+rr2=v06_60_00_02
 userdir=scratch/dunepro
 userbase=dunepro
 nevarg=0
@@ -197,7 +197,7 @@ find $DUNETPC_DIR/source/fcl/dune35t/gen $DUNETPC_DIR/source/fcl/dunefd/gen $DUN
 do
   if ! echo $fcl | grep -q 'common\|protoDUNE_gensingle'; then
     newprj=`basename $fcl .fcl`
-    newxml=${newprj}_${tag}.xml
+    newxml=${newprj}.xml
     samprj=${newprj}
     if [ $userbase != dunepro ]; then
 	samprj=${userbase}_$newprj
@@ -238,7 +238,7 @@ do
 
     # Make xml file.
 
-    echo "Making ${newxml}"
+    echo "Making ${newprj}.xml"
 
     # Generator
 
