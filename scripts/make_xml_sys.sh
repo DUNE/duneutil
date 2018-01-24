@@ -45,7 +45,7 @@ while [ $# -gt 0 ]; do
     # User directory.
 
     -h|--help )
-      echo "Usage: make_xml_mcc5.0.sh [-h|--help] [-r <release>] [-u|--user <user>] [--local <dir|tar>] [--nev <n>] [--nevjob <n>] [--nevgjob <n>]"
+      echo "Usage: make_xml_mcc5.0.sh [-h|--help] [-r <release>] [-u|--user <user>] [--local <dir|tar>] [--nev <n>] [--nevjob <n>] [--sys <sys>]"
       exit
     ;;
 
