@@ -36,7 +36,8 @@ userbase=dunepro
 nev=100000
 nevjob=100
 ls=''
-sys=25pcbadchans
+#sys=25pcbadchans
+sys=def
 tag=mcc10.1
 
 while [ $# -gt 0 ]; do
@@ -141,7 +142,9 @@ do
     # Reco
     recoinputdef=''
     recofcl=/dune/app/users/tjyang/larsoft_mydev/srcs/dunetpc/fcl/dunefd/reco/syst/standard_reco_dune10kt_nu_1x2x6_${sys}.fcl
-
+    if [ "$sys" == "def" ]; then
+        recofcl=standard_reco_dune10kt_nu_1x2x6.fcl
+    fi
     # Merge/Analysis
 
     caffcl=''
@@ -225,7 +228,6 @@ EOF
     <jobsub>--expected-lifetime=24h --subgroup=prod</jobsub>
     <maxfilesperjob>1</maxfilesperjob>
     <inputdef>${recoinputdef}</inputdef>
-    <!-- disable trajcluster -->
     <fcl>$recofcl</fcl>
     <outdir>/pnfs/dune/${userdir}/&rel;/reco/&name;</outdir>
     <workdir>/pnfs/dune/${userdir}/work/&rel;/reco/&name;</workdir>
