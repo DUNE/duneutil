@@ -22,7 +22,7 @@ fi
 #echo $osversionvendorid
 #echo $osversionrelease
 
-if [[ x`echo $osversionvendorid | grep -i scientific` != x ]]; then
+if [[ x`echo $osversionvendorid | grep -i scientific` != x ]] || [[ x`echo $osversionvendorid | grep -i centos` != x ]]; then
   if [[ x`echo $osversionrelease | grep -F "6."` != x ]]; then
     case `uname -r` in
       3.*) export UPS_OVERRIDE="-H Linux64bit+2.6-2.12";;
