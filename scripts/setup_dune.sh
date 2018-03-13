@@ -155,9 +155,12 @@ if [ `uname` != Darwin ]; then
   export LD_LIBRARY_PATH=`dropit -p $LD_LIBRARY_PATH git`
   setup git
 fi
+
 setup gitflow
 setup mrb
-setup pycurl
+
+# this is now setup by jobsub_client. setup pycurl
+
 # Define the value of MRB_PROJECT. This can be used
 # to drive other set-ups. 
 # We need to set this to 'larsoft' for now.
