@@ -63,7 +63,7 @@ while [ $# -gt 0 ]; do
 
     -u|--user )
     if [ $# -gt 1 ]; then
-      userdir=users/$2
+      userdir=scratch/users/$2
       userbase=$2
       shift
     fi
@@ -112,7 +112,7 @@ done
 
 # Get qualifier.
 
-quals=e14
+quals=e15
 if [[ $rel < 'v06_32_00'  ]]; then
   quals=e10
 fi
