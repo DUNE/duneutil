@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python
 import sys, getopt
 import os
@@ -225,9 +224,9 @@ class expMetaData(MetaData):
             md['file_size'] = md0['file_size']
         else:
             md['file_size'] = os.path.getsize(self.inputfile)
-        if 'crc' in md0:
+        if 'crc' in md0 and not args.no_crc:
             md['crc'] = md0['crc']
-        else:
+        elif not args.no_crc:
             md['crc'] = root_metadata.fileEnstoreChecksum(self.inputfile)
 
         # In case we ever want to check out what md is for any instance of MetaData by calling instance.md
@@ -248,10 +247,13 @@ def main():
     argparser.add_argument('--infile',help='path to input file',required=True,type=str)
     argparser.add_argument('--declare',help='validate and declare the metadata for the file specified in --infile to SAM',action='store_true')
     argparser.add_argument('--appname',help='application name for SAM metadata',type=str)
+    argparser.add_argument('--appversion',help='application version for SAM metadata',type=str)
     argparser.add_argument('--campaign',help='Value for DUNE.campaign for SAM metadata',type=str)
     argparser.add_argument('--set_processed',help='Set for parent file as processed in SAM metadata',action="store_true")
     argparser.add_argument('--strip_parents',help='Do not include the file\'s parents in SAM metadata for declaration',action="store_true")
+    argparser.add_argument('--no_crc',help='Leave the crc out of the generated json',action="store_true")
     
+    global args
     args = argparser.parse_args()
 
     ih = ifdh.ifdh()
@@ -262,6 +264,8 @@ def main():
         mddict = expSpecificMetadata.getmetadata()
         if 'name' not in mddict['application'].keys() and args.appname != None:
             mddict['application']['name'] = args.appname
+        if args.appversion != None:
+            mddict['application']['version'] = args.appversion
         if 'DUNE.campaign' not in mddict.keys() and args.campaign != None:
             mddict['DUNE.campaign'] = args.campaign
 
