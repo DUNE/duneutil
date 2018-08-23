@@ -2,8 +2,8 @@
 
 # The *parent* line must the first non-commented line and defines this product and version
 # The version should be of the form vxx_yy_zz (e.g. v01_02_03)
-parent duneutil v07_00_01
-defaultqual e15
+parent duneutil v07_03_00
+defaultqual e17
 
 # These optional lines define the installed directories where headers,
 # libraries, and executables will be found.
@@ -42,9 +42,9 @@ table_fragment_end
 
 product          version
 art             v2_11_03
-larbatch        v01_43_00
+larbatch        v01_44_00
 
-cetbuildtools	v7_03_03	-	only_for_build
+cetbuildtools	v7_04_00	-	only_for_build
 end_product_list
 
 
@@ -54,9 +54,6 @@ qualifier	art		larbatch	notes
 c2:debug	c2:debug	-nq-
 c2:opt		c2:opt		-nq-
 c2:prof		c2:prof		-nq-
-e15:debug	e15:debug	-nq-
-e15:opt		e15:opt		-nq-
-e15:prof	e15:prof	-nq-
 e17:debug	e17:debug	-nq-
 e17:opt		e17:opt		-nq-
 e17:prof	e17:prof	-nq-
