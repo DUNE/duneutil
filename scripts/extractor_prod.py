@@ -124,98 +124,163 @@ class expMetaData(MetaData):
 	
 	# Loop over art metadata.
 	for mdkey in mdart.keys():
-		mdval = mdart[mdkey]
+            mdval = mdart[mdkey]
 
 		# Skip some art-specific fields.
 
-		if mdkey == 'file_format_version':
-			pass
-		elif mdkey == 'file_format_era':
-			pass
+            if mdkey == 'file_format_version':
+                pass
+            elif mdkey == 'file_format_era':
+                pass
 
 		# Ignore primary run_type field (if any).
 		# Instead, get run_type from runs field.
 
-		elif mdkey == 'run_type':
-			pass
+            elif mdkey == 'run_type':
+	       	pass
 
-		# Ignore data_stream for now.
+		# do not Ignore data_stream any longer.
 
-		elif mdkey == 'data_stream':
-			pass
+            elif mdkey == 'data_stream':
+                if 'dunemeta.data_stream' not in mdart.keys(): # only use this data_stream value if dunemeta.data_stream is not present
+                    md['data_stream'] = mdval
 
-		# Ignore process_name for now.
-
-		elif mdkey == 'process_name':
-			pass
-
+		# Ignore process_name as of 2018-09-22 because it is not in SAM yet
+            elif mdkey == 'process_name':
+#                md['process_name'] = mdval
+                pass
 		# Application family/name/version.
 
-		elif mdkey == 'applicationFamily':
-			if not md.has_key('application'):
-				md['application'] = {}
-			md['application']['family'] = mdval
-		elif mdkey == 'StageName' or mdkey == 'applicationName':
-			if not md.has_key('application'):
-				md['application'] = {}
-			md['application']['name'] = mdval
-		elif mdkey == 'applicationVersion':
-			if not md.has_key('application'):
-				md['application'] = {}
-			md['application']['version'] = mdval
+            elif mdkey == 'applicationFamily':
+                if not md.has_key('application'):
+                    md['application'] = {}
+                    md['application']['family'] = mdval
+            elif mdkey == 'StageName' or mdkey == 'applicationName':
+                if not md.has_key('application'):
+                    md['application'] = {}
+                    md['application']['name'] = mdval
+            elif mdkey == 'applicationVersion':
+                if not md.has_key('application'):
+                    md['application'] = {}
+                    md['application']['version'] = mdval
 
 		# Parents.
 
-		elif mdkey == 'parents':
-			mdparents = []
-			if not args.strip_parents:
-                            for parent in mdval:
-                                parent_dict = {'file_name': parent}
-                                mdparents.append(parent_dict)
-			md['parents'] = mdparents
+            elif mdkey == 'parents':
+                mdparents = []
+                if not args.strip_parents:
+                    for parent in mdval:
+                        parent_dict = {'file_name': parent}
+                        mdparents.append(parent_dict)
+                    md['parents'] = mdparents
 
 		# Other fields where the key or value requires minor conversion.
 
-		elif mdkey == 'first_event':
-			md[mdkey] = mdval[2]
-		elif mdkey == 'last_event':
-			md[mdkey] = mdval[2]
-		elif mdkey == 'lbneMCGenerators':
-			md['lbne_MC.generators']  = mdval
-		elif mdkey == 'lbneMCOscillationP':
-			md['lbne_MC.oscillationP']  = mdval
-		elif mdkey == 'lbneMCTriggerListVersion':
-			md['lbne_MC.trigger-list-version']  = mdval
-		elif mdkey == 'lbneMCBeamEnergy':
-			md['lbne_MC.beam_energy']  = mdval
-		elif mdkey == 'lbneMCBeamFluxID':
-			md['lbne_MC.beam_flux_ID']  = mdval
-		elif mdkey == 'lbneMCName':
-			md['lbne_MC.name']  = mdval
-		elif mdkey == 'lbneMCDetectorType':
-			md['lbne_MC.detector_type']  = mdval
-		elif mdkey == 'lbneMCNeutrinoFlavors':
-			md['lbne_MC.neutrino_flavors']  = mdval
-		elif mdkey == 'lbneMCMassHierarchy':
-			md['lbne_MC.mass_hierarchy']  = mdval
-		elif mdkey == 'lbneMCMiscellaneous':
-			md['lbne_MC.miscellaneous']  = mdval
-		elif mdkey == 'lbneMCGeometryVersion':
-			md['lbne_MC.geometry_version']  = mdval
-		elif mdkey == 'lbneMCOverlay':
-			md['lbne_MC.overlay']  = mdval
-		elif mdkey == 'lbneDataRunMode':
-			md['lbne_data.run_mode']  = mdval
-		elif mdkey == 'lbneDataDetectorType':
-			md['lbne_data.detector_type']  = mdval
-		elif mdkey == 'lbneDataName':
-			md['lbne_data.name']  = mdval
-
+            elif mdkey == 'first_event':
+                md[mdkey] = mdval[2]
+            elif mdkey == 'last_event':
+		md[mdkey] = mdval[2]
+            elif mdkey == 'lbneMCGenerators':
+		md['lbne_MC.generators']  = mdval
+            elif mdkey == 'lbneMCOscillationP':
+		md['lbne_MC.oscillationP']  = mdval
+            elif mdkey == 'lbneMCTriggerListVersion':
+                md['lbne_MC.trigger-list-version']  = mdval
+            elif mdkey == 'lbneMCBeamEnergy':
+                md['lbne_MC.beam_energy']  = mdval
+            elif mdkey == 'lbneMCBeamFluxID':
+                md['lbne_MC.beam_flux_ID']  = mdval
+            elif mdkey == 'lbneMCName':
+                md['lbne_MC.name']  = mdval
+            elif mdkey == 'lbneMCDetectorType':
+                md['lbne_MC.detector_type']  = mdval
+            elif mdkey == 'lbneMCNeutrinoFlavors':
+                md['lbne_MC.neutrino_flavors']  = mdval
+            elif mdkey == 'lbneMCMassHierarchy':
+                md['lbne_MC.mass_hierarchy']  = mdval
+            elif mdkey == 'lbneMCMiscellaneous':
+                md['lbne_MC.miscellaneous']  = mdval
+            elif mdkey == 'lbneMCGeometryVersion':
+                md['lbne_MC.geometry_version']  = mdval
+            elif mdkey == 'lbneMCOverlay':
+                md['lbne_MC.overlay']  = mdval
+            elif mdkey == 'lbneDataRunMode':
+                md['lbne_data.run_mode']  = mdval
+            elif mdkey == 'lbneDataDetectorType':
+                md['lbne_data.detector_type']  = mdval
+            elif mdkey == 'lbneDataName':
+                md['lbne_data.name']  = mdval
+            elif mdkey == 'detector.hv_status':
+                md[mdkey] = mdval
+            elif mdkey == 'detector.hv_value':
+                md[mdkey] = mdval
+            elif mdkey == 'detector.tpc_status':
+                md[mdkey] = mdval
+            elif mdkey == 'detector.tpc_apa_status':
+                md[mdkey] = mdval
+            elif mdkey == 'detector.tpc_apas':
+                md[mdkey] = mdval
+            elif mdkey == 'detector.tpc_apa_1':
+                md[mdkey] = mdval
+            elif mdkey == 'detector.tpc_apa_2':
+                md[mdkey] = mdval
+            elif mdkey == 'detector.tpc_apa_3':
+                md[mdkey] = mdval
+            elif mdkey == 'detector.tpc_apa_4':
+                md[mdkey] = mdval
+            elif mdkey == 'detector.tpc_apa_5':
+                md[mdkey] = mdval
+            elif mdkey == 'detector.tpc_apa_6':
+                md[mdkey] = mdval
+            elif mdkey == 'detector.pd_status':
+                md[mdkey] = mdval
+            elif mdkey == 'detector.crt_status':
+                md[mdkey] = mdval
+            elif mdkey == 'daq.readout':
+                md[mdkey] = mdval
+            elif mdkey == 'daq.felix_status':
+                md[mdkey] = mdval
+            elif mdkey == 'beam.polarity':
+                md[mdkey] = mdval
+            elif mdkey == 'beam.momentum':
+                md[mdkey] = mdval
+            elif mdkey == 'dunemeta.data_stream':
+                md['data_stream'] = mdval
+            elif mdkey == '??.data_type':
+                md[mdkey] = mdval
+            elif mdkey == 'data_quality.level':
+                md[mdkey] = mdval
+            elif mdkey == 'data_quality.is_junk':
+                md[mdkey] = mdval
+            elif mdkey == 'data_quality.do_not_process':
+                md[mdkey] = mdval
+            elif mdkey == 'dunemeta.dune_data.accouple':
+                md['DUNE_data.accouple'] = int(mdval)
+            elif mdkey == 'dunemeta.dune_data.calibpulsemode':
+                md['DUNE_data.calibpulsemode'] = int(mdval)
+            elif mdkey == 'dunemeta.dune_data.daqconfigname':
+                md['DUNE_data.DAQConfigName'] = mdval
+            elif mdkey == 'dunemeta.dune_data.detector_config':
+                md['DUNE_data.detector_config'] = mdval
+            elif mdkey == 'dunemeta.dune_data.febaselinehigh':
+                md['DUNE_data.febaselinehigh'] = int(mdval)
+            elif mdkey ==  'dunemeta.dune_data.fegain':
+                md['DUNE_data.fegain'] = int(mdval)
+            elif mdkey == 'dunemeta.dune_data.feleak10x':
+                md['DUNE_data.feleak10x'] = int(mdval)
+            elif mdkey == 'dunemeta.dune_data.feleakhigh':
+                md['DUNE_data.feleakhigh'] = int(mdval)
+            elif mdkey == 'dunemeta.dune_data.feshapingtime':
+                md['DUNE_data.feshapingtime'] = int(mdval)
+            elif mdkey == 'dunemeta.dune_data.inconsistent_hw_config':
+                md['DUNE_data.inconsistent_hw_config'] = int(mdval)
+            elif mdkey == 'dunemeta.dune_data.is_fake_data':
+                md['DUNE_data.is_fake_data'] = int(mdval)
 		# For all other keys, copy art metadata directly to sam metadata.
 		# This works for run-tuple (run, subrun, runtype) and time stamps.
 
-		else:
-			md[mdkey] = mdart[mdkey]
+            else:
+                md[mdkey] = mdart[mdkey]
 
 	# Get the other meta data field parameters				
 
@@ -248,7 +313,9 @@ def main():
     argparser.add_argument('--declare',help='validate and declare the metadata for the file specified in --infile to SAM',action='store_true')
     argparser.add_argument('--appname',help='application name for SAM metadata',type=str)
     argparser.add_argument('--appversion',help='application version for SAM metadata',type=str)
+    argparser.add_argument('--appfamily',help='application family for SAM metadata',type=str)
     argparser.add_argument('--campaign',help='Value for DUNE.campaign for SAM metadata',type=str)
+    argparser.add_argument('--data_stream',help='Value for data_stream for SAM metadata',type=str)
     argparser.add_argument('--set_processed',help='Set for parent file as processed in SAM metadata',action="store_true")
     argparser.add_argument('--strip_parents',help='Do not include the file\'s parents in SAM metadata for declaration',action="store_true")
     argparser.add_argument('--no_crc',help='Leave the crc out of the generated json',action="store_true")
@@ -262,12 +329,16 @@ def main():
 #        expSpecificMetadata = expMetaData(os.environ['SAM_EXPERIMENT'], str(sys.argv[1]))
         expSpecificMetadata = expMetaData(os.environ['SAM_EXPERIMENT'], args.infile)
         mddict = expSpecificMetadata.getmetadata()
-        if 'name' not in mddict['application'].keys() and args.appname != None:
+        if 'application' in mddict  and 'name' not in mddict['application'].keys() and args.appname != None:
             mddict['application']['name'] = args.appname
         if args.appversion != None:
             mddict['application']['version'] = args.appversion
+        if 'application' in mddict  and 'family' not in mddict['application'].keys() and args.appname != None:
+            mddict['application']['family'] = args.appfamily
         if 'DUNE.campaign' not in mddict.keys() and args.campaign != None:
             mddict['DUNE.campaign'] = args.campaign
+        if args.data_stream != None:
+            mddict['data_stream'] = args.data_stream
 
     except TypeError:
         print 'You have not implemented a defineMetaData function by providing an experiment.'
