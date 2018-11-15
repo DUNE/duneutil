@@ -12,35 +12,6 @@ BULK_QUERY_SIZE = 100
 WEBDAV_HOST = "https://fndca4a.fnal.gov:2880"
 PNFS_DIR_PATTERN = re.compile(r"/pnfs/(?P<area>[^/]+)")
 
-try:
-  HAVE_XROOTD = True
-  import XRootD.client
-except ImportError:
-  print "ERROR: Could not import XRootD python bindings."
-  sys.exit(1)
-
-if HAVE_XROOTD:
-  class LazyXrootDClient(object):
-    """ Wrapper around an xrootd client that only opens the connection when needed """
-   
-    _XROOTD_FS_PROPS = set(dir(XRootD.client.FileSystem))
-    
-    def __init__(self, server_url="root://fndca1.fnal.gov:1094"):
-      self._server_url = server_url
-      self._client = None
-    
-    def _Load(self):
-      if not self._client:
-        self._client = XRootD.client.FileSystem(self._server_url)
-    
-    def __getattr__(self, attr):
-      if attr in LazyXrootDClient._XROOTD_FS_PROPS:
-        self._Load()
-        return getattr(self._client, attr)
-      
-      raise AttributeError("'XRootD.client.FileSystem' object has no attribute '%s'" % attr)
-  
-  xrootd_client = LazyXrootDClient()
 
 class ProgressBar(object):
   def __init__(self, total, announce_threshold=50):
@@ -78,16 +49,9 @@ def FilelistCacheCount(files, verbose_flag, METHOD="pnfs"):
   n = 0
   
   for f in files:
-    if METHOD in ("xrootd", "webdav"):
+    if METHOD in ("webdav"):
       f = PNFS_DIR_PATTERN.sub(r"/pnfs/fnal.gov/usr/\1", f)
-    if METHOD == "xrootd":
-      stat = xrootd_client.stat(f)
-      if len(stat) > 0 and stat[1] is not None:
-        if stat[1].flags & XRootD.client.flags.StatInfoFlags.OFFLINE == 0:
-          cached += 1
-      n += 1
-      progbar.Update(n)
-    elif METHOD == "webdav":
+    if METHOD == "webdav":
       bulk_query_list.append(f)
       
     else:
@@ -163,17 +127,13 @@ gp.add_argument("-d", "--dataset",
 parser.add_argument("-s","--sparse", dest='sparse',help="Sparsification factor.  This is used to check only a portion of a list of files",default=1)
 parser.add_argument("-ss", "--snapshot", dest="snapshot", help="[Also requires -d]  Use this snapshot ID for the dataset.  Specify 'latest' for the most recent one.")
 parser.add_argument("-v","--verbose", action="store_true", dest="verbose", default="False", help="Print information about individual files")
-parser.add_argument("-m", "--method", choices=["webdav", "xrootd", "pnfs"], default="webdav", help="Use this method to look up file status.")
+parser.add_argument("-m", "--method", choices=["webdav", "pnfs"], default="webdav", help="Use this method to look up file status.")
 
 args=parser.parse_args()
 
-if args.method == "xrootd" and not HAVE_XROOTD:
-  print >> sys.stderr, "XRootD requested but not available.  Choose a different --method."
-  sys.exit(2)
-
 # gotta make sure you have a valid certificate.
 # otherwise the results may lie...
-if args.method in ("xrootd", "webdav"):
+if args.method in ("webdav"):
   try:
   	subprocess.check_call(shlex.split("setup_fnal_security --check"), stdout=open(os.devnull), stderr=subprocess.STDOUT)
   except subprocess.CalledProcessError:
