@@ -123,6 +123,11 @@ gp.add_argument("-d", "--dataset",
                 dest="dataset_name",
                 help="Name of the SAM dataset to check cache status of",
 )
+gp.add_argument("-q", "--dim",
+                metavar="\"DIMENSION\"",
+                dest="dimensions",
+                help="sam dimensions to check cache status of",
+                )
 
 parser.add_argument("-s","--sparse", dest='sparse',help="Sparsification factor.  This is used to check only a portion of a list of files",default=1)
 parser.add_argument("-ss", "--snapshot", dest="snapshot", help="[Also requires -d]  Use this snapshot ID for the dataset.  Specify 'latest' for the most recent one.")
@@ -163,6 +168,25 @@ if args.dataset_name:
         samlist = sam.listFiles(dimensions=dimensions)
     else:
         samlist  = sam.listFiles(defname=args.dataset_name)
+    filelist = [ f for  f in samlist[::int(args.sparse)] ]
+    print " done."
+  except Exception as e:
+    print e
+    print
+    print 'Unable to retrieve SAM information for dataset: %s' %(args.dataset_name)
+    exit(-1)
+    # Take the rest of the commandline as the filenames
+    filelist = args
+
+if args.dimensions:
+  print "Retrieving file list for SAM dimensions: '%s'..." % args.dataset_name,
+  sys.stdout.flush()
+  try:
+    dimensions = args.dimensions
+    
+    if dimensions:
+      samlist = sam.listFiles(dimensions=dimensions)
+
     filelist = [ f for  f in samlist[::int(args.sparse)] ]
     print " done."
   except Exception as e:
