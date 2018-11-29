@@ -10,6 +10,7 @@ import abc
 import ifdh
 import argparse
 import samweb_client
+import collections
 
 # Function to wait for a subprocess to finish and fetch return code,
 # standard output, and standard error.
@@ -254,6 +255,8 @@ class expMetaData(MetaData):
                 md[mdkey] = mdval
             elif mdkey == 'data_quality.do_not_process':
                 md[mdkey] = mdval
+            elif mdkey == 'data_quality.online_good_run_list':
+                md[mdkey] = mdval
             elif mdkey == 'dunemeta.dune_data.accouple':
                 md['DUNE_data.accouple'] = int(mdval)
             elif mdkey == 'dunemeta.dune_data.calibpulsemode':
@@ -331,10 +334,15 @@ def main():
         mddict = expSpecificMetadata.getmetadata()
         if 'application' in mddict  and 'name' not in mddict['application'].keys() and args.appname != None:
             mddict['application']['name'] = args.appname
-        if args.appversion != None:
+        if 'application' in mddict  and 'version' not in mddict['application'].keys() and args.appversion != None:
             mddict['application']['version'] = args.appversion
-        if 'application' in mddict  and 'family' not in mddict['application'].keys() and args.appname != None:
+        if 'application' in mddict  and 'family' not in mddict['application'].keys() and args.appfamily != None:
             mddict['application']['family'] = args.appfamily
+        if 'application' not in mddict and args.appfamily != None and args.appname != None and args.appversion != None:
+            mddict['application'] = {}
+            mddict['application']['family']  = args.appfamily
+            mddict['application']['name']    = args.appname
+            mddict['application']['version'] = args.appversion    
         if 'DUNE.campaign' not in mddict.keys() and args.campaign != None:
             mddict['DUNE.campaign'] = args.campaign
         if args.data_stream != None:
