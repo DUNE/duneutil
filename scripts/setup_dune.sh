@@ -57,8 +57,8 @@ fi
 # and for the DUNE-specific software that interfaces to LArSoft.
 
 # some old directory names for documentation purposes.
-#FERMIAPP_LARSOFT_DIR="/grid/fermiapp/products/larsoft/"
-#FERMIOSG_LARSOFT_DIR="/cvmfs/fermilab.opensciencegrid.org/products/larsoft/"
+FERMIAPP_LARSOFT_DIR="/grid/fermiapp/products/larsoft/"
+FERMIOSG_LARSOFT_DIR="/cvmfs/fermilab.opensciencegrid.org/products/larsoft/"
 #OASIS_LARSOFT_DIR="/cvmfs/oasis.opensciencegrid.org/fermilab/products/larsoft/"
 
 # current location of larsoft in CVMFS
@@ -72,6 +72,19 @@ FERMIOSG_DUNE_DIR="/cvmfs/dune.opensciencegrid.org/products/dune/"
 DUNE_BLUEARC_DATA="/dune/data/"
 
 # Set up ups for LArSoft
+
+for dir in $FERMIOSG_LARSOFT_DIR $FERMIAPP_LARSOFT_DIR;
+do
+  if [[ -f $dir/setup ]]; then
+    echo "Setting up old larsoft UPS area... ${dir}"
+    source $dir/setup
+    common=`dirname $dir`/common/db
+    if [[ -d $common ]]; then
+      export PRODUCTS=`dropit -p $PRODUCTS common/db`:`dirname $dir`/common/db
+    fi
+    break
+  fi
+done
 
 # Sourcing this setup will add new larsoft to $PRODUCTS
 
