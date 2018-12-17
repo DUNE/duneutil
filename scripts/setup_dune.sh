@@ -1,35 +1,6 @@
 
-# look for cases where the environment is Scientific Linux 6 running
-# a 3.x or a 4.x kernel and set the UPS_OVERRIDE variable to force
-# the SL6 version
-
-osversionvendorid=`lsb_release -i 2> /dev/null`
-if [[ x$osversionvendorid = x ]]; then
-  osversionvendorid=`grep -i scientific /etc/redhat-release 2>/dev/null`
-fi
-if [[ x$osversionvendorid = x ]]; then
-  osversionvendorid=`grep -i scientific /etc/issue 2>/dev/null`
-fi
-
-osversionrelease=`lsb_release -r 2> /dev/null | cut -f 2`
-if [[ x$osversionrelease = x ]]; then
-  osversionrelease=`grep -F "6." /etc/redhat-release 2>/dev/null` 
-fi 
-if [[ x$osversionrelease = x ]]; then
-  osversionrelease=`grep -F "6." /etc/issue 2>/dev/null` 
-fi 
-
-#echo $osversionvendorid
-#echo $osversionrelease
-
-if [[ x`echo $osversionvendorid | grep -i scientific` != x ]] || [[ x`echo $osversionvendorid | grep -i centos` != x ]]; then
-  if [[ x`echo $osversionrelease | grep -F "6."` != x ]]; then
-    case `uname -r` in
-      3.*) export UPS_OVERRIDE="-H Linux64bit+2.6-2.12";;
-      4.*) export UPS_OVERRIDE="-H Linux64bit+2.6-2.12";;
-    esac
-  fi
-fi
+# DUNE software environment setup script
+# to be sourced.
 
 # Look for obsolete lines in login scripts
 checkthesefiles=
@@ -85,9 +56,12 @@ fi
 # Source this file to set the basic configuration needed by LArSoft 
 # and for the DUNE-specific software that interfaces to LArSoft.
 
-FERMIAPP_LARSOFT_DIR="/grid/fermiapp/products/larsoft/"
-FERMIOSG_LARSOFT_DIR="/cvmfs/fermilab.opensciencegrid.org/products/larsoft/"
+# some old directory names for documentation purposes.
+#FERMIAPP_LARSOFT_DIR="/grid/fermiapp/products/larsoft/"
+#FERMIOSG_LARSOFT_DIR="/cvmfs/fermilab.opensciencegrid.org/products/larsoft/"
 #OASIS_LARSOFT_DIR="/cvmfs/oasis.opensciencegrid.org/fermilab/products/larsoft/"
+
+# current location of larsoft in CVMFS
 
 FERMIOSG_LARSOFT_DIR2="/cvmfs/larsoft.opensciencegrid.org/products/"
 
@@ -98,27 +72,13 @@ FERMIOSG_DUNE_DIR="/cvmfs/dune.opensciencegrid.org/products/dune/"
 DUNE_BLUEARC_DATA="/dune/data/"
 
 # Set up ups for LArSoft
-# Sourcing this setup will add old larsoft and common to $PRODUCTS
-
-for dir in $FERMIOSG_LARSOFT_DIR $FERMIAPP_LARSOFT_DIR;
-do
-  if [[ -f $dir/setup ]]; then
-    echo "Setting up old larsoft UPS area... ${dir}"
-    source $dir/setup
-    common=`dirname $dir`/common/db
-    if [[ -d $common ]]; then
-      export PRODUCTS=`dropit -p $PRODUCTS common/db`:`dirname $dir`/common/db
-    fi
-    break
-  fi
-done
 
 # Sourcing this setup will add new larsoft to $PRODUCTS
 
 for dir in $FERMIOSG_LARSOFT_DIR2;
 do
   if [[ -f $dir/setup ]]; then
-    echo "Setting up new larsoft UPS area... ${dir}"
+    echo "Setting up larsoft UPS area... ${dir}"
     source $dir/setup
     break
   fi
@@ -204,3 +164,7 @@ export DBINAME=dune35t_prod
 export DBIPORT=5442
 export DBIUSER=dune_reader
 export DBIPWDFILE=~jpaley/dune/db/proddbpwd
+
+# to ensure compatibility on OSG nodes missing OS libraries
+
+setup dune_oslibs v1_0_0
