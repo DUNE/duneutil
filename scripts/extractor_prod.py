@@ -155,15 +155,15 @@ class expMetaData(MetaData):
             elif mdkey == 'applicationFamily':
                 if not md.has_key('application'):
                     md['application'] = {}
-                    md['application']['family'] = mdval
+                md['application']['family'] = mdval
             elif mdkey == 'StageName' or mdkey == 'applicationName':
                 if not md.has_key('application'):
                     md['application'] = {}
-                    md['application']['name'] = mdval
+                md['application']['name'] = mdval
             elif mdkey == 'applicationVersion':
                 if not md.has_key('application'):
                     md['application'] = {}
-                    md['application']['version'] = mdval
+                md['application']['version'] = mdval
 
 		# Parents.
 
@@ -338,7 +338,7 @@ def main():
             mddict['application']['version'] = args.appversion
         if 'application' in mddict  and 'family' not in mddict['application'].keys() and args.appfamily != None:
             mddict['application']['family'] = args.appfamily
-        if 'application' not in mddict and args.appfamily != None and args.appname != None and args.appversion != None:
+        if args.appfamily != None and args.appname != None and args.appversion != None:
             mddict['application'] = {}
             mddict['application']['family']  = args.appfamily
             mddict['application']['name']    = args.appname
