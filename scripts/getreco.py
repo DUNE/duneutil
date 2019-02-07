@@ -15,27 +15,39 @@ if not stderr:
   raw = line.split(" ")[0]
   sub = raw.split("_")[3] + "_" + raw.split("_")[4].strip(".root")
 
-  cmd = ["samweb", "list-files", "defname:", sys.argv[3]]
 
+  #find the runset for the run
+  cmd = ["samweb", "list-definitions"]
   p = Popen(cmd, stdout=PIPE, stderr=PIPE)
   stdout, stderr = p.communicate()
   if not stderr:
-    for f in stdout.split("\n"):
-      if raw.strip(".root") in f: 
-        print "Reco:", f, nskip[0], nskip[1] 
-        print
-        print "Locations:"
+    for d in stdout.split("\n"):
+      if "reco-unified" in d and str(sys.argv[1]) in d: 
 
-        cmd = ["samweb", "locate-file", f]
+        cmd = ["samweb", "list-files", "defname:", d]
+      
         p = Popen(cmd, stdout=PIPE, stderr=PIPE)
         stdout, stderr = p.communicate()
         if not stderr:
-          print stdout
+          for f in stdout.split("\n"):
+            if raw.strip(".root") in f: 
+              print "Reco:", f, nskip[0], nskip[1] 
+              print
+              print "Locations:"
+      
+              cmd = ["samweb", "locate-file", f]
+              p = Popen(cmd, stdout=PIPE, stderr=PIPE)
+              stdout, stderr = p.communicate()
+              if not stderr:
+                print stdout
+      
+              print
+              print "Access URLs:"        
+              cmd = ["samweb", "get-file-access-url", f, "--schema=xroot"]
+              p = Popen(cmd, stdout=PIPE, stderr=PIPE)
+              stdout, stderr = p.communicate()
+              if not stderr:
+                print stdout
+  else: print stderr
 
-        print
-        print "Access URLs:"        
-        cmd = ["samweb", "get-file-access-url", f, "--schema=xroot"]
-        p = Popen(cmd, stdout=PIPE, stderr=PIPE)
-        stdout, stderr = p.communicate()
-        if not stderr:
-          print stdout
+
