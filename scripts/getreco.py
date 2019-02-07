@@ -31,3 +31,11 @@ if not stderr:
         stdout, stderr = p.communicate()
         if not stderr:
           print stdout
+
+        print
+        print "Access URLs:"        
+        cmd = ["samweb", "get-file-access-url", f, "--schema=xroot"]
+        p = Popen(cmd, stdout=PIPE, stderr=PIPE)
+        stdout, stderr = p.communicate()
+        if not stderr:
+          print stdout
