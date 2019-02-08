@@ -279,6 +279,8 @@ class expMetaData(MetaData):
                 md['DUNE_data.inconsistent_hw_config'] = int(mdval)
             elif mdkey == 'dunemeta.dune_data.is_fake_data':
                 md['DUNE_data.is_fake_data'] = int(mdval)
+            elif mdkey == 'dunemeta.dune_data.readout_window':
+                md['DUNE_data.readout_window'] = float(mdval)
 		# For all other keys, copy art metadata directly to sam metadata.
 		# This works for run-tuple (run, subrun, runtype) and time stamps.
 
