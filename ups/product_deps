@@ -2,7 +2,7 @@
 
 # The *parent* line must the first non-commented line and defines this product and version
 # The version should be of the form vxx_yy_zz (e.g. v01_02_03)
-parent duneutil v08_14_00
+parent duneutil v08_15_00_rc0
 defaultqual e17
 
 # These optional lines define the installed directories where headers,
@@ -41,7 +41,7 @@ table_fragment_end
 # Add the dependent product and version
 
 product          version
-art             v3_01_02
+art_root_io     v1_00_03
 larbatch        v01_50_00
 
 cetbuildtools	v7_11_00	-	only_for_build
@@ -50,7 +50,7 @@ end_product_list
 
 # We now define allowed qualifiers and the corresponding qualifiers for the depdencies.
 # Make a table by adding columns before "notes". 
-qualifier	art		larbatch	notes
+qualifier	art_root_io	larbatch	notes
 c2:debug	c2:debug	-nq-
 c2:opt		c2:opt		-nq-
 c2:prof		c2:prof		-nq-
