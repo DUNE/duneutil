@@ -1,0 +1,29 @@
+#!/bin/sh
+# samweb to rootd path conversions 
+# This script converts the enstore paths returned by samweb into valid rootd uri's
+# Now using samweb get-file-access-url --schema=root available since sam_web_client v1_8(?)
+filename=$1
+
+if [ x == x$filename ]
+then
+    echo Usage: `basename $0` filename.root 1>&2
+    exit 1
+fi
+
+# Prefer dcache (ie persistent) locations
+filepath=`samweb get-file-access-url --schema=root $filename --location=dcache`
+if [ x != x$filepath ]
+    # Pick the first in case there are still multiple
+    then echo $filepath | awk '{print $1}'
+    exit 0
+fi
+
+# Otherwise enstore is good
+filepath=`samweb get-file-access-url --schema=root $filename --location=enstore`
+if [ x != x$filepath ]
+    then echo $filepath | awk '{print $1}'
+    exit 0
+fi
+
+echo Can\'t find rootd path for $filename 1>&2
+exit 1
