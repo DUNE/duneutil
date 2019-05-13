@@ -99,12 +99,7 @@ function makegraph {
 # begin main program
 
 if [ "$1" == "--help" ]; then
-#    echo "Usage: dtgv.sh will make a graphviz input file for all setup products"
-#    echo "except mrb.  It trims gcc, cetbuildtools, and the dependencies of GEANT4"
-#    echo "The output is on stdout.   Redirect it to a file, and use graphviz:"
-#    echo "dot -Tpdf -o deptree.pdf deptree.txt"
-#    echo "where deptree.txt is the output of this script."
-    echo "Usage: dtgv.sh <product> <version> <qualifiers> to make a file <product>_<version>.pdf showing"
+    echo "Usage: dependency_graph.sh <product> <version> <qualifiers> to make a file <product>_<version>.pdf showing"
     echo "the dependency tree.  This version suppresses GEANT4's dependencies as well as mrb and cetpkgsupport"
     exit
 fi
