@@ -177,10 +177,14 @@ class expMetaData(MetaData):
 
 		# Other fields where the key or value requires minor conversion.
 
-            elif mdkey == 'first_event':
+            elif mdkey == 'art.first_event':
                 md[mdkey] = mdval[2]
-            elif mdkey == 'last_event':
+            elif mdkey == 'art.last_event':
 		md[mdkey] = mdval[2]
+            elif mdkey == 'first_event':
+                md[mdkey] = mdval
+            elif mdkey == 'last_event':
+                md[mdkey] = mdval
             elif mdkey == 'lbneMCGenerators':
 		md['lbne_MC.generators']  = mdval
             elif mdkey == 'lbneMCOscillationP':
