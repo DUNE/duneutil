@@ -140,7 +140,7 @@ class expMetaData(MetaData):
             elif mdkey == 'run_type':
 	       	pass
 
-            elif mkdey == 'application.version':
+            elif mdkey == 'application.version':
                 pass
 
 		# do not Ignore data_stream any longer.
