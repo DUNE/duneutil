@@ -142,6 +142,10 @@ class expMetaData(MetaData):
 
             elif mdkey == 'application.version':
                 pass
+            elif mdkey == 'application.family':
+                pass
+            elif mdkey == 'application.name':
+                pass
 
 		# do not Ignore data_stream any longer.
 
