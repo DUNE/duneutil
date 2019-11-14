@@ -30,7 +30,7 @@ for file in files:
         filename =  os.path.splitext(file)[0]
         recofiles = samweb.listFiles("run_number %s " % (sys.argv[1]) + "and run_type protodune-sp and data_tier full-reconstructed")
         for recofile in recofiles:
-          if filename in recofile:
+          if filename+'_' in recofile:
             print "Reco: ", recofile, '--nskip',events.index(int(sys.argv[2]))
             print "Locations:"
             cmd = ["samweb", "locate-file", recofile]

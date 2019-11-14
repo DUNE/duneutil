@@ -55,7 +55,7 @@ class MetaData(object):
         q = Queue.Queue()
         thread = threading.Thread(target=self.wait_for_subprocess, args=[proc, q])
         thread.start()
-        thread.join(timeout=60)
+        thread.join(timeout=300)
         if thread.is_alive():
             print 'Terminating subprocess because of timeout.'
             proc.terminate()
@@ -335,7 +335,9 @@ def main():
     argparser.add_argument('--set_processed',help='Set for parent file as processed in SAM metadata',action="store_true")
     argparser.add_argument('--strip_parents',help='Do not include the file\'s parents in SAM metadata for declaration',action="store_true")
     argparser.add_argument('--no_crc',help='Leave the crc out of the generated json',action="store_true")
-    
+    argparser.add_argument('--skip_dumper',help='Skip running sam_metadata_dumper on the input file',action="store_true")
+    argparser.add_argument('--input_json',help='Input json file containing metadata to be added to output (can contain ANY valid SAM metadata parameters)',type=str)
+
     global args
     args = argparser.parse_args()
 
@@ -345,6 +347,13 @@ def main():
 #        expSpecificMetadata = expMetaData(os.environ['SAM_EXPERIMENT'], str(sys.argv[1]))
         expSpecificMetadata = expMetaData(os.environ['SAM_EXPERIMENT'], args.infile)
         mddict = expSpecificMetadata.getmetadata()
+        # If --input_json is supplied, open that dict now and add it to the output json
+        if args.input_json != None:
+            # do some shit
+            arbjson = json.load(args.input_json)
+            for key in arbjson.keys():
+                mddict[key] = arbjson[key]
+
         if 'application' in mddict  and 'name' not in mddict['application'].keys() and args.appname != None:
             mddict['application']['name'] = args.appname
         if 'application' in mddict  and 'version' not in mddict['application'].keys() and args.appversion != None:
