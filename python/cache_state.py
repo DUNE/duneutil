@@ -7,11 +7,12 @@ import shlex
 import subprocess
 import sys
 import samweb_client as swc
+import json
 
 BULK_QUERY_SIZE = 100
 WEBDAV_HOST = "https://fndca4a.fnal.gov:2880"
 PNFS_DIR_PATTERN = re.compile(r"/pnfs/(?P<area>[^/]+)")
-
+PRESTAGE_API_BASE_URL = "https://fndca3a.fnal.gov:3880/api/v1/namespace"
 
 class ProgressBar(object):
   def __init__(self, total, announce_threshold=50):
@@ -107,6 +108,48 @@ def FilelistCacheCount(files, verbose_flag, METHOD="pnfs"):
   
   return cached
 
+def FilelistPrestageRequest(files, verbose_flag):
+    bulk_query_list = []
+  
+    if len(files) > 1:
+        print "Prestaging %d files:" % len(files)
+
+  
+    for f in files:
+        f = PNFS_DIR_PATTERN.sub(r"/pnfs/fnal.gov/usr/\1", f)
+        bulk_query_list.append(f)
+  
+    for f in bulk_query_list:
+        params = {
+            "local_cert": "/tmp/x509up_u%d"  % os.getuid(),
+            "base_url": PRESTAGE_API_BASE_URL,
+            "filename": f
+        }
+    
+        cmd="""
+        curl -L --capath /etc/grid-security/certificates \
+        --cert %(local_cert)s \
+        --cacert %(local_cert)s \
+        --key %(local_cert)s \
+        -s \
+        -X POST \
+        -H "Accept: application/json" \
+        -H "Content-Type: application/json" \
+        %(base_url)s/%(filename)s --data '{"action" : "qos", "target" : "disk+tape"}' \
+        """ % params
+
+        if verbose_flag: print cmd
+        
+        out = subprocess.check_output(shlex.split(cmd))
+        out_json=json.loads(out)
+        if verbose_flag: print json.dumps(out_json, indent=4, separators=(',', ': '))
+        
+        if not (out_json.has_key("status") and out_json["status"]=="success"):
+            print "Prestaging %s, server replied:\n%s" % (f, json.dumps(out_json, indent=4, separators=(',', ': ')))
+            return False
+    return True
+
+
 verbose_flag=False
 
 parser= argparse.ArgumentParser()
@@ -132,6 +175,7 @@ gp.add_argument("-q", "--dim",
 parser.add_argument("-s","--sparse", dest='sparse',help="Sparsification factor.  This is used to check only a portion of a list of files",default=1)
 parser.add_argument("-ss", "--snapshot", dest="snapshot", help="[Also requires -d]  Use this snapshot ID for the dataset.  Specify 'latest' for the most recent one.")
 parser.add_argument("-v","--verbose", action="store_true", dest="verbose", default="False", help="Print information about individual files")
+parser.add_argument("-p","--prestage", action="store_true", dest="prestage", default="False", help="Prestage the files specified")
 parser.add_argument("-m", "--method", choices=["webdav", "pnfs"], default="webdav", help="Use this method to look up file status.")
 
 args=parser.parse_args()
@@ -255,22 +299,30 @@ print
 
 non_enstore = cache_count
 
-cache_count = FilelistCacheCount(files_to_check, verbose_flag, METHOD)
-miss_count = len(files_to_check) - cache_count
-
-cache_count += non_enstore
-
-total = float(cache_count + miss_count)
-cache_frac_str = (" (%d%%)" % round(cache_count/total*100)) if total > 0 else ""
-miss_frac_str = (" (%d%%)" % round(miss_count/total*100)) if total > 0 else ""
-
-if total > 1:
-  print
-  print "Cached: %d%s\tTape only: %d%s" % (cache_count, cache_frac_str, miss_count, miss_frac_str)
-elif total == 1:
-  print "CACHED" if cache_count > 0 else "NOT CACHED"
-
-if miss_count == 0:
-  sys.exit(0)
+if args.prestage:
+    success=FilelistPrestageRequest(files_to_check, args.verbose)
+    sys.exit(0 if success else 1)
 else:
-  sys.exit(1)
+    cache_count = FilelistCacheCount(files_to_check, args.verbose, METHOD)
+    miss_count = len(files_to_check) - cache_count
+
+    cache_count += non_enstore
+
+    total = float(cache_count + miss_count)
+    cache_frac_str = (" (%d%%)" % round(cache_count/total*100)) if total > 0 else ""
+    miss_frac_str = (" (%d%%)" % round(miss_count/total*100)) if total > 0 else ""
+
+    if total > 1:
+      print
+      print "Cached: %d%s\tTape only: %d%s" % (cache_count, cache_frac_str, miss_count, miss_frac_str)
+    elif total == 1:
+      print "CACHED" if cache_count > 0 else "NOT CACHED"
+
+    if miss_count == 0:
+      sys.exit(0)
+    else:
+      sys.exit(1)
+
+# Local Variables:
+# python-indent-offset: 4
+# End:
