@@ -79,19 +79,19 @@ def FilelistCacheCount(files, verbose_flag, METHOD="pnfs"):
 
 
             cmd = """
-        curl  -L --capath /etc/grid-security/certificates \
-             --cert %(local_cert)s \
-             --cacert %(local_cert)s \
-             --key %(local_cert)s \
-             -s -X PROPFIND -H Depth:0 \
-             --data '<?xml version="1.0" encoding="utf-8"?>
-              <D:propfind xmlns:D="DAV:">
-                  <D:prop xmlns:R="http://www.dcache.org/2013/webdav"
-                          xmlns:S="http://srm.lbl.gov/StorageResourceManager">
-                      <S:FileLocality/>
-                  </D:prop>
-              </D:propfind>' \
-        """ % params
+            curl  -L --capath /etc/grid-security/certificates \
+                 --cert %(local_cert)s \
+                 --cacert %(local_cert)s \
+                 --key %(local_cert)s \
+                 -s -X PROPFIND -H Depth:0 \
+                 --data '<?xml version="1.0" encoding="utf-8"?>
+                  <D:propfind xmlns:D="DAV:">
+                      <D:prop xmlns:R="http://www.dcache.org/2013/webdav"
+                              xmlns:S="http://srm.lbl.gov/StorageResourceManager">
+                          <S:FileLocality/>
+                      </D:prop>
+                  </D:propfind>' \
+            """ % params
             for f in bulk_query_list[:BULK_QUERY_SIZE]:
                 cmd += " %s/%s" % (WEBDAV_HOST, f)
 
@@ -111,7 +111,8 @@ def FilelistCacheCount(files, verbose_flag, METHOD="pnfs"):
 def FilelistPrestageRequest(files, verbose_flag):
     bulk_query_list = []
 
-    if len(files) > 1:
+    announce=len(files) > 1
+    if announce:
         print "Prestaging %d files:" % len(files)
 
 
@@ -120,6 +121,8 @@ def FilelistPrestageRequest(files, verbose_flag):
         bulk_query_list.append(f)
 
     for f in bulk_query_list:
+        if announce:
+            print f
         params = {
             "local_cert": "/tmp/x509up_u%d"  % os.getuid(),
             "base_url": PRESTAGE_API_BASE_URL,
@@ -128,14 +131,14 @@ def FilelistPrestageRequest(files, verbose_flag):
 
         cmd="""
         curl -L --capath /etc/grid-security/certificates \
-        --cert %(local_cert)s \
-        --cacert %(local_cert)s \
-        --key %(local_cert)s \
-        -s \
-        -X POST \
-        -H "Accept: application/json" \
-        -H "Content-Type: application/json" \
-        %(base_url)s/%(filename)s --data '{"action" : "qos", "target" : "disk+tape"}' \
+            --cert %(local_cert)s \
+            --cacert %(local_cert)s \
+            --key %(local_cert)s \
+            -s \
+            -X POST \
+            -H "Accept: application/json" \
+            -H "Content-Type: application/json" \
+            %(base_url)s/%(filename)s --data '{"action" : "qos", "target" : "disk+tape"}' \
         """ % params
 
         if verbose_flag: print cmd
@@ -148,9 +151,6 @@ def FilelistPrestageRequest(files, verbose_flag):
             print "Prestaging %s, server replied:\n%s" % (f, json.dumps(out_json, indent=4, separators=(',', ': ')))
             return False
     return True
-
-
-verbose_flag=False
 
 parser= argparse.ArgumentParser()
 
@@ -174,8 +174,8 @@ gp.add_argument("-q", "--dim",
 
 parser.add_argument("-s","--sparse", dest='sparse',help="Sparsification factor.  This is used to check only a portion of a list of files",default=1)
 parser.add_argument("-ss", "--snapshot", dest="snapshot", help="[Also requires -d]  Use this snapshot ID for the dataset.  Specify 'latest' for the most recent one.")
-parser.add_argument("-v","--verbose", action="store_true", dest="verbose", default="False", help="Print information about individual files")
-parser.add_argument("-p","--prestage", action="store_true", dest="prestage", default="False", help="Prestage the files specified")
+parser.add_argument("-v","--verbose", action="store_true", dest="verbose", default=False, help="Print information about individual files")
+parser.add_argument("-p","--prestage", action="store_true", dest="prestage", default=False, help="Prestage the files specified")
 parser.add_argument("-m", "--method", choices=["webdav", "pnfs"], default="webdav", help="Use this method to look up file status.")
 
 args=parser.parse_args()
