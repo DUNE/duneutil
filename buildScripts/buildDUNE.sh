@@ -165,7 +165,6 @@ cd $MRB_SOURCE || exit 1
 
 DASHQUAL=`echo ${QUAL} | sed -e "s/:/-/g" | sed -e "s/-/-nu-/"`
 
-
 dune_raw_data_version=`ups active | grep dune_raw_data | awk '{print $2}'`
 echo "dune_raw_data version: $dune_raw_data_version"
 #artqual=`ups active | grep dune_raw_data | awk '{print $6}'   | sed -e "s/${QUAL}//g" | sed -e "s/nu//g" | sed -e "s/://g" | sed -e "s/${BUILDTYPE}//g"`
@@ -217,8 +216,10 @@ fi
 
 # Construct name of larsoft manifest.
 
+DASHQUAL2=`echo ${QUAL} | sed -e "s/:/-/g"`
+
 #larsoft_hyphen_qual=`echo $LARSOFT_QUAL | tr : - | sed 's/-noifdh//'`
-larsoft_manifest=larsoft-${larsoft_dot_version}-${flvr}-${SQUAL}-${QUAL}-${BUILDTYPE}_MANIFEST.txt
+larsoft_manifest=larsoft-${larsoft_dot_version}-${flvr}-${SQUAL}-${DASHQUAL2}-${BUILDTYPE}_MANIFEST.txt
 echo "Larsoft manifest:"
 echo $larsoft_manifest
 echo
