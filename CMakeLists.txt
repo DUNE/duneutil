@@ -74,5 +74,3 @@ include(UseCPack)
 # Scripts and utilities.
 add_subdirectory(dhtools)
 
-# 
-add_subdirectory(buildScripts)
