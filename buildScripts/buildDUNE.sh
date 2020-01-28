@@ -13,6 +13,8 @@
 
 echo "dunetpc version: $DUNE"
 echo "base qualifiers: $QUAL"
+QUAL=`echo ${QUAL} | sed -e "s/-/:/g"`
+echo "modified base qualifiers: $QUAL"
 echo "build type: $BUILDTYPE"
 echo "workspace: $WORKSPACE"
 
@@ -161,20 +163,29 @@ cd $MRB_SOURCE || exit 1
 
 # Extract dune_raw_data version from our ups active list
 
+DASHQUAL=`echo ${QUAL} | sed -e "s/:/-/g" | sed -e "s/-/-nu-/"`
+
+
 dune_raw_data_version=`ups active | grep dune_raw_data | awk '{print $2}'`
 echo "dune_raw_data version: $dune_raw_data_version"
-artqual=`ups active | grep dune_raw_data | awk '{print $6}'   | sed -e "s/${QUAL}//g" | sed -e "s/nu//g" | sed -e "s/://g" | sed -e "s/${BUILDTYPE}//g"`
+#artqual=`ups active | grep dune_raw_data | awk '{print $6}'   | sed -e "s/${QUAL}//g" | sed -e "s/nu//g" | sed -e "s/://g" | sed -e "s/${BUILDTYPE}//g"`
+artqual=$SQUAL
 lbne_raw_data_version=`ups active | grep lbne_raw_data | awk '{print $2}'`
 echo "lbne_raw_data version: $lbne_raw_data_version"
 
 cd $MRB_BUILDDIR
 
+# find our set qualifier from artdaq_core's qualifier
+
+SQUAL=`ups active | grep artdaq_core | tr : '\n' | grep ^s | awk '{print $1}'`
+echo "Set qualifier from artdaq_core:  $SQUAL"
+
 # also add dune_raw_data and lbne_raw_data to the manifest
 
 dune_raw_data_dot_version=`echo ${dune_raw_data_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
-echo "dune_raw_data         ${dune_raw_data_version}       dune_raw_data-${dune_raw_data_dot_version}-${PLATFORM}-x86_64-${QUAL}-nu-${artqual}-${BUILDTYPE}.tar.bz2" >>  $manifest
+echo "dune_raw_data         ${dune_raw_data_version}       dune_raw_data-${dune_raw_data_dot_version}-${PLATFORM}-x86_64-${DASHQUAL}-${artqual}-${BUILDTYPE}.tar.bz2" >>  $manifest
 lbne_raw_data_dot_version=`echo ${lbne_raw_data_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
-echo "lbne_raw_data         ${lbne_raw_data_version}       lbne_raw_data-${lbne_raw_data_dot_version}-${PLATFORM}-x86_64-${QUAL}-nu-${artqual}-${BUILDTYPE}.tar.bz2" >>  $manifest
+echo "lbne_raw_data         ${lbne_raw_data_version}       lbne_raw_data-${lbne_raw_data_dot_version}-${PLATFORM}-x86_64-${DASHQUAL}-${artqual}-${BUILDTYPE}.tar.bz2" >>  $manifest
 
 # add dunepdsprce to the manifest
 
@@ -203,11 +214,6 @@ if uname | grep -q Darwin; then
 else
   flvr=`ups flavor -4`
 fi
-
-# find our set qualifier from artdaq_core's qualifier
-
-SQUAL=`ups active | grep artdaq_core | tr : '\n' | grep ^s | awk '{print $1}'`
-echo "Set qualifier from artdaq_core:  $SQUAL"
 
 # Construct name of larsoft manifest.
 
