@@ -69,8 +69,8 @@ def FilelistCacheCount(files, verbose_flag, METHOD="pnfs"):
 
     if len(bulk_query_list) > 0:
         while len(bulk_query_list) > 0:
-                # it's probably possible to actually implement this using urllib2 natively,
-           # but I couldn't make it work very quickly
+            # it's probably possible to actually implement this using urllib2 natively,
+            # but I couldn't make it work very quickly
 
             params = {
                 "local_cert": "/tmp/x509up_u%d"  % os.getuid(),
@@ -223,7 +223,7 @@ if args.dataset_name:
         filelist = args
 
 if args.dimensions:
-    print "Retrieving file list for SAM dimensions: '%s'..." % args.dataset_name,
+    print "Retrieving file list for SAM dimensions: '%s'..." % args.dimensions,
     sys.stdout.flush()
     try:
         dimensions = args.dimensions
