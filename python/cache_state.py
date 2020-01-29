@@ -13,6 +13,12 @@ from io import BytesIO
 
 X509_USER_PROXY="/tmp/x509up_u%d" % os.getuid()
 PNFS_DIR_PATTERN = re.compile(r"/pnfs/(?P<area>[^/]+)")
+# enstore locations look like
+# "enstore:/path/to/directory(weird_tape_id)", except that sometimes
+# the "weird_tape_id" part is missing (eg in the output of
+# samweb.listFilesAndLocations()), so we make that part optional,
+# which gets us this unreadable re
+ENSTORE_PATTERN = re.compile(r"^enstore:([^(]+)(\([^)]+\))?")
 # The base URL for the Fermilab instance of the dcache REST API.
 #
 # We use this for finding the online status of files and for requesting prestaging. The full dcache REST API is described in the dcache User Guide:
@@ -219,17 +225,65 @@ def FilelistPrestageRequest(files, verbose_flag):
 
     return (n_request_succeeded, n)
 
+################################################################################
+def enstore_locations_to_paths(samlist, sparsification=1):
+    """Convert a list of enstore locations as returned by
+       samweb.listFilesAndLocations() into plain pnfs paths. Sparsify by
+       `sparsification`"""
+    pnfspaths=[]
+    for f in samlist[::sparsification]:
+        m=ENSTORE_PATTERN.match(f[0])
+        if m:
+            directory=m.group(1)
+            filename=f[1]
+            pnfspaths.append(os.path.join(directory, filename))
+        else:
+            print "enstore_locations_to_paths got a non-enstore location", f[0]
+    return pnfspaths
+
+examples="""
+Examples:
+
+ Find the cache state of one file:
+
+    %(prog)s np04_raw_run004513_0008_dl5.root
+
+ Find the cache state of multiple files. With -v, each file's status
+ is shown; otherwise just a count is shown. Can mix-and-match full
+ paths and SAM filenames:
+
+    %(prog)s -v /pnfs/dune/tape_backed/myfile.root np04_raw_run004513_0008_dl5.root
+
+ Summarize the cache state of a SAM dataset:
+
+    %(prog)s -d protodune-sp_runset_4513_raw_v0
+
+ Show the cache state of each file matching a SAM query:
+
+    %(prog)s -v --dim 'run_type protodune-sp and run_number 4513 and data_tier raw'
+
+ Prestage an individual file, by its SAM filename:
+
+    %(prog)s -p np04_raw_run004513_0008_dl5.root
+
+ (In subsequent queries, the file will show up as "pending" until it
+ arrives on disk)
+
+ Prestage an entire dataset (like samweb prestage-dataset):
+
+    %(prog)s -p -d protodune-sp_runset_4513_raw_v0
+"""
 
 ################################################################################
 if __name__=="__main__":
-    parser= argparse.ArgumentParser()
+    parser= argparse.ArgumentParser(epilog=examples, formatter_class=argparse.RawDescriptionHelpFormatter)
 
     gp = parser.add_mutually_exclusive_group()
     gp.add_argument("files",
                     nargs="*",
                     default=[],
                     metavar="FILE",
-                    help="Files to consider",
+                    help="Files to consider. Can be specified as a full /pnfs path, or just the SAM filename",
     )
     gp.add_argument("-d", "--dataset",
                     metavar="DATASET",
@@ -263,7 +317,8 @@ if __name__=="__main__":
 
     sam = swc.SAMWebClient("dune")
 
-    #
+    cache_count = 0
+
     # Figure out where we want to get our list of files from
 
     # See if a SAM dataset was specified
@@ -281,7 +336,7 @@ if __name__=="__main__":
             else:
                 samlist  = sam.listFilesAndLocations(defname=args.dataset_name, filter_path="enstore")
 
-            filelist = [ os.path.join(f[0],f[1]) for  f in list(samlist)[::args.sparse] ]
+            filelist = enstore_locations_to_paths(list(samlist), args.sparse) 
             print " done."
         except Exception as e:
             print e
@@ -295,8 +350,7 @@ if __name__=="__main__":
         sys.stdout.flush()
         try:
             samlist = sam.listFilesAndLocations(dimensions=args.dimensions, filter_path="enstore")
-
-            filelist = [ os.path.join(f[0],f[1]) for  f in list(samlist)[::args.sparse] ]
+            filelist = enstore_locations_to_paths(list(samlist), args.sparse) 
             print " done."
         except Exception as e:
             print e
@@ -308,44 +362,35 @@ if __name__=="__main__":
         # We were passed a list of files. Loop over them and try to locate each one
         for f in args.files:
             if os.path.isfile(f):
-                loc = os.path.split(f)[0]
-                # ok.  try to guess what kind of location this is...
-                if loc.startswith("/pnfs") and ("/scratch" in loc or "/persistent" in loc):
-                    loc = "dcache:" + loc
-                elif loc.startswith("/pnfs"):
-                    loc = "enstore:" + loc
-                elif loc.startswith("/dune"):
-                    loc = "bluearc:" + loc
+                # We got a path to an actual file
+                # If the file's not on pnfs, just assume it's on a
+                # regular filesystem that is always "cached". Otherwise, add it to the list
+                if f.startswith("/pnfs"):
+                    filelist.append(f)
                 else:
-                    print >> sys.stderr, "Unknown storage tier for file:", f
-                    print >> sys.stderr, "Cannot determine cache state."
-                    sys.exit(2)
-
-                loc = [loc,]
+                    cache_count += 1
+                    continue
             else:
+                # The argument isn't a file on the file system. Assume
+                # it's a filename in samweb and ask samweb for the
+                # location
                 try:
-                    loc = sam.locateFile(f)
-                    loc = [l['location'] for l in loc]
+                    locs = sam.locateFile(f)
+                    # locateFile potentially produces multiple
+                    # locations. We look through them for the enstore
+                    # one, and add it to the list, but without the
+                    # "enstore:/" at the front
+                    for loc in locs:
+                        l=loc["location"]
+                        m=ENSTORE_PATTERN.match(l)
+                        if m:
+                            directory=m.group(1)
+                            fullpath=os.path.join(directory, f)
+                            filelist.append(fullpath)
                 except (swc.exceptions.FileNotFound, swc.exceptions.HTTPNotFound):
                     print >> sys.stderr, "File is not known to SAM and is not a full path:", f
                     sys.exit(2)
 
-            # if it's got a dcache location, our tools will prefer that location anyway,
-            # and that's cached by construction.
-            # bluearc files are cached for the purposes of this script, I guess...
-            if any(l.startswith("dcache:") or l.startswith("bluearc:") for l in loc):
-                cache_count += 1
-                continue
-
-            for l in loc:
-                if l.startswith("enstore:"):
-                    # We now have the enstore location
-                    # Strip off the enstore prefix and the tape label
-                    thePath = l.split(':')[1].split('(')[0]
-                    filelist.append(os.path.join(thePath, f))
-
-
-    cache_count = 0
     miss_count = 0
 
     n_files = len(filelist)
