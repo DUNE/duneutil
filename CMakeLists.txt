@@ -73,3 +73,4 @@ include(UseCPack)
 
 # Scripts and utilities.
 add_subdirectory(dhtools)
+
