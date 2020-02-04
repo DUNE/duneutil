@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+from __future__ import division
+from __future__ import print_function
 
 import argparse
 import os, os.path
@@ -10,6 +12,7 @@ import subprocess
 import shlex
 import pycurl
 from io import BytesIO
+
 
 X509_USER_PROXY="/tmp/x509up_u%d" % os.getuid()
 PNFS_DIR_PATTERN = re.compile(r"/pnfs/(?P<area>[^/]+)")
@@ -30,7 +33,7 @@ DCACHE_REST_BASE_URL = "https://fndca3a.fnal.gov:3880/api/v1/namespace"
 class ProgressBar(object):
     def __init__(self, total, announce_threshold=50):
         self.total = total
-        self._total_div10 = total / 10
+        self._total_div10 = total // 10
 
         self.announce = total >= announce_threshold
         self._last_announce_decile = -1
@@ -40,15 +43,15 @@ class ProgressBar(object):
     def Update(self, n):
         current_decile = None
         if self.total > 10:
-            current_decile = n / self._total_div10
+            current_decile = n // self._total_div10
         if self.announce:
             if current_decile is None:
-                print " %d" % n,
+                print( " %d" % n, end=" " )
             if (current_decile > self._last_announce_decile or n == self.total):  # always want to announce 100%
-                curr_perc = int(float(n) / float(self.total) * 100)
-                print " %d%%" % curr_perc,
+                curr_perc = int(n / self.total * 100)
+                print( " %d%%" % curr_perc, end=" " )
 
-                self._last_announce_decile = n / self._total_div10
+                self._last_announce_decile = n // self._total_div10
 
             sys.stdout.flush()
 
@@ -171,7 +174,7 @@ def FilelistCacheCount(files, verbose_flag, METHOD="rest"):
     assert(METHOD in ("rest", "pnfs"))
 
     if len(files) > 1:
-        print "Checking %d files:" % len(files)
+        print( "Checking %d files:" % len(files) )
     cached = 0
     pending = 0
     n = 0
@@ -188,12 +191,12 @@ def FilelistCacheCount(files, verbose_flag, METHOD="rest"):
             if "disk" in qos: cached += 1 
             if "disk" in targetQos: pending += 1
             if verbose_flag:
-                print f, qos, "pending" if targetQos else ""
+                print( f, qos, "pending" if targetQos else "")
         elif METHOD=="pnfs":
             this_cached=is_file_online_pnfs(f)
             if this_cached: cached += 1
             if verbose_flag:
-                print f, "ONLINE" if this_cached else "NEARLINE"
+                print( f, "ONLINE" if this_cached else "NEARLINE")
 
         n += 1
         # If we're in verbose mode, the per-file output fights with
@@ -212,7 +215,7 @@ def FilelistCacheCount(files, verbose_flag, METHOD="rest"):
 def FilelistPrestageRequest(files, verbose_flag):
     announce=len(files) > 1
     if announce:
-        print "Prestaging %d files:" % len(files)
+        print( "Prestaging %d files:" % len(files) )
 
     c=make_curl()
     n = len(files)
@@ -221,7 +224,7 @@ def FilelistPrestageRequest(files, verbose_flag):
         success=request_prestage(c, f)
         if success: n_request_succeeded += 1
         if verbose_flag:
-            print f, "request succeeded" if success else "request failed"
+            print( f, "request succeeded" if success else "request failed" )
 
     return (n_request_succeeded, n)
 
@@ -238,7 +241,7 @@ def enstore_locations_to_paths(samlist, sparsification=1):
             filename=f[1]
             pnfspaths.append(os.path.join(directory, filename))
         else:
-            print "enstore_locations_to_paths got a non-enstore location", f[0]
+            print( "enstore_locations_to_paths got a non-enstore location", f[0] )
     return pnfspaths
 
 examples="""
@@ -310,7 +313,7 @@ if __name__=="__main__":
         try:
             subprocess.check_call(shlex.split("setup_fnal_security --check"), stdout=open(os.devnull), stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError:
-            print "Your proxy is expired or missing.  Please run `setup_fnal_security` and then try again."
+            print( "Your proxy is expired or missing.  Please run `setup_fnal_security` and then try again." )
             sys.exit(2)
 
     filelist = None if args.dataset_name else args.files
@@ -323,8 +326,7 @@ if __name__=="__main__":
 
     # See if a SAM dataset was specified
     if args.dataset_name:
-        print "Retrieving file list for SAM dataset definition name: '%s'..." % args.dataset_name,
-        sys.stdout.flush()
+        print( "Retrieving file list for SAM dataset definition name: '%s'..." % args.dataset_name, end="", flush=True)
         try:
             dimensions = None
             if args.snapshot == "latest":
@@ -337,25 +339,24 @@ if __name__=="__main__":
                 samlist  = sam.listFilesAndLocations(defname=args.dataset_name, filter_path="enstore")
 
             filelist = enstore_locations_to_paths(list(samlist), args.sparse) 
-            print " done."
+            print( " done." )
         except Exception as e:
-            print e
-            print
-            print 'Unable to retrieve SAM information for dataset: %s' %(args.dataset_name)
+            print( e )
+            print()
+            print( 'Unable to retrieve SAM information for dataset: %s' %(args.dataset_name) )
             exit(-1)
             # Take the rest of the commandline as the filenames
             filelist = args
     elif args.dimensions:
-        print "Retrieving file list for SAM dimensions: '%s'..." % args.dimensions,
-        sys.stdout.flush()
+        print( "Retrieving file list for SAM dimensions: '%s'..." % args.dimensions, end="", flush=True )
         try:
             samlist = sam.listFilesAndLocations(dimensions=args.dimensions, filter_path="enstore")
             filelist = enstore_locations_to_paths(list(samlist), args.sparse) 
-            print " done."
+            print( " done." )
         except Exception as e:
-            print e
-            print
-            print 'Unable to retrieve SAM information for dimensions: %s' %(args.dimensions)
+            print( e )
+            print()
+            print( 'Unable to retrieve SAM information for dimensions: %s' %(args.dimensions) )
             exit(-1)
     else:
         filelist=[]
@@ -388,7 +389,7 @@ if __name__=="__main__":
                             fullpath=os.path.join(directory, f)
                             filelist.append(fullpath)
                 except (swc.exceptions.FileNotFound, swc.exceptions.HTTPNotFound):
-                    print >> sys.stderr, "File is not known to SAM and is not a full path:", f
+                    print("File is not known to SAM and is not a full path:", f, file=sys.stderr)
                     sys.exit(2)
 
     miss_count = 0
@@ -408,14 +409,14 @@ if __name__=="__main__":
         miss_frac_str = (" (%d%%)" % round(miss_count/total*100)) if total > 0 else ""
 
         if total > 1:
-            print
+            print()
             pending_string=""
             if pending_count>=0:
                 pending_string="\tPending: %d (%d%%)" % (pending_count, round(pending_count/total*100))
-            print "Cached: %d%s\tTape only: %d%s%s" % (cache_count, cache_frac_str, miss_count, miss_frac_str, pending_string)
+            print( "Cached: %d%s\tTape only: %d%s%s" % (cache_count, cache_frac_str, miss_count, miss_frac_str, pending_string))
         elif total == 1:
-            print "CACHED" if cache_count > 0 else "NOT CACHED",
-            print " PENDING" if pending_count > 0 else ""
+            print( "CACHED" if cache_count > 0 else "NOT CACHED", end="")
+            print( " PENDING" if pending_count > 0 else "" )
 
         if miss_count == 0:
             sys.exit(0)
