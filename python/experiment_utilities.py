@@ -44,7 +44,7 @@ def get_dropbox(filename):
         file_type = md['file_type']
 
     if not file_type:
-        raise RuntimeError, 'Missing or invalid metadata for file %s.' % filename
+        raise RuntimeError('Missing or invalid metadata for file %s.' % filename)
 
     # Construct dropbox path.
 
@@ -77,7 +77,7 @@ def get_setup_script_path():
     if os.path.isfile(OASIS_DIR+"setup_dune.sh"):
         setup_script = OASIS_DIR+"setup_dune.sh"
     else:
-        raise RuntimeError, "Could not find setup script at "+OASIS_DIR
+        raise RuntimeError("Could not find setup script at "+OASIS_DIR)
 
     return setup_script
 
