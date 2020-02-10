@@ -1,3 +1,4 @@
+from __future__ import print_function
 import base64
 import sys
 import os.path
@@ -246,5 +247,5 @@ if __name__ == '__main__':
     
     c = ECLConnection(url)
     lst = c.list(text=search_text, substring=search_substring, limit=10)
-    print lst
+    print (lst)
     
