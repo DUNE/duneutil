@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+
+from __future__ import print_function
+
 import sys, getopt
 import os
 from subprocess import Popen, PIPE
@@ -7,7 +10,6 @@ import Queue
 import project_utilities, root_metadata
 import json
 import abc
-from __future__ import print_function
 
 # Function to wait for a subprocess to finish and fetch return code,
 # standard output, and standard error.
