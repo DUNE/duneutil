@@ -43,7 +43,7 @@ def call_project_py(xml, stg, act, test=False):
         prj_out = subprocess.check_output(prj_cmd, stderr=subprocess.STDOUT)
         logging.info("project.py was run successfully.")
         logging.info("project.py output: {}".format(prj_out))
-    except subprocess.CalledProcessError, e:
+    except subprocess.CalledProcessError as e:
         logging.error("project.py exit with {}.".format(e.returncode))
         logging.error("project.py output: {}.".format(e.output))
         logging.error("Exiting now!")
