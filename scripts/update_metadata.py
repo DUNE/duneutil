@@ -12,7 +12,7 @@ def update_info(flist, md):
         sys.stdout.flush()
         sam.modifyFileMetadata(f,md)
         ith += 1
-    print "-- Done"
+    print("-- Done")
     return
 
 
@@ -30,7 +30,7 @@ if __name__ == '__main__':
     sam = swc.SAMWebClient("dune")
 
     flist=sam.listFiles(args.dimensions)
-    print "%d files matching dimension." % (len(flist))
+    print("%d files matching dimension." % (len(flist)))
     if args.metadata is not None:
         update_info(flist, args.metadata)
         return
