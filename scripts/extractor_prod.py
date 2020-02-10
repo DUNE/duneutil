@@ -3,8 +3,7 @@ import sys, getopt
 import os
 from subprocess import Popen, PIPE
 import threading
-import Queue
-import project_utilities, root_metadata
+import queue
 import json
 import abc
 import ifdh
@@ -38,12 +37,12 @@ class MetaData(object):
 
     def extract_metadata_to_pipe(self):
         """Extract metadata from inputfile into a pipe for further processing."""
-        local = project_utilities.path_to_local(self.inputfile)
+        local = self.inputfile
         if len(local) > 0:
             proc = Popen(["sam_metadata_dumper", local], stdout=PIPE,
                          stderr=PIPE)
         else:
-            url = project_utilities.path_to_url(inputfile)
+            url = inputfile
             proc = Popen(["sam_metadata_dumper", url], stdout=PIPE,
                          stderr=PIPE)
         if len(local) > 0 and local != self.inputfile:
@@ -52,19 +51,19 @@ class MetaData(object):
     
     def get_job(self, proc):
         """Run the proc in a 60-sec timeout queue, return stdout, stderr"""
-        q = Queue.Queue()
+        q = queue.Queue()
         thread = threading.Thread(target=self.wait_for_subprocess, args=[proc, q])
         thread.start()
-        thread.join(timeout=300)
+        thread.join(timeout=7200)
         if thread.is_alive():
-            print 'Terminating subprocess because of timeout.'
+            print('Terminating subprocess because of timeout.')
             proc.terminate()
             thread.join()
         rc = q.get()
         jobout = q.get()
         joberr = q.get()
         if rc != 0:
-            raise RuntimeError, 'sam_metadata_dumper returned nonzero exit status {}.'.format(rc)
+            raise RuntimeError('sam_metadata_dumper returned nonzero exit status {}.'.format(rc))
         return jobout, joberr
     
     @staticmethod
@@ -79,12 +78,13 @@ class MetaData(object):
     @staticmethod
     def mdart_gen(jobtuple):
         """Take Jobout and Joberr (in jobtuple) and return mdart object from that"""
-        mdtext = ''.join(line.replace(", ,", ",") for line in jobtuple[0].split('\n') if line[-3:-1] != ' ,')
-	mdtop = json.JSONDecoder().decode(mdtext)
-        if len(mdtop.keys()) == 0:
-            print 'No top-level key in extracted metadata.'
+###        mdtext = ''.join(line.replace(", ,", ",") for line in jobtuple[0].split('\n') if line[-3:-1] != ' ,')
+        mdtext = ''.join(line.replace(", ,", ",") for line in jobtuple[0].decode().split('\n') if line[-3:-1] != ' ,')
+        mdtop = json.JSONDecoder().decode(mdtext)
+        if len(list(mdtop.keys())) == 0:
+            print('No top-level key in extracted metadata.')
             sys.exit(1)
-        file_name = mdtop.keys()[0]
+        file_name = list(mdtop.keys())[0]
         return mdtop[file_name]
 
     @staticmethod
@@ -96,21 +96,43 @@ class MetaData(object):
         return md['application']
 
 
+
+class MetaDataKey:
+
+    def __init__(self):
+        self.expname = ''
+
+    def metadataList(self):
+        return [self.expname + elt for elt in ('lbneMCGenerators','lbneMCName','lbneMCDetectorType','StageName')]
+
+    def translateKey(self, key):
+        if key == 'lbneMCDetectorType':
+            return 'lbne_MC.detector_type'
+        elif key == 'StageName':
+            return 'lbne_MC.miscellaneous'
+        else:
+            prefix = key[:4]
+            stem = key[4:]
+            projNoun = stem.split("MC")
+            return prefix + "_MC." + projNoun[1]
+
+
+
 class expMetaData(MetaData):
     """Class to hold/interpret experiment-specific metadata"""
     def __init__(self, expname, inputfile):
         MetaData.__init__(self, inputfile)
         self.expname = expname
         #self.exp_md_keyfile = expname + '_metadata_key'
-        try:
-            #translateMetaData = __import__("experiment_utilities", "MetaDataKey")
-	    from experiment_utilities import MetaDataKey
-        except ImportError:
-            print "You have not defined an experiment-specific metadata and key-translating module in experiment_utilities. Exiting"
-            raise
-	    
+#        try:
+#            #translateMetaData = __import__("experiment_utilities", "MetaDataKey")
+#            from experiment_utilities import MetaDataKey
+#        except ImportError:
+#            print("You have not defined an experiment-specific metadata and key-translating module in experiment_utilities. Exiting")
+#            raise
+#	    
         metaDataModule = MetaDataKey()
-	self.metadataList, self.translateKeyf = metaDataModule.metadataList(), metaDataModule.translateKey
+        self.metadataList, self.translateKeyf = metaDataModule.metadataList(), metaDataModule.translateKey
 
     def translateKey(self, key):
         """Returns the output of the imported translateKey function (as translateKeyf) called on key"""
@@ -121,14 +143,13 @@ class expMetaData(MetaData):
         # define an empty python dictionary which will hold sam metadata.
         # Some fields can be copied directly from art metadata to sam metadata.
         # Other fields require conversion.
-	md = {}
+        md = {}
 	
 	# Loop over art metadata.
-	for mdkey in mdart.keys():
+        for mdkey in list(mdart.keys()):
             mdval = mdart[mdkey]
 
 		# Skip some art-specific fields.
-
             if mdkey == 'file_format_version':
                 pass
             elif mdkey == 'file_format_era':
@@ -138,8 +159,7 @@ class expMetaData(MetaData):
 		# Instead, get run_type from runs field.
 
             elif mdkey == 'run_type':
-	       	pass
-
+                pass
             elif mdkey == 'application.version':
                 pass
             elif mdkey == 'application.family':
@@ -150,7 +170,7 @@ class expMetaData(MetaData):
 		# do not Ignore data_stream any longer.
 
             elif mdkey == 'data_stream':
-                if 'dunemeta.data_stream' not in mdart.keys(): # only use this data_stream value if dunemeta.data_stream is not present
+                if 'dunemeta.data_stream' not in list(mdart.keys()): # only use this data_stream value if dunemeta.data_stream is not present
                     md['data_stream'] = mdval
 
 		# Ignore process_name as of 2018-09-22 because it is not in SAM yet
@@ -187,15 +207,15 @@ class expMetaData(MetaData):
             elif mdkey == 'art.first_event':
                 md[mdkey] = mdval[2]
             elif mdkey == 'art.last_event':
-		md[mdkey] = mdval[2]
+                md[mdkey] = mdval[2]
             elif mdkey == 'first_event':
                 md[mdkey] = mdval
             elif mdkey == 'last_event':
                 md[mdkey] = mdval
             elif mdkey == 'lbneMCGenerators':
-		md['lbne_MC.generators']  = mdval
+                md['lbne_MC.generators']  = mdval
             elif mdkey == 'lbneMCOscillationP':
-		md['lbne_MC.oscillationP']  = mdval
+                md['lbne_MC.oscillationP']  = mdval
             elif mdkey == 'lbneMCTriggerListVersion':
                 md['lbne_MC.trigger-list-version']  = mdval
             elif mdkey == 'lbneMCBeamEnergy':
@@ -354,25 +374,25 @@ def main():
             for key in arbjson.keys():
                 mddict[key] = arbjson[key]
 
-        if 'application' in mddict  and 'name' not in mddict['application'].keys() and args.appname != None:
+        if 'application' in mddict  and 'name' not in list(mddict['application'].keys()) and args.appname != None:
             mddict['application']['name'] = args.appname
-        if 'application' in mddict  and 'version' not in mddict['application'].keys() and args.appversion != None:
+        if 'application' in mddict  and 'version' not in list(mddict['application'].keys()) and args.appversion != None:
             mddict['application']['version'] = args.appversion
-        if 'application' in mddict  and 'family' not in mddict['application'].keys() and args.appfamily != None:
+        if 'application' in mddict  and 'family' not in list(mddict['application'].keys()) and args.appfamily != None:
             mddict['application']['family'] = args.appfamily
         if args.appfamily != None and args.appname != None and args.appversion != None:
             mddict['application'] = {}
             mddict['application']['family']  = args.appfamily
             mddict['application']['name']    = args.appname
             mddict['application']['version'] = args.appversion    
-        if 'DUNE.campaign' not in mddict.keys() and args.campaign != None:
+        if 'DUNE.campaign' not in list(mddict.keys()) and args.campaign != None:
             mddict['DUNE.campaign'] = args.campaign
         if args.data_stream != None:
             mddict['data_stream'] = args.data_stream
 
     except TypeError:
-        print 'You have not implemented a defineMetaData function by providing an experiment.'
-        print 'No metadata keys will be saved'
+        print('You have not implemented a defineMetaData function by providing an experiment.')
+        print('No metadata keys will be saved')
         raise
 #    mdtext = json.dumps(expSpecificMetadata.getmetadata(), indent=2, sort_keys=True)
     mdtext = json.dumps(mddict, indent=2, sort_keys=True)
@@ -388,10 +408,10 @@ def main():
             try:
                 swc.modifyFileMetadata(fname, moddict)
             except:
-                print 'Error modidying metadata for %s' % fname
+                print('Error modidying metadata for %s' % fname)
                 raise
 
-    print mdtext
+    print(mdtext)
     sys.exit(0)
 
 

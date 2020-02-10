@@ -161,6 +161,11 @@ esac
 
 cd $MRB_SOURCE || exit 1
 
+# find our set qualifier from artdaq_core's qualifier
+
+SQUAL=`ups active | grep artdaq_core | tr : '\n' | grep ^s | awk '{print $1}'`
+echo "Set qualifier from artdaq_core:  $SQUAL"
+
 # Extract dune_raw_data version from our ups active list
 
 DASHQUAL=`echo ${QUAL} | sed -e "s/:/-/g" | sed -e "s/-/-nu-/"`
@@ -174,11 +179,6 @@ echo "lbne_raw_data version: $lbne_raw_data_version"
 
 cd $MRB_BUILDDIR
 
-# find our set qualifier from artdaq_core's qualifier
-
-SQUAL=`ups active | grep artdaq_core | tr : '\n' | grep ^s | awk '{print $1}'`
-echo "Set qualifier from artdaq_core:  $SQUAL"
-
 # also add dune_raw_data and lbne_raw_data to the manifest
 
 dune_raw_data_dot_version=`echo ${dune_raw_data_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
@@ -188,10 +188,18 @@ echo "lbne_raw_data         ${lbne_raw_data_version}       lbne_raw_data-${lbne_
 
 # add dunepdsprce to the manifest
 
+fci=`expr index "$QUAL" :`
+let "fct = $fci - 1"
+COMPILER=$QUAL
+if [[ $fci != 0 ]]; then
+  COMPILER=${QUAL:0:$fct}
+fi
+echo "Compiler is: $COMPILER"
+
 dunepdsprce_version=`ups active | grep dunepdsprce | awk '{print $2}'`
 echo "dunepdsprce version: $dunepdsprce_version"
 dunepdsprce_dot_version=`echo ${dunepdsprce_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
-echo "dunepdsprce          ${dunepdsprce_version}          dunepdsprce-${dunepdsprce_dot_version}-${PLATFORM}-x86_64-gen-${QUAL}-${BUILDTYPE}.tar.bz2" >>  $manifest
+echo "dunepdsprce          ${dunepdsprce_version}          dunepdsprce-${dunepdsprce_dot_version}-${PLATFORM}-x86_64-gen-${COMPILER}-${BUILDTYPE}.tar.bz2" >>  $manifest
 
 # add dune_oslibs to the manifest
 
