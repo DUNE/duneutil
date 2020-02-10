@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
+from __future__ import print_function
+
 # Creation Date : 2013-10-28, Qizhong Li
 # upgraded to be python2 and python 3 compatible by Tom Junk. Only modified print statements
 
 import os, sys
 import samweb_client
-
-from __future__ import print_function
 
 Project = sys.argv[1]
 Destination = sys.argv[2]
