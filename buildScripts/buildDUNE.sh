@@ -168,6 +168,14 @@ DQTMP=${QUAL}-${SQUAL}
 DASHQUAL=`echo ${DQTMP} | sed -e "s/:/-/g" | sed -e "s/-/-nu-/"`
 DASHQUAL2=`echo ${QUAL} | sed -e "s/:/-/g"`
 
+fci=`expr index "$QUAL" :`
+let "fct = $fci - 1"
+COMPILER=$QUAL
+if [[ $fci != 0 ]]; then
+  COMPILER=${QUAL:0:$fct}
+fi
+echo "Compiler is: $COMPILER"
+
 # Extract dune_raw_data version and lbne_raw_data version and nusystematics version from our ups active list
 
 
@@ -186,18 +194,11 @@ echo "dune_raw_data         ${dune_raw_data_version}       dune_raw_data-${dune_
 lbne_raw_data_dot_version=`echo ${lbne_raw_data_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
 echo "lbne_raw_data         ${lbne_raw_data_version}       lbne_raw_data-${lbne_raw_data_dot_version}-${PLATFORM}-x86_64-${DASHQUAL}-${BUILDTYPE}.tar.bz2" >>  $manifest
 nusystematics_dot_version=`echo ${nusystematics_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
-echo "nusystematics         ${nusystematics_version}       nusystematics-${nusystematics_dot_version}-${PLATFORM}-x86_64-${DASHQUAL2}-${BUILDTYPE}.tar.bz2" >>  $manifest
+echo "nusystematics         ${nusystematics_version}       nusystematics-${nusystematics_dot_version}-${PLATFORM}-x86_64-${COMPILER}-${BUILDTYPE}.tar.bz2" >>  $manifest
 
 
 # add dunepdsprce to the manifest
 
-fci=`expr index "$QUAL" :`
-let "fct = $fci - 1"
-COMPILER=$QUAL
-if [[ $fci != 0 ]]; then
-  COMPILER=${QUAL:0:$fct}
-fi
-echo "Compiler is: $COMPILER"
 
 dunepdsprce_version=`ups active | grep dunepdsprce | awk '{print $2}'`
 echo "dunepdsprce version: $dunepdsprce_version"
