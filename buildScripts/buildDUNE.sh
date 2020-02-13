@@ -157,8 +157,6 @@ case $OS in
         ;;
 esac
 
-# need to check out dune_raw_data to get the dunepdsrpce version -- do it here, after the build
-
 cd $MRB_SOURCE || exit 1
 
 # find our set qualifier from artdaq_core's qualifier
@@ -182,7 +180,7 @@ cd $MRB_BUILDDIR
 # also add dune_raw_data and lbne_raw_data to the manifest
 
 dune_raw_data_dot_version=`echo ${dune_raw_data_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
-echo "dune_raw_data         ${dune_raw_data_version}       dune_raw_data-${dune_raw_data_dot_version}-${PLATFORM}-x86_64-${DASHQUAL}-${artqual}-${BUILDTYPE}.tar.bz2" >>  $manifest
+echo "dune_raw_data         ${dune_raw_data_version}       dune_raw_data-${dune_raw_data_dot_version}-${PLATFORM}-x86_64-${DASHQUAL}-${artqual}-nu-${BUILDTYPE}.tar.bz2" >>  $manifest
 lbne_raw_data_dot_version=`echo ${lbne_raw_data_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
 echo "lbne_raw_data         ${lbne_raw_data_version}       lbne_raw_data-${lbne_raw_data_dot_version}-${PLATFORM}-x86_64-${DASHQUAL}-${artqual}-${BUILDTYPE}.tar.bz2" >>  $manifest
 
