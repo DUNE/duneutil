@@ -164,14 +164,13 @@ cd $MRB_SOURCE || exit 1
 SQUAL=`ups active | grep artdaq_core | tr : '\n' | grep ^s | awk '{print $1}'`
 echo "Set qualifier from artdaq_core:  $SQUAL"
 
-# Extract dune_raw_data version from our ups active list
+DQTMP=${QUAL}-${SQUAL}
+DASHQUAL=`echo ${DQTMP} | sed -e "s/:/-/g" | sed -e "s/-/-nu-/"`
 
-DASHQUAL=`echo ${QUAL} | sed -e "s/:/-/g" | sed -e "s/-/-nu-/"`
+# Extract dune_raw_data version from our ups active list
 
 dune_raw_data_version=`ups active | grep dune_raw_data | awk '{print $2}'`
 echo "dune_raw_data version: $dune_raw_data_version"
-#artqual=`ups active | grep dune_raw_data | awk '{print $6}'   | sed -e "s/${QUAL}//g" | sed -e "s/nu//g" | sed -e "s/://g" | sed -e "s/${BUILDTYPE}//g"`
-artqual=$SQUAL
 lbne_raw_data_version=`ups active | grep lbne_raw_data | awk '{print $2}'`
 echo "lbne_raw_data version: $lbne_raw_data_version"
 
@@ -180,9 +179,9 @@ cd $MRB_BUILDDIR
 # also add dune_raw_data and lbne_raw_data to the manifest
 
 dune_raw_data_dot_version=`echo ${dune_raw_data_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
-echo "dune_raw_data         ${dune_raw_data_version}       dune_raw_data-${dune_raw_data_dot_version}-${PLATFORM}-x86_64-${DASHQUAL}-${artqual}-nu-${BUILDTYPE}.tar.bz2" >>  $manifest
+echo "dune_raw_data         ${dune_raw_data_version}       dune_raw_data-${dune_raw_data_dot_version}-${PLATFORM}-x86_64-${DASHQUAL}-${BUILDTYPE}.tar.bz2" >>  $manifest
 lbne_raw_data_dot_version=`echo ${lbne_raw_data_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
-echo "lbne_raw_data         ${lbne_raw_data_version}       lbne_raw_data-${lbne_raw_data_dot_version}-${PLATFORM}-x86_64-${DASHQUAL}-${artqual}-${BUILDTYPE}.tar.bz2" >>  $manifest
+echo "lbne_raw_data         ${lbne_raw_data_version}       lbne_raw_data-${lbne_raw_data_dot_version}-${PLATFORM}-x86_64-${DASHQUAL}-${BUILDTYPE}.tar.bz2" >>  $manifest
 
 # add dunepdsprce to the manifest
 
