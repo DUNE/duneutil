@@ -157,8 +157,6 @@ case $OS in
         ;;
 esac
 
-# need to check out dune_raw_data to get the dunepdsrpce version -- do it here, after the build
-
 cd $MRB_SOURCE || exit 1
 
 # find our set qualifier from artdaq_core's qualifier
@@ -166,27 +164,9 @@ cd $MRB_SOURCE || exit 1
 SQUAL=`ups active | grep artdaq_core | tr : '\n' | grep ^s | awk '{print $1}'`
 echo "Set qualifier from artdaq_core:  $SQUAL"
 
-# Extract dune_raw_data version from our ups active list
-
-DASHQUAL=`echo ${QUAL} | sed -e "s/:/-/g" | sed -e "s/-/-nu-/"`
-
-dune_raw_data_version=`ups active | grep dune_raw_data | awk '{print $2}'`
-echo "dune_raw_data version: $dune_raw_data_version"
-#artqual=`ups active | grep dune_raw_data | awk '{print $6}'   | sed -e "s/${QUAL}//g" | sed -e "s/nu//g" | sed -e "s/://g" | sed -e "s/${BUILDTYPE}//g"`
-artqual=$SQUAL
-lbne_raw_data_version=`ups active | grep lbne_raw_data | awk '{print $2}'`
-echo "lbne_raw_data version: $lbne_raw_data_version"
-
-cd $MRB_BUILDDIR
-
-# also add dune_raw_data and lbne_raw_data to the manifest
-
-dune_raw_data_dot_version=`echo ${dune_raw_data_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
-echo "dune_raw_data         ${dune_raw_data_version}       dune_raw_data-${dune_raw_data_dot_version}-${PLATFORM}-x86_64-${DASHQUAL}-${artqual}-${BUILDTYPE}.tar.bz2" >>  $manifest
-lbne_raw_data_dot_version=`echo ${lbne_raw_data_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
-echo "lbne_raw_data         ${lbne_raw_data_version}       lbne_raw_data-${lbne_raw_data_dot_version}-${PLATFORM}-x86_64-${DASHQUAL}-${artqual}-${BUILDTYPE}.tar.bz2" >>  $manifest
-
-# add dunepdsprce to the manifest
+DQTMP=${QUAL}-${SQUAL}
+DASHQUAL=`echo ${DQTMP} | sed -e "s/:/-/g" | sed -e "s/-/-nu-/"`
+DASHQUAL2=`echo ${QUAL} | sed -e "s/:/-/g"`
 
 fci=`expr index "$QUAL" :`
 let "fct = $fci - 1"
@@ -196,10 +176,34 @@ if [[ $fci != 0 ]]; then
 fi
 echo "Compiler is: $COMPILER"
 
+# Extract dune_raw_data version and lbne_raw_data version and nusystematics version from our ups active list
+
+
+dune_raw_data_version=`ups active | grep dune_raw_data | awk '{print $2}'`
+echo "dune_raw_data version: $dune_raw_data_version"
+lbne_raw_data_version=`ups active | grep lbne_raw_data | awk '{print $2}'`
+echo "lbne_raw_data version: $lbne_raw_data_version"
+nusystematics_version=`ups active | grep nusystematics | awk '{print $2}'`
+
+cd $MRB_BUILDDIR
+
+# add dune_raw_data, lbne_raw_data, and nusystematics to the manifest
+
+dune_raw_data_dot_version=`echo ${dune_raw_data_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
+echo "dune_raw_data         ${dune_raw_data_version}       dune_raw_data-${dune_raw_data_dot_version}-${PLATFORM}-x86_64-${DASHQUAL}-${BUILDTYPE}.tar.bz2" >>  $manifest
+lbne_raw_data_dot_version=`echo ${lbne_raw_data_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
+echo "lbne_raw_data         ${lbne_raw_data_version}       lbne_raw_data-${lbne_raw_data_dot_version}-${PLATFORM}-x86_64-${DASHQUAL}-${BUILDTYPE}.tar.bz2" >>  $manifest
+nusystematics_dot_version=`echo ${nusystematics_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
+echo "nusystematics         ${nusystematics_version}       nusystematics-${nusystematics_dot_version}-${PLATFORM}-x86_64-${COMPILER}-${BUILDTYPE}.tar.bz2" >>  $manifest
+
+
+# add dunepdsprce to the manifest
+
+
 dunepdsprce_version=`ups active | grep dunepdsprce | awk '{print $2}'`
 echo "dunepdsprce version: $dunepdsprce_version"
 dunepdsprce_dot_version=`echo ${dunepdsprce_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
-echo "dunepdsprce          ${dunepdsprce_version}          dunepdsprce-${dunepdsprce_dot_version}-${PLATFORM}-x86_64-gen-${COMPILER}-${BUILDTYPE}.tar.bz2" >>  $manifest
+echo "dunepdsprce          ${dunepdsprce_version}          dunepdsprce-${dunepdsprce_dot_version}-${PLATFORM}-x86_64-${COMPILER}-gen-${BUILDTYPE}.tar.bz2" >>  $manifest
 
 # add dune_oslibs to the manifest
 
@@ -223,8 +227,6 @@ else
 fi
 
 # Construct name of larsoft manifest.
-
-DASHQUAL2=`echo ${QUAL} | sed -e "s/:/-/g"`
 
 #larsoft_hyphen_qual=`echo $LARSOFT_QUAL | tr : - | sed 's/-noifdh//'`
 larsoft_manifest=larsoft-${larsoft_dot_version}-${flvr}-${SQUAL}-${DASHQUAL2}-${BUILDTYPE}_MANIFEST.txt
