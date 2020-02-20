@@ -326,7 +326,8 @@ if __name__=="__main__":
 
     # See if a SAM dataset was specified
     if args.dataset_name:
-        print( "Retrieving file list for SAM dataset definition name: '%s'..." % args.dataset_name, end="", flush=True)
+        print( "Retrieving file list for SAM dataset definition name: '%s'..." % args.dataset_name, end="" )
+        sys.stdout.flush()
         try:
             dimensions = None
             if args.snapshot == "latest":
@@ -348,7 +349,8 @@ if __name__=="__main__":
             # Take the rest of the commandline as the filenames
             filelist = args
     elif args.dimensions:
-        print( "Retrieving file list for SAM dimensions: '%s'..." % args.dimensions, end="", flush=True )
+        print( "Retrieving file list for SAM dimensions: '%s'..." % args.dimensions, end="" )
+        sys.stdout.flush()
         try:
             samlist = sam.listFilesAndLocations(dimensions=args.dimensions, filter_path="enstore")
             filelist = enstore_locations_to_paths(list(samlist), args.sparse) 
