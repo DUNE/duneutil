@@ -6,7 +6,7 @@ import sys, getopt
 import os
 from subprocess import Popen, PIPE
 import threading
-import Queue
+import queue
 import project_utilities, root_metadata
 import json
 import abc
@@ -63,7 +63,7 @@ class MetaData(object):
         jobout = q.get()
         joberr = q.get()
         if rc != 0:
-            raise RuntimeError, 'sam_metadata_dumper returned nonzero exit status {}.'.format(rc)
+            raise RuntimeError('sam_metadata_dumper returned nonzero exit status {}.'.format(rc))
         return jobout, joberr
     
     @staticmethod
@@ -79,7 +79,7 @@ class MetaData(object):
     def mdart_gen(jobtuple):
         """Take Jobout and Joberr (in jobtuple) and return mdart object from that"""
         mdtext = ''.join(line.replace(", ,", ",") for line in jobtuple[0].split('\n') if line[-3:-1] != ' ,')
-	mdtop = json.JSONDecoder().decode(mdtext)
+        mdtop = json.JSONDecoder().decode(mdtext)
         if len(mdtop.keys()) == 0:
             print('No top-level key in extracted metadata.')
             sys.exit(1)
@@ -103,13 +103,13 @@ class expMetaData(MetaData):
         #self.exp_md_keyfile = expname + '_metadata_key'
         try:
             #translateMetaData = __import__("experiment_utilities", "MetaDataKey")
-	    from experiment_utilities import MetaDataKey
+            from experiment_utilities import MetaDataKey
         except ImportError:
             print("You have not defined an experiment-specific metadata and key-translating module in experiment_utilities. Exiting")
             raise
-	    
+
         metaDataModule = MetaDataKey()
-	self.metadataList, self.translateKeyf = metaDataModule.metadataList(), metaDataModule.translateKey
+        self.metadataList, self.translateKeyf = metaDataModule.metadataList(), metaDataModule.translateKey
 
     def translateKey(self, key):
         """Returns the output of the imported translateKey function (as translateKeyf) called on key"""
@@ -120,104 +120,104 @@ class expMetaData(MetaData):
         # define an empty python dictionary which will hold sam metadata.
         # Some fields can be copied directly from art metadata to sam metadata.
         # Other fields require conversion.
-	md = {}
-	
-	# Loop over art metadata.
-	for mdkey in mdart.keys():
-		mdval = mdart[mdkey]
+        md = {}
 
-		# Skip some art-specific fields.
+        # Loop over art metadata.
+        for mdkey in mdart.keys():
+            mdval = mdart[mdkey]
 
-		if mdkey == 'file_format_version':
-			pass
-		elif mdkey == 'file_format_era':
-			pass
+            # Skip some art-specific fields.
 
-		# Ignore primary run_type field (if any).
-		# Instead, get run_type from runs field.
+            if mdkey == 'file_format_version':
+                pass
+            elif mdkey == 'file_format_era':
+                pass
 
-		elif mdkey == 'run_type':
-			pass
+            # Ignore primary run_type field (if any).
+            # Instead, get run_type from runs field.
 
-		# Ignore data_stream for now.
+            elif mdkey == 'run_type':
+                pass
 
-		elif mdkey == 'data_stream':
-			pass
+            # Ignore data_stream for now.
 
-		# Ignore process_name for now.
+            elif mdkey == 'data_stream':
+                pass
 
-		elif mdkey == 'process_name':
-			pass
+            # Ignore process_name for now.
 
-		# Application family/name/version.
+            elif mdkey == 'process_name':
+                pass
 
-		elif mdkey == 'applicationFamily':
-			if not md.has_key('application'):
-				md['application'] = {}
-			md['application']['family'] = mdval
-		elif mdkey == 'StageName':
-			if not md.has_key('application'):
-				md['application'] = {}
-			md['application']['name'] = mdval
-		elif mdkey == 'applicationVersion':
-			if not md.has_key('application'):
-				md['application'] = {}
-			md['application']['version'] = mdval
+            # Application family/name/version.
 
-		# Parents.
+            elif mdkey == 'applicationFamily':
+                if not md.has_key('application'):
+                    md['application'] = {}
+                md['application']['family'] = mdval
+            elif mdkey == 'StageName':
+                if not md.has_key('application'):
+                    md['application'] = {}
+                md['application']['name'] = mdval
+            elif mdkey == 'applicationVersion':
+                if not md.has_key('application'):
+                    md['application'] = {}
+                md['application']['version'] = mdval
 
-		elif mdkey == 'parents':
-			mdparents = []
-			for parent in mdval:
-				parent_dict = {'file_name': parent}
-				mdparents.append(parent_dict)
-			md['parents'] = mdparents
+            # Parents.
 
-		# Other fields where the key or value requires minor conversion.
+            elif mdkey == 'parents':
+                mdparents = []
+                for parent in mdval:
+                    parent_dict = {'file_name': parent}
+                    mdparents.append(parent_dict)
+                md['parents'] = mdparents
 
-		elif mdkey == 'first_event':
-			md[mdkey] = mdval[2]
-		elif mdkey == 'last_event':
-			md[mdkey] = mdval[2]
-		elif mdkey == 'lbneMCGenerators':
-			md['lbne_MC.generators']  = mdval
-		elif mdkey == 'lbneMCOscillationP':
-			md['lbne_MC.oscillationP']  = mdval
-		elif mdkey == 'lbneMCTriggerListVersion':
-			md['lbne_MC.trigger-list-version']  = mdval
-		elif mdkey == 'lbneMCBeamEnergy':
-			md['lbne_MC.beam_energy']  = mdval
-		elif mdkey == 'lbneMCBeamFluxID':
-			md['lbne_MC.beam_flux_ID']  = mdval
-		elif mdkey == 'lbneMCName':
-			md['lbne_MC.name']  = mdval
-		elif mdkey == 'lbneMCDetectorType':
-			md['lbne_MC.detector_type']  = mdval
-		elif mdkey == 'lbneMCNeutrinoFlavors':
-			md['lbne_MC.neutrino_flavors']  = mdval
-		elif mdkey == 'lbneMCMassHierarchy':
-			md['lbne_MC.mass_hierarchy']  = mdval
-		elif mdkey == 'lbneMCMiscellaneous':
-			md['lbne_MC.miscellaneous']  = mdval
-		elif mdkey == 'lbneMCGeometryVersion':
-			md['lbne_MC.geometry_version']  = mdval
-		elif mdkey == 'lbneMCOverlay':
-			md['lbne_MC.overlay']  = mdval
-		elif mdkey == 'lbneDataRunMode':
-			md['lbne_data.run_mode']  = mdval
-		elif mdkey == 'lbneDataDetectorType':
-			md['lbne_data.detector_type']  = mdval
-		elif mdkey == 'lbneDataName':
-			md['lbne_data.name']  = mdval
+            # Other fields where the key or value requires minor conversion.
 
-		# For all other keys, copy art metadata directly to sam metadata.
-		# This works for run-tuple (run, subrun, runtype) and time stamps.
+            elif mdkey == 'first_event':
+                md[mdkey] = mdval[2]
+            elif mdkey == 'last_event':
+                md[mdkey] = mdval[2]
+            elif mdkey == 'lbneMCGenerators':
+                md['lbne_MC.generators']  = mdval
+            elif mdkey == 'lbneMCOscillationP':
+                md['lbne_MC.oscillationP']  = mdval
+            elif mdkey == 'lbneMCTriggerListVersion':
+                md['lbne_MC.trigger-list-version']  = mdval
+            elif mdkey == 'lbneMCBeamEnergy':
+                md['lbne_MC.beam_energy']  = mdval
+            elif mdkey == 'lbneMCBeamFluxID':
+                md['lbne_MC.beam_flux_ID']  = mdval
+            elif mdkey == 'lbneMCName':
+                md['lbne_MC.name']  = mdval
+            elif mdkey == 'lbneMCDetectorType':
+                md['lbne_MC.detector_type']  = mdval
+            elif mdkey == 'lbneMCNeutrinoFlavors':
+                md['lbne_MC.neutrino_flavors']  = mdval
+            elif mdkey == 'lbneMCMassHierarchy':
+                md['lbne_MC.mass_hierarchy']  = mdval
+            elif mdkey == 'lbneMCMiscellaneous':
+                md['lbne_MC.miscellaneous']  = mdval
+            elif mdkey == 'lbneMCGeometryVersion':
+                md['lbne_MC.geometry_version']  = mdval
+            elif mdkey == 'lbneMCOverlay':
+                md['lbne_MC.overlay']  = mdval
+            elif mdkey == 'lbneDataRunMode':
+                md['lbne_data.run_mode']  = mdval
+            elif mdkey == 'lbneDataDetectorType':
+                md['lbne_data.detector_type']  = mdval
+            elif mdkey == 'lbneDataName':
+                md['lbne_data.name']  = mdval
 
-		else:
-			md[mdkey] = mdart[mdkey]
+            # For all other keys, copy art metadata directly to sam metadata.
+            # This works for run-tuple (run, subrun, runtype) and time stamps.
 
-	# Get the other meta data field parameters				
+            else:
+                md[mdkey] = mdart[mdkey]
 
+
+	# Get the other meta data field parameters
         md['file_name'] = self.inputfile.split("/")[-1]
         if 'file_size' in md0:
             md['file_size'] = md0['file_size']
