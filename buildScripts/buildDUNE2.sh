@@ -76,12 +76,12 @@ echo
 echo "Begin build."
 echo
 if [ x$label = x ]; then
-  ./buildFW -t -b $basequal -s $SQUAL $blddir $BUILDTYPE dunetpc-$VERSION || \
+  ./buildFW -t -b $basequal -s $SQUAL $blddir $BUILDTYPE dune-$VERSION || \
   { mv *.log $logdir
     exit 1
   }
 else
-  ./buildFW -t -b $basequal -s $SQUAL -l $label $blddir $BUILDTYPE dunetpc-$VERSION || \
+  ./buildFW -t -b $basequal -s $SQUAL -l $label $blddir $BUILDTYPE dune-$VERSION || \
   { mv *.log $logdir
     exit 1
   }
