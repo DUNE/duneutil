@@ -10,6 +10,9 @@ import ifdh
 import argparse
 import samweb_client
 import collections
+# Temporary solution for crc computation until we can move the calculation into code inside duneutil.
+# Then we should be able to remove the larbatch dependency altogether.
+import root_metadata 
 
 # Function to wait for a subprocess to finish and fetch return code,
 # standard output, and standard error.
