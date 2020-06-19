@@ -95,7 +95,6 @@ mv *.log $logdir || exit 1
 
 mv dunetpc*.bz2  $WORKSPACE/copyBack/ || exit 1
 mv dune_raw_data*.bz2  $WORKSPACE/copyBack/ || exit 1
-mv lbne_raw_data*.bz2  $WORKSPACE/copyBack/ || exit 1
 mv *.txt $WORKSPACE/copyBack/ || exit 1
 
 # Clean up.
