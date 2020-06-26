@@ -174,22 +174,18 @@ if [[ $fci != 0 ]]; then
 fi
 echo "Compiler is: $COMPILER"
 
-# Extract dune_raw_data version and lbne_raw_data version from our ups active list
+# Extract dune_raw_data version from our ups active list
 
 
 dune_raw_data_version=`ups active | grep dune_raw_data | awk '{print $2}'`
 echo "dune_raw_data version: $dune_raw_data_version"
-lbne_raw_data_version=`ups active | grep lbne_raw_data | awk '{print $2}'`
-echo "lbne_raw_data version: $lbne_raw_data_version"
 
 cd $MRB_BUILDDIR
 
-# add dune_raw_data and lbne_raw_data to the manifest
+# add dune_raw_data to the manifest
 
 dune_raw_data_dot_version=`echo ${dune_raw_data_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
 echo "dune_raw_data         ${dune_raw_data_version}       dune_raw_data-${dune_raw_data_dot_version}-${PLATFORM}-x86_64-${DASHQUAL}-${BUILDTYPE}.tar.bz2" >>  $manifest
-lbne_raw_data_dot_version=`echo ${lbne_raw_data_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
-echo "lbne_raw_data         ${lbne_raw_data_version}       lbne_raw_data-${lbne_raw_data_dot_version}-${PLATFORM}-x86_64-${DASHQUAL}-${BUILDTYPE}.tar.bz2" >>  $manifest
 
 
 # add dunepdsprce to the manifest
