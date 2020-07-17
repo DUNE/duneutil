@@ -27,7 +27,7 @@ ENSTORE_PATTERN = re.compile(r"^enstore:([^(]+)(\([^)]+\))?")
 # We use this for finding the online status of files and for requesting prestaging. The full dcache REST API is described in the dcache User Guide:
 #
 # https://www.dcache.org/manuals/UserGuide-6.0/frontend.shtml
-DCACHE_REST_BASE_URL = "https://fndca3a.fnal.gov:3880/api/v1/namespace"
+DCACHE_REST_BASE_URL = "https://fndca.fnal.gov:3880/api/v1/namespace"
 
 ################################################################################
 class ProgressBar(object):
