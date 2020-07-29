@@ -355,6 +355,7 @@ def main():
     argparser.add_argument('--appfamily',help='application family for SAM metadata',type=str)
     argparser.add_argument('--campaign',help='Value for DUNE.campaign for SAM metadata',type=str)
     argparser.add_argument('--data_stream',help='Value for data_stream for SAM metadata',type=str)
+    argparser.add_argument('--requestid',help='Value for DUNE.requestid for SAM metadata',type=str)
     argparser.add_argument('--set_processed',help='Set for parent file as processed in SAM metadata',action="store_true")
     argparser.add_argument('--strip_parents',help='Do not include the file\'s parents in SAM metadata for declaration',action="store_true")
     argparser.add_argument('--no_crc',help='Leave the crc out of the generated json',action="store_true")
@@ -392,6 +393,8 @@ def main():
             mddict['DUNE.campaign'] = args.campaign
         if args.data_stream != None:
             mddict['data_stream'] = args.data_stream
+        if args.requestid != None:
+            mddict['DUNE.requestid'] = args.requestid
 
     except TypeError:
         print('You have not implemented a defineMetaData function by providing an experiment.')
