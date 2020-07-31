@@ -18,6 +18,7 @@ argparser.add_argument('--no_crc',help='Leave the crc out of the generated json'
 argparser.add_argument('--input_json',help='Input json file containing metadata to be added to output (can contain ANY valid SAM metadata parameters)',type=str)
 argparser.add_argument('--file_format',help='Value of file_format set in output md, default is binary',type=str,default='binary')
 argparser.add_argument('--data_tier',help='Value of data_tier set in output md, default is pandora_info',type=str,default='pandora_info')
+argparser.add_argument('--requestid',help='Value of DUNE.requestid set in output md',type=str) 
 
 global args
 args = argparser.parse_args()
@@ -51,13 +52,10 @@ outmd['file_size'] = os.path.getsize(args.infile)
 
 #kill the existing checksum and file_id values, if set, because they would correspond to 
 # the value from the input json, which is from another file.
-if 'crc' in list(outmd.keys()):
-    del outmd['crc']
-if 'checksum' in list(outmd.keys()):
-    del outmd['checksum']
-if 'file_id' in list(outmd.keys()):
-    del outmd['file_id']
 
+for ikey in [ 'crc', 'checksum', 'file_id' ]:
+    if ikey in list(outmd.keys()):
+        del outmd[ikey]
 
 # Check optional overrides
 if args.campaign:
@@ -72,6 +70,9 @@ if args.appname and args.appfamily and args.appversion:
 elif args.appname or args.appfamily or args.appversion:
     print('Error: you specified at least one of --appfamily, --appname, or --appversion, but not all three. You must specify all or none of them (if none, you will get the existing values in the input json file, if you supplied one.')
     sys.exit(1)
+
+if args.requestid != None:
+    outmd['DUNE.requestid'] = args.requestid
 
 mdtext = json.dumps(outmd, indent=2, sort_keys=True)
 
