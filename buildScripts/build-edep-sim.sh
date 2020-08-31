@@ -131,7 +131,7 @@ mkdir ${PRODUCT_NAME}/${VERSION}/share || exit 1
 
 TABLEFILENAME=${PRODUCT_NAME}/${VERSION}/ups/${PRODUCT_NAME}.table
 touch ${TABLEFILENAME} || exit 1
-rm -rf ${TABLEFILENAME} || exit 1
+rm -f ${TABLEFILENAME} || exit 1
 cat > ${TABLEFILENAME} <<EOF
 File=Table
 Product=edepsim
@@ -144,7 +144,7 @@ EOF
 
 for CQ in $COMPILERQUAL_LIST; do
   touch tablefrag.txt || exit 1
-  rm -rf tablefrag.txt || exit 1
+  rm -f tablefrag.txt || exit 1
   cat > tablefrag.txt <<'EOF'
 
 Flavor=ANY
