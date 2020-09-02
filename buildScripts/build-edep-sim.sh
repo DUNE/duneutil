@@ -224,6 +224,7 @@ Common:
           execute( true, NO_UPS_ENV )
       endif ( sh -c 'for dd in bin;do [ -d ${EDEPSIM_FQ_DIR}/$dd ] && exit;done;exit 1' )
       # useful variables
+       pathPrepend(ROOT_INCLUDE_PATH, ${EDEPSIM_DIR}/include/EDepSim )
 #      envPrepend(CMAKE_PREFIX_PATH, ${EDEPSIM_DIR} )  figure out what to do here
 #      envPrepend(PKG_CONFIG_PATH, ${EDEPSIM_DIR} )
       # requirements
