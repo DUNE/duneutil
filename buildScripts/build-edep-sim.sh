@@ -272,6 +272,9 @@ cp -r installdir/lib/* ${DIRNAME}/lib
 cp -r installdir/bin/* ${DIRNAME}/bin
 cp -r installdir/share/* ${DIRNAME}/../share
 cp -r installdir/include/* ${DIRNAME}/../include
+# duplicate in the flavored versions in case cmake files assume include is flavored.
+cp -r installdir/share/* ${DIRNAME}/share
+cp -r installdir/include/* ${DIRNAME}/include
 
 # for testing the tarball, remove so we keep .upsfiles as is when
 # unwinding into a real products area
