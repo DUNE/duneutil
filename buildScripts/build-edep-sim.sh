@@ -252,6 +252,8 @@ mkdir -p ${DIRNAME} || exit 1
 rm -rf ${DIRNAME}/* || exit 1
 mkdir ${DIRNAME}/bin || exit 1
 mkdir ${DIRNAME}/lib || exit 1
+mkdir ${DIRNAME}/share || exit 1
+mkdir ${DIRNAME}/include || exit 1
 
 cd ${CURDIR}/builddir
 
