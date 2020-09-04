@@ -55,7 +55,7 @@ elif [ $QUAL = c2 ]; then
 elif [ $QUAL = e19 ]; then
   COMPILERVERS="gcc v8_2_0"
   COMPILERCOMMAND=g++
-  CCOMPILIER=gcc
+  CCOMPILER=gcc
 elif [ $QUAL = c7 ]; then
   COMPILERVERS="clang v7_0_0"
   COMPILERCOMMAND=clang++
@@ -131,7 +131,7 @@ mkdir ${PRODUCT_NAME}/${VERSION}/share || exit 1
 
 TABLEFILENAME=${PRODUCT_NAME}/${VERSION}/ups/${PRODUCT_NAME}.table
 touch ${TABLEFILENAME} || exit 1
-rm -rf ${TABLEFILENAME} || exit 1
+rm -f ${TABLEFILENAME} || exit 1
 cat > ${TABLEFILENAME} <<EOF
 File=Table
 Product=edepsim
@@ -144,7 +144,7 @@ EOF
 
 for CQ in $COMPILERQUAL_LIST; do
   touch tablefrag.txt || exit 1
-  rm -rf tablefrag.txt || exit 1
+  rm -f tablefrag.txt || exit 1
   cat > tablefrag.txt <<'EOF'
 
 Flavor=ANY
@@ -224,6 +224,7 @@ Common:
           execute( true, NO_UPS_ENV )
       endif ( sh -c 'for dd in bin;do [ -d ${EDEPSIM_FQ_DIR}/$dd ] && exit;done;exit 1' )
       # useful variables
+       pathPrepend(ROOT_INCLUDE_PATH, ${EDEPSIM_DIR}/include/EDepSim )
 #      envPrepend(CMAKE_PREFIX_PATH, ${EDEPSIM_DIR} )  figure out what to do here
 #      envPrepend(PKG_CONFIG_PATH, ${EDEPSIM_DIR} )
       # requirements
@@ -251,6 +252,8 @@ mkdir -p ${DIRNAME} || exit 1
 rm -rf ${DIRNAME}/* || exit 1
 mkdir ${DIRNAME}/bin || exit 1
 mkdir ${DIRNAME}/lib || exit 1
+mkdir ${DIRNAME}/share || exit 1
+mkdir ${DIRNAME}/include || exit 1
 
 cd ${CURDIR}/builddir
 
@@ -271,6 +274,9 @@ cp -r installdir/lib/* ${DIRNAME}/lib
 cp -r installdir/bin/* ${DIRNAME}/bin
 cp -r installdir/share/* ${DIRNAME}/../share
 cp -r installdir/include/* ${DIRNAME}/../include
+# duplicate in the flavored versions in case cmake files assume include is flavored.
+cp -r installdir/share/* ${DIRNAME}/share
+cp -r installdir/include/* ${DIRNAME}/include
 
 # for testing the tarball, remove so we keep .upsfiles as is when
 # unwinding into a real products area
