@@ -104,8 +104,15 @@ def get_file_qos(c, filename):
 
     # qos=true in the URL causes dcache to tell us whether the file's
     # on disk or tape, and also the "targetQos", which exists if
-    # there's an outstanding prestage request
-    url="{host}/{path}?qos=true".format(host=DCACHE_REST_BASE_URL, path=filename_to_namespace(filename))
+    # there's an outstanding prestage request.
+    #
+    # Update 2020-10-02: it looks like qos is sometimes incorrect, or
+    # at least, not what I thought it was, since online files can have
+    # fileLocality=ONLINE_AND_NEARLINE but qos=tape. So we use
+    # fileLocality for the online-ness of the file, but still request
+    # qos because it gives us the target qos if there's an outstanding
+    # prestage request
+    url="{host}/{path}?qos=true&locality=true".format(host=DCACHE_REST_BASE_URL, path=filename_to_namespace(filename))
     c.setopt(c.URL, url)
     mybuffer = BytesIO()
     c.setopt(c.WRITEFUNCTION, mybuffer.write)
@@ -118,18 +125,22 @@ def get_file_qos(c, filename):
     
     j=json.loads(body)
     qos=""
+    locality=""
     targetQos=""
-    if "currentQos" in j:
-        qos=j["currentQos"]
+    # "qos" turns out to not quite be right - see comment above
+    # if "currentQos" in j:
+    #    qos=j["currentQos"]
+    if "fileLocality" in j:
+        locality=j["fileLocality"]
     if "targetQos" in j:
         targetQos=j["targetQos"]
         
-    return (qos, targetQos)
+    return (locality, targetQos)
 
 ################################################################################
 def is_file_online(c, filename):
     """Using curl object `c`, returns whether `filename` is online"""
-    return "disk" in get_file_qos(c, filename)[0]
+    return "ONLINE" in get_file_qos(c, filename)[0]
 
 ################################################################################
 def request_prestage(c, filename):
@@ -188,7 +199,7 @@ def FilelistCacheCount(files, verbose_flag, METHOD="rest"):
     for f in files:
         if METHOD=="rest":
             qos,targetQos=get_file_qos(c, f)
-            if "disk" in qos: cached += 1 
+            if "ONLINE" in qos: cached += 1 
             if "disk" in targetQos: pending += 1
             if verbose_flag:
                 print( f, qos, "pending" if targetQos else "")
