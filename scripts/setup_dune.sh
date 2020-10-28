@@ -176,8 +176,17 @@ export DBIHOST=ifdbprod.fnal.gov
 export DBINAME=dune35t_prod
 export DBIPORT=5442
 export DBIUSER=dune_reader
-export DBIPWDFILE=~jpaley/dune/db/proddbpwd
+export DBIPWDFILE='~jpaley/dune/db/proddbpwd'
+
+# For ifbeam
+
+export SSL_CERT_FILE=""
 
 # to ensure compatibility on OSG nodes missing OS libraries
 
 setup dune_oslibs v1_0_0
+
+# set up gdb and ninja out of ups
+
+setup gdb
+setup ninja
