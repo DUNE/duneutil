@@ -73,21 +73,6 @@ DUNE_BLUEARC_DATA="/dune/data/"
 
 # Set up ups for LArSoft
 
-for dir in $FERMIOSG_LARSOFT_DIR $FERMIAPP_LARSOFT_DIR;
-do
-  if [[ -f $dir/setup ]]; then
-    echo "Setting up old larsoft UPS area... ${dir}"
-    source $dir/setup
-    common=`dirname $dir`/common/db
-    if [[ -d $common ]]; then
-      export PRODUCTS=`dropit -p $PRODUCTS common/db`:`dirname $dir`/common/db
-    fi
-    break
-  fi
-done
-
-# Sourcing this setup will add new larsoft to $PRODUCTS
-
 for dir in $FERMIOSG_LARSOFT_DIR2;
 do
   if [[ -f $dir/setup ]]; then
@@ -96,6 +81,20 @@ do
     break
   fi
 done
+
+# need also the common db in $PRODUCTS
+
+for dir in $FERMIOSG_LARSOFT_DIR $FERMIAPP_LARSOFT_DIR;
+do
+  if [[ -f $dir/setup ]]; then
+    common=`dirname $dir`/common/db
+    if [[ -d $common ]]; then
+      export PRODUCTS=`dropit -p $PRODUCTS common/db`:`dirname $dir`/common/db
+    fi
+    break
+  fi
+done
+
 
 # Set up ups for DUNE
 
@@ -176,8 +175,17 @@ export DBIHOST=ifdbprod.fnal.gov
 export DBINAME=dune35t_prod
 export DBIPORT=5442
 export DBIUSER=dune_reader
-export DBIPWDFILE=~jpaley/dune/db/proddbpwd
+export DBIPWDFILE='~jpaley/dune/db/proddbpwd'
+
+# For ifbeam
+
+export SSL_CERT_FILE=""
 
 # to ensure compatibility on OSG nodes missing OS libraries
 
 setup dune_oslibs v1_0_0
+
+# set up gdb and ninja out of ups
+
+setup gdb
+setup ninja
