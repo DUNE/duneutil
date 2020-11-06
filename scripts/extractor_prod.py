@@ -373,10 +373,18 @@ def main():
         mddict = expSpecificMetadata.getmetadata()
         # If --input_json is supplied, open that dict now and add it to the output json
         if args.input_json != None:
-            # do some shit
-            arbjson = json.load(args.input_json)
-            for key in arbjson.keys():
-                mddict[key] = arbjson[key]
+            if os.path.exists(args.input_json):
+                try:
+                    injson=open(args.input_json)
+                    arbjson = json.load(injson)
+                    for key in list(arbjson.keys()):
+                        mddict[key] = arbjson[key]
+                except:
+                    print('Error loading input json file.')
+                    raise
+            else:
+                print('Error, specified input file does not exist.')
+                sys.exit(1)
 
         if 'application' in mddict  and 'name' not in list(mddict['application'].keys()) and args.appname != None:
             mddict['application']['name'] = args.appname
