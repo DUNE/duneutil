@@ -51,7 +51,7 @@ class MetaData(object):
     
     def get_job(self, proc):
         """Run the proc in a 60-sec timeout queue, return stdout, stderr"""
-        q = Queue.Queue()
+        q = queue.Queue()
         thread = threading.Thread(target=self.wait_for_subprocess, args=[proc, q])
         thread.start()
         thread.join(timeout=60)
