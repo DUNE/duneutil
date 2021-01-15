@@ -18,12 +18,22 @@ CMPFILE=`mktemp`
 grep Component $CFNAME | awk '{print $3}' > $CMPFILE
 
 gain=`grep "gain:" $CFNAME | head -1 | awk '{print $2}'`
-shapetime=`grep "shape:" $CFNAME | head -1 | awk '{print $2}'`
-accouple=`grep "acCouple:" $CFNAME | head -1 | awk '{print $2}'`
-baselineHigh=`grep "baselineHigh:" $CFNAME | head -1 | awk '{print $2}'`
-leakHigh=`grep "leakHigh:" $CFNAME | head -1 | awk '{print $2}'`
-leak10x=`grep "leak10X:" $CFNAME | head -1 | awk '{print $2}'`
-pulsemode=`grep "pls_mode:" $CFNAME | head -1 | awk '{print $2}'`
+shapetime=`grep "peak_time:" $CFNAME | head -1 | awk '{print $2}'`
+accouple=`grep "ac_couple:" $CFNAME | head -1 | awk '{print $2}'`
+baselineHigh=`grep "baseline:" $CFNAME | head -1 | awk '{print $2}'`
+leakHigh=`grep "leak:" $CFNAME | head -1 | awk '{print $2}'`
+leak10x=`grep "leak_10x:" $CFNAME | head -1 | awk '{print $2}'`
+if [[ ${leak10x} = false ]]; then
+  leak10x=0
+else
+  leak10x=1
+fi
+pulsemode=`grep "enable_pulser:" $CFNAME | head -1 | awk '{print $2}'`
+if [[ ${pulsemode} = false ]]; then
+  pulsemode=0
+else
+  pulsemode=1
+fi
 configname=`grep "Config name:" $CFNAME | head -1 | awk '{print $3}'`
 
 runno=`grep first_event $TMPMD | head -1 | awk '{print $3}' | sed -e "s/,//g"`
@@ -80,8 +90,7 @@ rm ${CMPFILE}
 
 }
 
-source /cvmfs/dune.opensciencegrid.org/products/dune/setup_dune.sh
-setup dunetpc v08_12_00 -q e17:prof
+source /home/nfs/dunecet/offlsetup.sh
 source /cvmfs/oasis.opensciencegrid.org/mis/osg-wn-client/current/el7-x86_64/setup.sh
 setup_fnal_security
 
