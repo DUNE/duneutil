@@ -14,7 +14,9 @@ import pycurl
 from io import BytesIO
 
 
-X509_USER_PROXY="/tmp/x509up_u%d" % os.getuid()
+# Check if X509_USER_PROXY is already set in the environment first and use it if so.
+# Fall back to the /tmp/x509up... only if X509_USER_PROXY is not set.
+X509_USER_PROXY = os.getenv("X509_USER_PROXY", "/tmp/x509up_u%d" % os.getuid())
 PNFS_DIR_PATTERN = re.compile(r"/pnfs/(?P<area>[^/]+)")
 # enstore locations look like
 # "enstore:/path/to/directory(weird_tape_id)", except that sometimes
