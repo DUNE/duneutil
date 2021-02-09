@@ -245,7 +245,7 @@ mkdir installdir || exit 1
 mkdir builddir || exit 1
 mkdir inputdir || exit 1
 cd inputdir
-git clone https://github.com/ClarkMcGrew/edep-sim.git || exit 1
+git clone https://github.com/DUNE/edep-sim.git || exit 1
 cd edep-sim || exit 1
 git checkout tags/${EDEPSIMVERSION} || exit 1
 
