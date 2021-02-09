@@ -312,7 +312,7 @@ SUBDIR=`get-directory-name subdir | sed -e "s/\./-/g"`
 
 # use SUBDIR instead of FLAVOR
 
-FULLNAME=${PRODUCT_NAME}-${VERSIONDOTS}${VERSIONSUFFIX}-${SUBDIR}-${QUAL}-${BUILDTYPE}
+FULLNAME=${PRODUCT_NAME}-${VERSIONDOTS}-${SUBDIR}-${QUAL}-${BUILDTYPE}
 
 # strip off the first "v" in the version number
 
