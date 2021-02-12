@@ -10,6 +10,8 @@
 #   ROOTVERSION   -- tag for setting up ROOT
 #   WORKSPACE     -- from Jenkins
 #   COMPILERQUAL_LIST -- list of all the compiler qualifiers (space separated)
+#   EXTRAROOTQUALIFIERS -- to fully specify ROOT.  Needs a colon at the beginning so it can be
+#          added to an existing qualifier string.  e.g. ":p383"
 
 PRODUCT_NAME=edepsim
 
@@ -28,6 +30,9 @@ echo "ROOT version: $ROOTVERSION"
 # -- the base qualifier is only the compiler version qualifier:  e.g. "e15"
 
 echo "base qualifiers (compiler): $QUAL"
+
+echo "extra root qualifiers: $EXTRAROOTQUALFIERS"
+echo "these need a colon before but not after"
 
 # note -- this script knows about the correspondence between compiler qualifiers and compiler versions.
 # there is another if-block later on with the same information (apologies for the duplication).  If a new compiler
@@ -90,7 +95,7 @@ else
 fi
 
 setup -B cetbuildtools v7_15_01 || exit 1
-setup -B root ${ROOTVERSION} -q ${QUAL}:${BUILDTYPE} || exit 1
+setup -B root ${ROOTVERSION} -q ${QUAL}${EXTRAROOTQUALIFIERS}:${BUILDTYPE} || exit 1
 setup -B geant4 ${GEANT4VERSION} -q ${QUAL}:${BUILDTYPE} || exit 1
 
 # Use system git on macos, and the one in ups for linux
@@ -156,7 +161,7 @@ Qualifiers=QUALIFIER_REPLACE_STRING:debug
   Action = ExtraSetup
     setupRequired( COMPILERVERS_REPLACE_STRING )
     setupRequired( geant4 GEANT4VERS_REPLACE_STRING -q QUALIFIER_REPLACE_STRING:debug )
-    setupRequired( root ROOTVERS_REPLACE_STRING -q QUALIFIER_REPLACE_STRING:debug )
+    setupRequired( root ROOTVERS_REPLACE_STRING -q QUALIFIER_REPLACE_STRINGROOTEXTRAQUALS_RS:debug )
 
 Flavor=ANY
 Qualifiers=QUALIFIER_REPLACE_STRING:prof
@@ -167,7 +172,7 @@ Qualifiers=QUALIFIER_REPLACE_STRING:prof
   Action = ExtraSetup
     setupRequired( COMPILERVERS_REPLACE_STRING )
     setupRequired( geant4 GEANT4VERS_REPLACE_STRING -q QUALIFIER_REPLACE_STRING:prof )
-    setupRequired( root ROOTVERS_REPLACE_STRING -q QUALIFIER_REPLACE_STRING:prof )
+    setupRequired( root ROOTVERS_REPLACE_STRING -q QUALIFIER_REPLACE_STRINGROOTEXTRAQUALS_RS:prof )
 
 EOF
 
@@ -194,6 +199,7 @@ sed -e "s/QUALIFIER_REPLACE_STRING/${CQ}/g" < tablefrag.txt \
  | sed -e "s/COMPILERVERS_REPLACE_STRING/${CV}/g" \
  | sed -e "s/GEANT4VERS_REPLACE_STRING/${GEANT4VERSION}/g" \
  | sed -e "s/ROOTVERS_REPLACE_STRING/${ROOTVERSION}/g" \
+ | sed -e "s/ROOTEXTRAQUALS_RS/${EXTRAROOTQUALIFIERS}/g" \
  >> ${TABLEFILENAME} || exit 1
 rm -f tablefrag.txt || exit 1
 
@@ -239,7 +245,7 @@ mkdir installdir || exit 1
 mkdir builddir || exit 1
 mkdir inputdir || exit 1
 cd inputdir
-git clone https://github.com/ClarkMcGrew/edep-sim.git || exit 1
+git clone https://github.com/DUNE/edep-sim.git || exit 1
 cd edep-sim || exit 1
 git checkout tags/${EDEPSIMVERSION} || exit 1
 
