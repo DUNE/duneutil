@@ -8,7 +8,7 @@
 # Tom Junk, August 22, 2018
 # copied from the dune_raw_data build script in dune's artdaq_utilities repository
 
-echo "garana version: $GARSOFT_VERSION"
+echo "garana version: $GARANA_VERSION"
 echo "target qualifier: $QUAL"
 echo "build type: $BUILDTYPE"
 echo "workspace: $WORKSPACE"
@@ -90,7 +90,7 @@ cd $WORKSPACE/temp || exit 1
 
 FQUAL=${QUAL}:${BUILDTYPE}
 
-mrb newDev -v $GARSOFT_VERSION -q $FQUAL || exit 1
+mrb newDev -v $GARANA_VERSION -q $FQUAL || exit 1
 
 #dla set +x
 source localProducts*/setup || exit 1
@@ -112,7 +112,7 @@ fi
 #dla set -x
 cd $MRB_SOURCE  || exit 1
 # check out a readonly version
-#mrb g -r -t $GARSOFT_VERSION -d garana || exit 1
+#mrb g -r -t $GARANA_VERSION -d garana || exit 1
 mrb g -r -b develop -d garana || exit 1
 
 cd $MRB_BUILDDIR || exit 1
