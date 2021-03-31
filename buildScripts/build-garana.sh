@@ -112,8 +112,7 @@ fi
 #dla set -x
 cd $MRB_SOURCE  || exit 1
 # check out a readonly version
-#mrb g -r -t $GARANA_VERSION -d garana || exit 1
-mrb g -r -b develop -d garana || exit 1
+mrb g -r -t $GARANA_VERSION -d garana https://github.com/DUNE/garana || exit 1
 
 cd $MRB_BUILDDIR || exit 1
 mrbsetenv || exit 1
