@@ -78,8 +78,8 @@ if ! uname | grep -q Darwin; then
 fi
 setup gitflow || exit 1
 export MRB_PROJECT=dune
-echo "Mrb path:"
-which mrb
+#echo "Mrb path:"
+#which mrb
 
 #dla set -x
 rm -rf $WORKSPACE/temp || exit 1
@@ -95,8 +95,8 @@ mrb newDev -v $GARANA_VERSION -q $FQUAL || exit 1
 #dla set +x
 source localProducts*/setup || exit 1
 
-echo "Chris MRB_SOURCE: ${MRB_SOURCE}"
-echo "Chris MRB_BUILDDIR: ${MRB_BUILDDIR}"
+#echo "Chris MRB_SOURCE: ${MRB_SOURCE}"
+#echo "Chris MRB_BUILDDIR: ${MRB_BUILDDIR}"
 
 # some shenanigans so we can use getopt v1_1_6
 if [ `uname` = Darwin ]; then
