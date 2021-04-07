@@ -95,6 +95,9 @@ mrb newDev -v $GARANA_VERSION -q $FQUAL || exit 1
 #dla set +x
 source localProducts*/setup || exit 1
 
+echo "Chris MRB_SOURCE: ${MRB_SOURCE}"
+echo "Chris MRB_BUILDDIR: ${MRB_BUILDDIR}"
+
 # some shenanigans so we can use getopt v1_1_6
 if [ `uname` = Darwin ]; then
 #  cd $MRB_INSTALL
@@ -112,10 +115,10 @@ fi
 #dla set -x
 cd $MRB_SOURCE  || exit 1
 # check out a readonly version
-#mrb g -r -t $GARANA_VERSION -d garana || exit 1
-mrb g -r -b develop -d garana || exit 1
+mrb g -r -t $GARANA_VERSION -d garana || exit 1
 
 cd $MRB_BUILDDIR || exit 1
+ls
 mrbsetenv || exit 1
 mrb b -j$ncores || exit 1
 mrb mp -n garana -- -j$ncores || exit 1
