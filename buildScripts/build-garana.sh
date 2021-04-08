@@ -5,8 +5,8 @@
 # designed to work on Jenkins
 # this is a proof of concept script
 
-# Tom Junk, August 22, 2018
-# copied from the dune_raw_data build script in dune's artdaq_utilities repository
+# Chris Hilgenberg 8 April 2021
+# copied from garsoft build script, originally written by Tom Junk
 
 echo "garana version: $GARANA_VERSION"
 echo "target qualifier: $QUAL"
@@ -115,8 +115,9 @@ fi
 #dla set -x
 cd $MRB_SOURCE  || exit 1
 # check out a readonly version
-mrb g -r -t $GARANA_VERSION -d garana || exit 1
-
+#mrb g -r -t $GARANA_VERSION -d garana garana-garana || exit 1
+#mrb g -r -t $GARANA_VERSION garana || exit 1
+mrb g -r -t $GARANA_VERSION https://www.github.com/DUNE/garana || exit 
 cd $MRB_BUILDDIR || exit 1
 ls
 mrbsetenv || exit 1
