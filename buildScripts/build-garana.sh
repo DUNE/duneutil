@@ -121,7 +121,7 @@ mrb g -r -t $GARANA_VERSION https://www.github.com/DUNE/garana || exit
 cd $MRB_BUILDDIR || exit 1
 ls
 mrbsetenv || exit 1
-mrb b -j$ncores || exit 1
+mrb b -D BUILD_W_CET=ON -j$ncores || exit 1
 mrb mp -n garana -- -j$ncores || exit 1
 
 # Extract flavor.
