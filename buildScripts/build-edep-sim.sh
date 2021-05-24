@@ -4,7 +4,7 @@
 # input variables:  
 #   EDEPSIMVERSION  -- matches tag name in Clark McGrew's github
 #   VERSIONSUFFIX   -- to append to the github tag to make our tag
-#   QUAL -- compiler, e.g. e17, e19, c2, c7
+#   QUAL -- compiler, e.g. e17, e19, e20, c2, c7
 #   BUILDTYPE --  debug or prof
 #   GEANT4VERSION -- tag for setting up GEANT4
 #   ROOTVERSION   -- tag for setting up ROOT
@@ -59,6 +59,10 @@ elif [ $QUAL = c2 ]; then
   CCOMPILER=clang
 elif [ $QUAL = e19 ]; then
   COMPILERVERS="gcc v8_2_0"
+  COMPILERCOMMAND=g++
+  CCOMPILER=gcc
+elif [ $QUAL = e20 ]; then
+  COMPILERVERS="gcc v9_3_0"
   COMPILERCOMMAND=g++
   CCOMPILER=gcc
 elif [ $QUAL = c7 ]; then
@@ -187,6 +191,8 @@ elif [ $CQ = c2 ]; then
   CV="clang v5_0_1"
 elif [ $CQ = e19 ]; then
   CV="gcc v8_2_0"
+elif [ $CQ = e20 ]; then
+  CV="gcc v9_3_0"
 elif [ $CQ = c7 ]; then
   CV="clang v7_0_0"
 fi
