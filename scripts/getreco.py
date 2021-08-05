@@ -23,15 +23,15 @@ for file in files:
         p = Popen(cmd, stdout=PIPE, stderr=PIPE)
         stdout, stderr = p.communicate()
         if not stderr:
-          print (stdout)
+          print (stdout.decode('ascii'))
         print ("Access URLs:")        
         cmd = ["samweb", "get-file-access-url", file, "--schema=xroot"]
         p = Popen(cmd, stdout=PIPE, stderr=PIPE)
         stdout, stderr = p.communicate()
         if not stderr:
-          print (stdout)
+          print (stdout.decode('ascii'))
         filename =  os.path.splitext(file)[0]
-        recofiles = samweb.listFiles("run_number %s " % (sys.argv[1]) + "and run_type protodune-sp and data_tier full-reconstructed")
+        recofiles = samweb.listFiles("run_number %s " % (sys.argv[1]) + "and run_type protodune-sp and (data_tier full-reconstructed or data_tier reco-recalibrated)")
         for recofile in recofiles:
           if filename+'_' in recofile:
             print ("Reco: ", recofile, '--nskip',events.index(int(sys.argv[2])))
@@ -40,13 +40,13 @@ for file in files:
             p = Popen(cmd, stdout=PIPE, stderr=PIPE)
             stdout, stderr = p.communicate()
             if not stderr:
-              print (stdout)
+              print (stdout.decode('ascii'))
             print ("Access URLs:")        
             cmd = ["samweb", "get-file-access-url", recofile, "--schema=xroot"]
             p = Popen(cmd, stdout=PIPE, stderr=PIPE)
             stdout, stderr = p.communicate()
             if not stderr:
-              print (stdout)
+              print (stdout.decode('ascii'))
 
 
 #from subprocess import Popen, PIPE
