@@ -56,24 +56,22 @@ fi
 # Source this file to set the basic configuration needed by LArSoft 
 # and for the DUNE-specific software that interfaces to LArSoft.
 
-# some old directory names for documentation purposes.
-FERMIAPP_LARSOFT_DIR="/grid/fermiapp/products/larsoft/"
-FERMIOSG_LARSOFT_DIR="/cvmfs/fermilab.opensciencegrid.org/products/larsoft/"
-#OASIS_LARSOFT_DIR="/cvmfs/oasis.opensciencegrid.org/fermilab/products/larsoft/"
+# location of the common UPS database
+
+CVMFS_COMMON_DIR="/cvmfs/fermilab.opensciencegrid.org/products/common/db/"
 
 # current location of larsoft in CVMFS
 
-FERMIOSG_LARSOFT_DIR2="/cvmfs/larsoft.opensciencegrid.org/products/"
+CVMFS_LARSOFT_DIR="/cvmfs/larsoft.opensciencegrid.org/products/"
 
+# location of DUNE software.  /grid/fermiapp is a fallback
+
+CVMFS_DUNE_DIR="/cvmfs/dune.opensciencegrid.org/products/dune/"
 FERMIAPP_DUNE_DIR="/grid/fermiapp/products/dune/"
-FERMIOSG_DUNE_DIR="/cvmfs/dune.opensciencegrid.org/products/dune/"
-#OASIS_DUNE_DIR="/cvmfs/oasis.opensciencegrid.org/lbne/products"
-
-DUNE_BLUEARC_DATA="/dune/data/"
 
 # Set up ups for LArSoft
 
-for dir in $FERMIOSG_LARSOFT_DIR2;
+for dir in $CVMFS_LARSOFT_DIR;
 do
   if [[ -f $dir/setup ]]; then
     echo "Setting up larsoft UPS area... ${dir}"
@@ -84,21 +82,18 @@ done
 
 # need also the common db in $PRODUCTS
 
-for dir in $FERMIOSG_LARSOFT_DIR $FERMIAPP_LARSOFT_DIR;
+for dir in $CVMFS_COMMON_DIR
 do
-  if [[ -f $dir/setup ]]; then
-    common=`dirname $dir`/common/db
-    if [[ -d $common ]]; then
-      export PRODUCTS=`dropit -p $PRODUCTS common/db`:`dirname $dir`/common/db
-    fi
+  if [[ -d $CVMFS_COMMON_DIR ]]; then
+    export PRODUCTS=`dropit -p $PRODUCTS common/db`:${CVMFS_COMMON_DIR}
     break
   fi
 done
 
+# Set up ups for DUNE.  Try CVMFS first and fall back to /grid/fermiapp
+# only if the CVMFS setup cannot be found
 
-# Set up ups for DUNE
-
-for dir in $FERMIOSG_DUNE_DIR $FERMIAPP_DUNE_DIR;
+for dir in $CVMFS_DUNE_DIR $FERMIAPP_DUNE_DIR;
 do
   if [[ -f $dir/setup ]]; then
     echo "Setting up DUNE UPS area... ${dir}"
@@ -110,24 +105,9 @@ done
 # Add current working directory (".") to FW_SEARCH_PATH
 #
 if [[ -n "${FW_SEARCH_PATH}" ]]; then
-  FW_SEARCH_PATH=`dropit -e -p $FW_SEARCH_PATH .`
-  FW_SEARCH_PATH=`dropit -e -p $FW_SEARCH_PATH /grid/fermiapp/lbne/lar/aux`
-  export FW_SEARCH_PATH=.:/grid/fermiapp/lbne/lar/aux:${FW_SEARCH_PATH}
+  export FW_SEARCH_PATH=.:`dropit -e -p $FW_SEARCH_PATH .`
 else
-  export FW_SEARCH_PATH=.:/grid/fermiapp/lbne/lar/aux
-fi
-
-# Add DUNE data path to FW_SEARCH_PATH
-#
-if [[ -d "${DUNE_BLUEARC_DATA}" ]]; then
-
-    if [[ -n "${FW_SEARCH_PATH}" ]]; then
-      FW_SEARCH_PATH=`dropit -e -p $FW_SEARCH_PATH ${DUNE_BLUEARC_DATA}`
-      export FW_SEARCH_PATH=${DUNE_BLUEARC_DATA}:${FW_SEARCH_PATH}
-    else
-      export FW_SEARCH_PATH=${DUNE_BLUEARC_DATA}
-    fi
-
+  export FW_SEARCH_PATH=.
 fi
 
 # Set up the basic tools that will be needed
