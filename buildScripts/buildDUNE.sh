@@ -4,11 +4,6 @@
 # use mrb
 # designed to work on Jenkins
 
-# ignores LARSOFT_QUAL now.
-# Extract set qualifier from $LARSOFT_QUAL (we don't care about anything else in $LARSOFT_QUAL).
-#SQUAL=`echo $LARSOFT_QUAL | tr : '\n' | grep ^s`
-#echo "set qualifier: $SQUAL"
-
 echo "dunetpc version: $DUNE"
 echo "base qualifiers: $QUAL"
 QUAL=`echo ${QUAL} | sed -e "s/-/:/g"`
@@ -137,12 +132,31 @@ mrbsetenv || exit 1
 mrb b -j$ncores || exit 1
 mrb mp -n dune -- -j$ncores || exit 1
 
+
+# Extract flavor.
+
+flvr=''
+if uname | grep -q Darwin; then
+  flvr=`ups flavor -2`
+else
+  flvr=`ups flavor -4`
+fi
+
+
+manifest=`ls dune-*_MANIFEST.txt`
+
+# add flavor and qualifier to the dunetpc line
+
+dtline=`grep dunetpc $manifest`
+dtmodline="${dtline}    -f ${flvr}   -q   ${QUAL}:${BUILDTYPE}"
+rm ${manifest}
+echo $dtmodline > ${manifest}
+
 # add dune_pardata to the manifest
 
-manifest=dune-*_MANIFEST.txt
 dune_pardata_version=`grep dune_pardata $MRB_SOURCE/dunetpc/ups/product_deps | grep -v qualifier | awk '{print $2}'`
 dune_pardata_dot_version=`echo ${dune_pardata_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
-echo "dune_pardata         ${dune_pardata_version}       dune_pardata-${dune_pardata_dot_version}-noarch.tar.bz2" >>  $manifest
+echo "dune_pardata         ${dune_pardata_version}       dune_pardata-${dune_pardata_dot_version}-noarch.tar.bz2  -f NULL" >>  $manifest
 
 # get platform
 OS=$(uname)
@@ -174,52 +188,47 @@ if [[ $fci != 0 ]]; then
 fi
 echo "Compiler is: $COMPILER"
 
-# Extract dune_raw_data version from our ups active list
-
-
-dune_raw_data_version=`ups active | grep dune_raw_data | awk '{print $2}'`
-echo "dune_raw_data version: $dune_raw_data_version"
-
 cd $MRB_BUILDDIR
 
 # add dune_raw_data to the manifest
 
+dune_raw_data_version=`ups active | grep dune_raw_data | awk '{print $2}'`
+echo "dune_raw_data version: $dune_raw_data_version"
+dune_raw_data_flavor=`ups active | grep dune_raw_data | awk '{print $4}'`
+echo "dune_raw_data flavor: $dune_raw_data_flavor"
+dune_raw_data_quals=`ups active | grep dune_raw_data | awk '{print $6}'`
+echo "dune_raw_data quals: $dune_raw_data_quals"
 dune_raw_data_dot_version=`echo ${dune_raw_data_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
-echo "dune_raw_data         ${dune_raw_data_version}       dune_raw_data-${dune_raw_data_dot_version}-${PLATFORM}-x86_64-${DASHQUAL}-${BUILDTYPE}.tar.bz2" >>  $manifest
+echo "dune_raw_data         ${dune_raw_data_version}       dune_raw_data-${dune_raw_data_dot_version}-${PLATFORM}-x86_64-${DASHQUAL}-${BUILDTYPE}.tar.bz2   -f ${dune_raw_data_flavor}    -q  ${dune_raw_data_quals}" >>  $manifest
 
 
 # add dunepdsprce to the manifest
 
-
 dunepdsprce_version=`ups active | grep dunepdsprce | awk '{print $2}'`
 echo "dunepdsprce version: $dunepdsprce_version"
+dunepdsprce_flavor=`ups active | grep dunepdsprce | awk '{print $4}'`
+echo "dunepdsprce flavor: $dunepdsprce_flavor"
+dunepdsprce_quals=`ups active | grep dunepdsprce | awk '{print $6}'`
+echo "dunepdsprce quals: $dunepdsprce_quals"
 dunepdsprce_dot_version=`echo ${dunepdsprce_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
-echo "dunepdsprce          ${dunepdsprce_version}          dunepdsprce-${dunepdsprce_dot_version}-${PLATFORM}-x86_64-${COMPILER}-gen-${BUILDTYPE}.tar.bz2" >>  $manifest
+echo "dunepdsprce          ${dunepdsprce_version}          dunepdsprce-${dunepdsprce_dot_version}-${PLATFORM}-x86_64-${COMPILER}-gen-${BUILDTYPE}.tar.bz2  -f ${dunepdsprce_flavor}    -q  ${dunepdsprce_quals}" >>  $manifest
 
 # add dune_oslibs to the manifest
 
 dune_oslibs_version=`ups active | grep dune_oslibs | awk '{print $2}'`
 echo "dune_oslibs version: $dune_oslibs_version"
+dune_oslibs_flavor=`ups active | grep dune_oslibs | awk '{print $4}'`
+echo "dune_oslibs flavor: $dune_oslibs_flavor"
 dune_oslibs_dot_version=`echo ${dune_oslibs_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
-echo "dune_oslibs    ${dune_oslibs_version}   dune_oslibs-${dune_oslibs_dot_version}-${PLATFORM}-x86_64.tar.bz2" >> $manifest
+echo "dune_oslibs    ${dune_oslibs_version}   dune_oslibs-${dune_oslibs_dot_version}-${PLATFORM}-x86_64.tar.bz2   -f ${dune_oslibs_flavor}" >> $manifest
 
 # Extract larsoft version from product_deps.
 
 larsoft_version=`grep larsoft $MRB_SOURCE/dunetpc/ups/product_deps | grep -v qualifier | awk '{print $2}'`
 larsoft_dot_version=`echo ${larsoft_version} |  sed -e 's/_/./g' | sed -e 's/^v//'`
 
-# Extract flavor.
-
-flvr=''
-if uname | grep -q Darwin; then
-  flvr=`ups flavor -2`
-else
-  flvr=`ups flavor -4`
-fi
-
 # Construct name of larsoft manifest.
 
-#larsoft_hyphen_qual=`echo $LARSOFT_QUAL | tr : - | sed 's/-noifdh//'`
 larsoft_manifest=larsoft-${larsoft_dot_version}-${flvr}-${SQUAL}-${DASHQUAL2}-${BUILDTYPE}_MANIFEST.txt
 echo "Larsoft manifest:"
 echo $larsoft_manifest
