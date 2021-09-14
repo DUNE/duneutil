@@ -23,6 +23,6 @@ LIST(APPEND nonexes example2.json )
 message(STATUS "Executable data handling scripts ${exes}")
 message(STATUS "Non-executable data handling files ${nonexes}")
 
-install(PROGRAMS ${exes} DESTINATION ${product}/${version}/dhtools)
-install(FILES ${nonexes} DESTINATION ${product}/${version}/dhtools)
+install(PROGRAMS ${exes} DESTINATION dhtools)
+install(FILES ${nonexes} DESTINATION dhtools)
 install_scripts(LIST ${exes})
