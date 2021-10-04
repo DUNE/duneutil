@@ -3,7 +3,7 @@
 # The *parent* line must the first non-commented line and defines this product and version
 # The version should be of the form vxx_yy_zz (e.g. v01_02_03)
 
-parent duneutil v09_31_00_01
+parent duneutil v09_32_00
 
 defaultqual e20
 
@@ -44,10 +44,10 @@ table_fragment_end
 
 product          version
 art_root_io     v1_08_03
-larbatch        v01_56_01
+larbatch        v01_56_02
 jobsub_client   -               -       optional
 python_future_six_request        v1_3_1
-cetbuildtools	v8_17_03	-	only_for_build
+cetbuildtools	v8_18_00	-	only_for_build
 end_product_list
 
 
