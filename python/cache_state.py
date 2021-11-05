@@ -350,7 +350,21 @@ if __name__=="__main__":
             if dimensions:
                 samlist = sam.listFilesAndLocations(dimensions=dimensions, filter_path="enstore")
             else:
-                samlist  = sam.listFilesAndLocations(defname=args.dataset_name, filter_path="enstore")
+                #samlist  = sam.listFilesAndLocations(defname=args.dataset_name, filter_path="enstore")
+                thislist = sam.listFiles(defname=args.dataset_name)
+                print(len(thislist))
+                samlist = []
+                a = 0
+                for f in thislist:
+                  if not (a%100): print("Locating files: %i/%i"%(a, len(thislist)), end='\r')
+                  locs = sam.locateFile(f)
+                  for l in locs:
+                    if l['full_path'].split(':')[0] == 'enstore':
+                      samlist.append((l['full_path'], f))
+                      break 
+                  a += 1
+                print()
+                print(len(samlist))
 
             filelist = enstore_locations_to_paths(list(samlist), args.sparse) 
             print( " done." )
