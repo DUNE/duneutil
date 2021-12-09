@@ -47,7 +47,7 @@ art_root_io     v1_08_03
 larbatch        v01_56_02
 jobsub_client   -               -       optional
 python_future_six_request        v1_3_1
-cetbuildtools	v8_18_05	-	only_for_build
+cetbuildtools	v8_18_09	-	only_for_build
 end_product_list
 
 

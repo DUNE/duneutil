@@ -7,6 +7,7 @@
 
 LIST(APPEND exes extractor_dict.py)
 LIST(APPEND exes cache_state.py)
+LIST(APPEND exes new_cache_state.py)
 
 # Non-executable python files.
 
