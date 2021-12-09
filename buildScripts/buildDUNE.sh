@@ -222,6 +222,25 @@ echo "dune_oslibs flavor: $dune_oslibs_flavor"
 dune_oslibs_dot_version=`echo ${dune_oslibs_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
 echo "dune_oslibs    ${dune_oslibs_version}   dune_oslibs-${dune_oslibs_dot_version}-${PLATFORM}-x86_64.tar.bz2   -f ${dune_oslibs_flavor}" >> $manifest
 
+# add dunedetdataformats to the manifest
+
+dunedetdataformats_version=`ups active | grep dunedetdataformats | awk '{print $2}'`
+echo "dunedetdataformats version: $dunedetdataformats_version"
+dunedetdataformats_flavor=`ups active | grep dunedetdataformats | awk '{print $4}'`
+echo "dunedetdataformats flavor: $dunedetdataformats_flavor"
+dunedetdataformats_dot_version=`echo ${dunedetdataformats_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
+echo "dunedetdataformats    ${dunedetdataformats_version}   dunedetdataformats-${dunedetdataformats_dot_version}-noarch.tar.bz2   -f ${dunedetdataformats_flavor}" >> $manifest
+
+# add dunedaqdataformats to the manifest
+
+dunedaqdataformats_version=`ups active | grep dunedaqdataformats | awk '{print $2}'`
+echo "dunedaqdataformats version: $dunedaqdataformats_version"
+dunedaqdataformats_flavor=`ups active | grep dunedaqdataformats | awk '{print $4}'`
+echo "dunedaqdataformats flavor: $dunedaqdataformats_flavor"
+dunedaqdataformats_dot_version=`echo ${dunedaqdataformats_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
+echo "dunedaqdataformats    ${dunedaqdataformats_version}   dunedaqdataformats-${dunedaqdataformats_dot_version}-noarch.tar.bz2   -f ${dunedaqdataformats_flavor}" >> $manifest
+
+
 # Extract larsoft version from product_deps.
 
 larsoft_version=`grep larsoft $MRB_SOURCE/dunetpc/ups/product_deps | grep -v qualifier | awk '{print $2}'`
