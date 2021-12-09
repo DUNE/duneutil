@@ -1,3 +1,4 @@
+#!/bin/env python3
 import cache_state 
 import argparse
 import os, os.path
@@ -87,7 +88,7 @@ if args.dataset_name:
     print()
     print(len(samlist))
 
-    print(a, cached)
+    print("%i/%i files are cached"%(cached, a))
 
     #filelist = enstore_locations_to_paths(list(samlist), args.sparse) 
     print( " done." )
