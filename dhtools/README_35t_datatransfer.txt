@@ -14,7 +14,8 @@ dtr35t1.sh
 dtr35t1.sh calls
 make_metadata35t_declare.sh which calls
 dbjson.py to query the online database to look up 
-some metadata fields for each run.
+some metadata fields for each run.  -- file deleted from repository.
+Ask Tom Junk for a copy if you need it.
 
 The file example2.json is a template of some of the metadata
 with default values which make_metadata35t_declare.sh uses to
@@ -52,6 +53,8 @@ are assumed to exist in lbne35t-gateway02:/data/lbnedaq/data
 The file runsumdbquery.py can be used at the command line to 
 check the online database entry for a particular run.  It is not
 used in the automatic file transfer/metadata generation scripts.
+runsumdbquery.py has been deleted.   Ask Tom Junk if you need
+a copy.
 
 An example crontab entry for doing hourly transfers is:
 
