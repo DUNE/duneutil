@@ -102,7 +102,7 @@ fi
 set -x
 cd $MRB_SOURCE  || exit 1
 # make sure we get a read-only copy
-mrb g -r -t $DUNEUTILVER duneutil || exit 1
+mrb g -r -t $DUNEUTILVER --repo-type github -g DUNE duneutil || exit 1
 cd $MRB_BUILDDIR || exit 1
 mrbsetenv || exit 1
 mrb b -j$ncores || exit 1

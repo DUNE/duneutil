@@ -91,7 +91,7 @@ ntries=0
 until [ $ntries -ge $maxtries ]
 do
   date
-  mrb g -r -t $VERSION protoduneana && break
+  mrb g -r -t $VERSION --repo-type github -g DUNE protoduneana && break
   ntries=$[$ntries+1]
   sleep 60
 done
