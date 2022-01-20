@@ -10,7 +10,7 @@ print("Fixing product_deps files in %s"%os.environ['MRB_SOURCE'])
 print("Updating to larsoft version %s"%version)
 suite = ['dunecore', 'duneana', 'dunesw', 'dunecalib', 'dunesim', 'duneprototypes',
          'dunereco', 'protoduneana', 'duneopdet', 'dunedataprep',
-         'duneexamples']
+         'duneexamples', 'duneutil']
 dirs = ['%s/%s/'%(os.environ['MRB_SOURCE'], d) for d in suite]
 
 
@@ -28,7 +28,7 @@ for d in dirs:
    
   suite = ['dunecore', 'duneana', 'dunesw', 'dunecalib', 'dunesim', 'duneprototypes',
            'dunereco', 'protoduneana', 'duneopdet', 'dunedataprep',
-           'duneexamples']
+           'duneexamples', 'duneutil']
   new_suite = suite
   for line in fileinput.input(d+'ups/product_deps', inplace=True):
     found = False
