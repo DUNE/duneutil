@@ -21,6 +21,7 @@ for df in dep_files:
         break
       if found_header:
         if l.split()[0] in deps.keys(): continue
+        if l.split()[0] in suite: continue
         deps[l.split()[0]] = l.split()[1]
 print()
 for k, v in deps.items():
