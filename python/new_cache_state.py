@@ -13,8 +13,8 @@ examples = ''
 parser= argparse.ArgumentParser(epilog=examples, formatter_class=argparse.RawDescriptionHelpFormatter)
 
 gp = parser.add_mutually_exclusive_group()
-gp.add_argument("files",
-                nargs="*",
+gp.add_argument("--files",
+                nargs="+",
                 default=[],
                 metavar="FILE",
                 help="Files to consider. Can be specified as a full /pnfs path, or just the SAM filename",
@@ -60,43 +60,46 @@ filelist = []
 if args.dataset_name:
   print( "Retrieving file list for SAM dataset definition name: '%s'..." % args.dataset_name, end="" )
   sys.stdout.flush()
-  try:
+try:
+  if args.dataset_name:
     thislist = sam.listFiles(defname=args.dataset_name)
-    print(len(thislist))
-    samlist = []
-    a = 0
-    cached = 0
-    pending = 0
-    c = cache_state.make_curl() if args.method == "rest" else None
-    for f in thislist:
-      if not (a%100): print("Locating files: %i/%i"%(a, len(thislist)), end='\r')
-      locs = sam.locateFile(f)
-      for l in locs:
-        split_path = l['full_path'].split(':')
-        if split_path[0] == 'enstore':
-          if args.method == "pnfs":
-            this_cached = cache_state.is_file_online_pnfs(os.path.join(split_path[1], f))
-            if args.verbose:
-              print( f, "ONLINE" if this_cached else "NEARLINE")
-            if this_cached: cached += 1
-            break 
-          else:
-            qos,targetQos = cache_state.get_file_qos(c, os.path.join(split_path[1], f))
-            if "ONLINE" in qos: cached += 1 
-            if "disk" in targetQos: pending += 1
-      a += 1
-    print()
-    print(len(samlist))
+  elif len(args.files) > 0:
+    thislist = args.files
+  print(len(thislist))
+  samlist = []
+  a = 0
+  cached = 0
+  pending = 0
+  c = cache_state.make_curl() if args.method == "rest" else None
+  for f in thislist:
+    if not (a%100): print("Locating files: %i/%i"%(a, len(thislist)), end='\r')
+    locs = sam.locateFile(f)
+    for l in locs:
+      split_path = l['full_path'].split(':')
+      if split_path[0] == 'enstore':
+        if args.method == "pnfs":
+          this_cached = cache_state.is_file_online_pnfs(os.path.join(split_path[1], f))
+          if args.verbose:
+            print( f, "ONLINE" if this_cached else "NEARLINE")
+          if this_cached: cached += 1
+          break 
+        else:
+          qos,targetQos = cache_state.get_file_qos(c, os.path.join(split_path[1], f))
+          if "ONLINE" in qos: cached += 1 
+          if "disk" in targetQos: pending += 1
+    a += 1
+  print()
+  print(len(samlist))
 
-    print("%i/%i files are cached"%(cached, a))
+  print("%i/%i files are cached"%(cached, a))
 
-    #filelist = enstore_locations_to_paths(list(samlist), args.sparse) 
-    print( " done." )
-  except Exception as e:
-    print( e )
-    print()
-    print( 'Unable to retrieve SAM information for dataset: %s' %(args.dataset_name) )
-    exit(-1)
-    # Take the rest of the commandline as the filenames
-    filelist = args
+  #filelist = enstore_locations_to_paths(list(samlist), args.sparse) 
+  print( " done." )
+except Exception as e:
+  print( e )
+  print()
+  print( 'Unable to retrieve SAM information for dataset: %s' %(args.dataset_name) )
+  exit(-1)
+  # Take the rest of the commandline as the filenames
+  filelist = args
 
