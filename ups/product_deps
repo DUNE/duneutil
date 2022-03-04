@@ -44,7 +44,7 @@ table_fragment_end
 
 product          version
 art_root_io     v1_08_03
-larbatch        v01_56_02
+larbatch        v01_57_00
 jobsub_client   -               -       optional
 python_future_six_request        v1_3_1
 cetbuildtools	v8_18_09	-	only_for_build
