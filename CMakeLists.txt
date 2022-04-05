@@ -19,7 +19,7 @@ project(duneutil VERSION 09.47.00.01 LANGUAGES CXX C)
 # cetbuildtools contains our cmake modules
 find_package(cetbuildtools REQUIRED)
 
-list(APPEND CMAKE_MODULE_PATH $ENV{CANVAS_ROOT_IO_DIR}/Modules)
+find_package(canvas_root_io)
 
 include(CetCMakeEnv)
 cet_cmake_env()
