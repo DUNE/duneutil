@@ -335,6 +335,6 @@ tar -cjf $WORKSPACE/copyBack/${FULLNAMESTRIPPED}.tar.bz2 . || exit 1
 
 ls -l $WORKSPACE/copyBack/
 cd $WORKSPACE || exit 1
-#rm -rf $WORKSPACE/temp || exit 1
+rm -rf $WORKSPACE/temp || exit 1
 
 exit 0
