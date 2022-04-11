@@ -20,9 +20,11 @@ for d in dirs:
   print(d, dirname)
 
   for line in fileinput.input(d+'CMakeLists.txt', inplace=True):
-    if 'project(%s'%dirname in line:
+    #if 'project(%s'%dirname in line:
+    if 'CMAKE_PROJECT_VERSION_STRING' in line: 
       split = line.split()
-      split[2] = version.replace('_', '.').strip('v')
+      #split[2] = version.replace('_', '.').strip('v')
+      split[1] = version.replace('_', '.').strip('v') + ')'
       print(' '.join(split), end='\n')
     else: print(line, end='')
    
