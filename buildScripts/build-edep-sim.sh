@@ -251,7 +251,7 @@ mkdir installdir || exit 1
 mkdir builddir || exit 1
 mkdir inputdir || exit 1
 cd inputdir
-git clone https://github.com/DUNE/edep-sim.git || exit 1
+git clone https://github.com/ClarkMcGrew/edep-sim.git || exit 1
 cd edep-sim || exit 1
 git checkout tags/${EDEPSIMVERSION} || exit 1
 
@@ -289,6 +289,10 @@ cp -r installdir/include/* ${DIRNAME}/../include
 # duplicate in the flavored versions in case cmake files assume include is flavored.
 cp -r installdir/share/* ${DIRNAME}/share
 cp -r installdir/include/* ${DIRNAME}/include
+
+# fix a cmake include to enable relocation
+
+sed -i -e "s@include.*cmake\")@include(\$ENV{EDEPSIM_FQ_DIR}/lib/cmake/EDepSim/EDepSimTargets.cmake)@" ${DIRNAME}/lib/cmake/EDepSim/EDepSimConfig.cmake || exit 1
 
 # for testing the tarball, remove so we keep .upsfiles as is when
 # unwinding into a real products area

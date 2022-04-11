@@ -14,12 +14,14 @@
 
 cmake_minimum_required(VERSION 3.19 FATAL_ERROR)
 
-project(duneutil VERSION 09.47.00.01 LANGUAGES CXX C)
+project(duneutil LANGUAGES CXX C)
+set(${PROJECT_NAME}_CMAKE_PROJECT_VERSION_STRING 09.48.00d00)
+
 
 # cetbuildtools contains our cmake modules
 find_package(cetbuildtools REQUIRED)
 
-list(APPEND CMAKE_MODULE_PATH $ENV{CANVAS_ROOT_IO_DIR}/Modules)
+find_package(canvas_root_io)
 
 include(CetCMakeEnv)
 cet_cmake_env()
