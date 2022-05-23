@@ -7,6 +7,7 @@
 echo "dunetpc version: $DUNE"
 echo "base qualifiers: $QUAL"
 QUAL=`echo ${QUAL} | sed -e "s/-/:/g"`
+LARVERSION=`echo ${DUNE} | sed -e "s/d..//"`
 echo "modified base qualifiers: $QUAL"
 echo "build type: $BUILDTYPE"
 echo "workspace: $WORKSPACE"
@@ -83,7 +84,8 @@ mkdir -p $WORKSPACE/temp || exit 1
 mkdir -p $WORKSPACE/copyBack || exit 1
 rm -f $WORKSPACE/copyBack/* || exit 1
 cd $WORKSPACE/temp || exit 1
-mrb newDev -v $DUNE -q $QUAL:$BUILDTYPE || exit 1
+#mrb newDev -v $DUNE -q $QUAL:$BUILDTYPE || exit 1
+mrb newDev -v $LARVERSION -q $QUAL:$BUILDTYPE || exit 1
 
 #dla set +x
 source localProducts*/setup || exit 1
@@ -107,7 +109,7 @@ cd $MRB_SOURCE  || exit 1
 # make sure we get a read-only copy
 # put some retry logic here instead
 
-for repo in duneana dunecalib dunecore dunedataprep duneexamples duneopdet duneprototypes dunereco dunesim protoduneana dunesw
+for repo in duneana dunecalib duneutil dunecore dunedataprep duneexamples duneopdet duneprototypes dunereco dunesim protoduneana dunesw
 do
   echo "Cloning $repo"
   maxtries=20
