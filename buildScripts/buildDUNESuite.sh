@@ -159,7 +159,7 @@ dtmodline="${dtline}    -f ${flvr}   -q   ${QUAL}:${BUILDTYPE}"
 echo $dtmodline
 echo $dtmodline > ${manifest}
 
-for repo in dunecalib dunecore dunedataprep duneexamples duneopdet duneprototypes dunereco dunesim protoduneana dunesw
+for repo in dunecalib dunecore dunedataprep duneexamples duneopdet duneprototypes dunereco dunesim duneutil protoduneana dunesw
 do
   dtline=`grep $repo $oldmanifest`
   dtmodline="${dtline}    -f ${flvr}   -q   ${QUAL}:${BUILDTYPE}"
