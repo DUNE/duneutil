@@ -11,6 +11,8 @@ LARVERSION=`echo ${DUNE} | sed -e "s/d..//"`
 echo "modified base qualifiers: $QUAL"
 echo "build type: $BUILDTYPE"
 echo "workspace: $WORKSPACE"
+dune_dot_version=`echo ${DUNE} |  sed -e 's/_/./g' | sed -e 's/^v//'`
+echo "dune_dot: $dune_dot_version"
 
 # Don't do ifdh build on macos.
 
@@ -336,6 +338,9 @@ echo "Moving tarballs to copyBack"
 mv *.bz2  $WORKSPACE/copyBack/ || exit 1
 
 echo "Moving manifest to copyBack"
+
+newmanifest_name=`echo $manifest | sed -e "s/$larsoft_dot_version/$dune_dot_version/"`
+mv $manifest $newmanifest_name
 
 manifest=dune-*_MANIFEST.txt
 if [ -f $manifest ]; then
