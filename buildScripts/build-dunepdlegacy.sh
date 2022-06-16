@@ -36,7 +36,8 @@ ntries=0
 until [ $ntries -ge $maxtries ]
 do
   date
-  git clone git@github.com:DUNE/dunepdlegacy.git && break
+  #git clone git@github.com:DUNE/dunepdlegacy.git && break
+  git clone https://github.com/DUNE/dunepdlegacy.git && break
   ntries=$[$ntries+1]
   sleep 60
 done
