@@ -209,29 +209,6 @@ echo "Compiler is: $COMPILER"
 
 cd $MRB_BUILDDIR
 
-# add dune_raw_data to the manifest
-
-#dune_raw_data_version=`ups active | grep dune_raw_data | awk '{print $2}'`
-#echo "dune_raw_data version: $dune_raw_data_version"
-#dune_raw_data_flavor=`ups active | grep dune_raw_data | awk '{print $4}'`
-#echo "dune_raw_data flavor: $dune_raw_data_flavor"
-#dune_raw_data_quals=`ups active | grep dune_raw_data | awk '{print $6}'`
-#echo "dune_raw_data quals: $dune_raw_data_quals"
-#dune_raw_data_dot_version=`echo ${dune_raw_data_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
-#echo "dune_raw_data         ${dune_raw_data_version}       dune_raw_data-${dune_raw_data_dot_version}-${PLATFORM}-x86_64-${DASHQUAL}-${BUILDTYPE}.tar.bz2   -f ${dune_raw_data_flavor}    -q  ${dune_raw_data_quals}" >>  $manifest
-#
-#
-## add dunepdsprce to the manifest
-#
-#dunepdsprce_version=`ups active | grep dunepdsprce | awk '{print $2}'`
-#echo "dunepdsprce version: $dunepdsprce_version"
-#dunepdsprce_flavor=`ups active | grep dunepdsprce | awk '{print $4}'`
-#echo "dunepdsprce flavor: $dunepdsprce_flavor"
-#dunepdsprce_quals=`ups active | grep dunepdsprce | awk '{print $6}'`
-#echo "dunepdsprce quals: $dunepdsprce_quals"
-#dunepdsprce_dot_version=`echo ${dunepdsprce_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
-#echo "dunepdsprce          ${dunepdsprce_version}          dunepdsprce-${dunepdsprce_dot_version}-${PLATFORM}-x86_64-${COMPILER}-gen-${BUILDTYPE}.tar.bz2  -f ${dunepdsprce_flavor}    -q  ${dunepdsprce_quals}" >>  $manifest
-
 dunepdlegacy_version=`ups active | grep dunepdlegacy | awk '{print $2}'`
 echo "dunepdlegacy version: $dunepdlegacy_version"
 dunepdlegacy_flavor=`ups active | grep dunepdlegacy | awk '{print $4}'`
@@ -239,7 +216,7 @@ echo "dunepdlegacy flavor: $dunepdlegacy_flavor"
 dunepdlegacy_quals=`ups active | grep dunepdlegacy | awk '{print $6}'`
 echo "dunepdlegacy quals: $dunepdlegacy_quals"
 dunepdlegacy_dot_version=`echo ${dunepdlegacy_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
-echo "dunepdlegacy         ${dunepdlegacy_version}       dunepdlegacy-${dunepdlegacy_dot_version}-${PLATFORM}-x86_64-${DASHQUAL}-${BUILDTYPE}.tar.bz2   -f ${dunepdlegacy_flavor}    -q  ${dunepdlegacy_quals}" >>  $manifest
+echo "dunepdlegacy         ${dunepdlegacy_version}       dunepdlegacy-${dunepdlegacy_dot_version}-${PLATFORM}-x86_64-${DASHQUAL2}-${BUILDTYPE}.tar.bz2   -f ${dunepdlegacy_flavor}    -q  ${dunepdlegacy_quals}" >>  $manifest
 
 # add dune_oslibs to the manifest
 
