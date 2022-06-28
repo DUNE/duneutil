@@ -62,20 +62,17 @@ CVMFS_COMMON_DIR="/cvmfs/fermilab.opensciencegrid.org/products/common/db/"
 
 # current location of larsoft in CVMFS
 
-CVMFS_LARSOFT_DIR="/cvmfs/larsoft.opensciencegrid.org/products/"
-
-# location of DUNE software.  /grid/fermiapp is a fallback
+CVMFS_LARSOFT_DIR="/cvmfs/larsoft.opensciencegrid.org"
 
 CVMFS_DUNE_DIR="/cvmfs/dune.opensciencegrid.org/products/dune/"
-FERMIAPP_DUNE_DIR="/grid/fermiapp/products/dune/"
 
 # Set up ups for LArSoft
 
 for dir in $CVMFS_LARSOFT_DIR;
 do
-  if [[ -f $dir/setup ]]; then
+  if [[ -f $dir/setup_larsoft.sh ]]; then
     echo "Setting up larsoft UPS area... ${dir}"
-    source $dir/setup
+    source $dir/setup_larsoft.sh
     break
   fi
 done
@@ -90,10 +87,9 @@ do
   fi
 done
 
-# Set up ups for DUNE.  Try CVMFS first and fall back to /grid/fermiapp
-# only if the CVMFS setup cannot be found
+# Set up ups for DUNE.  Remove /grid/fermiapp fallback
 
-for dir in $CVMFS_DUNE_DIR $FERMIAPP_DUNE_DIR;
+for dir in $CVMFS_DUNE_DIR;
 do
   if [[ -f $dir/setup ]]; then
     echo "Setting up DUNE UPS area... ${dir}"
