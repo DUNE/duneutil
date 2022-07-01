@@ -101,12 +101,14 @@ function makegraph {
 if [ "$1" == "--help" ]; then
     echo "Usage: dependency_graph.sh <product> <version> <qualifiers> to make a file <product>_<version>.pdf showing"
     echo "the dependency tree.  This version suppresses GEANT4's dependencies as well as mrb and cetpkgsupport"
+    echo "be sure to set up the product first before running the script."
     exit
 fi
 
 export LANG=en_US
-source /cvmfs/dune.opensciencegrid.org/products/dune/setup_dune.sh
-setup $1 $2 -q $3
+# now that the script is in duneutil, we assume we have the products set up.
+# source /cvmfs/dune.opensciencegrid.org/products/dune/setup_dune.sh
+# setup $1 $2 -q $3
 
 TF=`mktemp /tmp/dtgv.tmp.XXXXXX`
 touch $TF
