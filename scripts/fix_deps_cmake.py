@@ -37,7 +37,7 @@ for d in dirs:
     if 'product' in line and 'version' in line:
       n_spaces = line.find('v')
     for s in suite:
-      if s in line and 'parent' not in line:
+      if s in line and 'parent' not in line and 'obj' not in line:
         split = line.split() 
         split[1] = version
         split.insert(1, ' '*(n_spaces-len(s))) 
