@@ -1,0 +1,92 @@
+#!/usr/bin/env python
+
+# findRunFiles
+#
+# Use samweb to find all the DUNE files for a run.
+
+import sys
+import samweb_cli
+
+nargv = len(sys.argv)
+com = sys.argv[0].split('/')[-1]
+if nargv <= 1 or sys.argv[1] == '-h':
+    print(f"Usage: {com}: RUN")
+    print(f"   or: {com}: DET RUN")
+    print(f"   or: {com}: DET EVT")
+    print(f"   or: {com}: DET RUN EVT")
+    print(f"where DET is a sam run type, e.g.:")
+    print(f"  protodune-sp - protoDUNE single-phase (default)")
+    print(f"  hd-coldbox - Horizontal drift coldbox tests")
+    print(f"  vd-coldbox-bottom - Vertical drift bottom electronics coldbox tests")
+    print(f"  vd-coldbox-top - Vertical drift top electronics coldbox tests")
+    print(f"  all - Any run type (includes LBNE)")
+    print(f"If the event number EVT is provided, then the name of the file holding")
+    print(f"the raw data for that event and its offset in the file are returned.")
+    print(f"Otherwise, the list of files for the event are returned.")
+    exit(0)
+
+run_type = 'protodune-sp'
+run = None
+event = None
+data_type = 'raw'
+showQuery = None
+dbg = False
+
+# Check for a run type.
+rem = sys.argv[1:]
+while len(rem):
+    arg = rem[0]
+    if arg == 'query':
+        showQuery = True
+    elif arg == 'debug':
+        dbg = True
+    elif arg.isdigit():
+        if run is None:
+            run = int(arg)
+        elif event is None:
+            event = int(arg)
+        else:
+            print(f"WARNING: Ignoring argument {arg}", file=sys.stderr)
+    else:
+        run_type = rem[0]
+    rem = rem[1:]
+
+if run is None:
+    print(f"ERROR: Run number must be provided.", file=sys.stderr)
+    exit(1)
+
+run_type_query = ''
+if run_type != 'all':
+    run_type_query = f" and run_type {run_type}"
+query = f"run_number {run}{run_type_query} and data_tier {data_type}"
+if showQuery:
+    print(query, file=sys.stderr)
+    exit(0)
+
+samweb = samweb_cli.SAMWebClient(experiment='dune')
+if dbg: print(f"INFO: Executing query {query}", file=sys.stderr)
+files = samweb.listFiles(query)
+if dbg: print(f"INFO: File count is {len(files)}", file=sys.stderr)
+if not files or len(files) == 0:
+    print(f"ERROR: No files found for {query}", file=sys.stderr)
+    exit(1)
+files.sort()
+
+if event is None:
+    for file in files:
+        print(file)
+    exit(0)
+
+for file in files:
+    if dbg: print(f"Checking file {file}", file=sys.stderr)
+    events = samweb.getURL('/files/metadata/event_numbers', {'file_name': file}).json()
+    if not events:
+        print(f"WARNING: Event list not found for file {file}", file=sys.stderr)
+    elif len(events)==0:
+        print(f"WARNING: Event list is empty for file {file}", file=sys.stderr)
+    else:
+        if event in events :
+            ievt = events.index(event)
+            if dbg: print(f"INFO: Found event in file {file} with offset {ievt}", file=sys.stderr)
+            print(f"{file} {ievt}")
+
