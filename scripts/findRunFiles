@@ -77,6 +77,21 @@ if event is None:
         print(file)
     exit(0)
 
+# Special handling for NP02 data which does not write event metatdata.
+if run_type == 'vd-coldbox-top':
+    if run < 1037:      # CRP1, CRP1B
+        ifil = (event-1)//110 + 1
+        ioff = (event-1)%110
+        efnam = f"{run}_{ifil}_cb.test"
+        if efnam in files:
+            print(f"{efnam} {ioff}")
+        else:
+            print(f"ERROR: File {efnam} is n ot found in catalog.", file=sys.stderr)
+    else:
+        print(f"ERROR: Event picking is not yet supported for {run_type} run {run}", file=sys.stderr)
+    exit(0)
+
+
 for file in files:
     if dbg: print(f"Checking file {file}", file=sys.stderr)
     events = samweb.getURL('/files/metadata/event_numbers', {'file_name': file}).json()
