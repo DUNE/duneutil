@@ -2,6 +2,9 @@
 
 # findRunFiles
 #
+# David Adams
+# September 2022
+#
 # Use samweb to find all the DUNE files for a run.
 
 import sys
@@ -10,19 +13,25 @@ import samweb_cli
 nargv = len(sys.argv)
 com = sys.argv[0].split('/')[-1]
 if nargv <= 1 or sys.argv[1] == '-h':
-    print(f"Usage: {com}: RUN")
-    print(f"   or: {com}: DET RUN")
-    print(f"   or: {com}: DET EVT")
-    print(f"   or: {com}: DET RUN EVT")
-    print(f"where DET is a sam run type, e.g.:")
+    print(f"Usage: {com}: RUN [EVT] [OPT1 [OPT2 ...]] [RUN_TYPE]")
+    print(f"where RUN_TYPE is a sam run type, e.g.:")
     print(f"  protodune-sp - protoDUNE single-phase (default)")
     print(f"  hd-coldbox - Horizontal drift coldbox tests")
     print(f"  vd-coldbox-bottom - Vertical drift bottom electronics coldbox tests")
     print(f"  vd-coldbox-top - Vertical drift top electronics coldbox tests")
-    print(f"  all - Any run type (includes LBNE)")
+    print(f"  all - Special value to list the files for this run number in any run.")
     print(f"If the event number EVT is provided, then the name of the file holding")
     print(f"the raw data for that event and its offset in the file are returned.")
-    print(f"Otherwise, the list of files for the event are returned.")
+    print(f"Otherwise, the list of files for run RUN event are returned.")
+    print(f"Arguments may appear in any order.")
+    print(f"  RUN is the first numeric argment and must be supplied (except -h).")
+    print(f"  EVT is the second nummeric argument.")
+    print(f"  RUN_TYPE is the first non-numeric argument that not one of the options.")
+    print(f"Supported options  include.")
+    print(f"     -h: Show only this help message.")
+    print(f"     -v: Show only the version of this script.")
+    print(f"  query: Show the sam query instead of executing it.")
+    print(f"  debug: Write debugging messages to stderr.")
     exit(0)
 
 run_type = 'protodune-sp'
@@ -31,12 +40,16 @@ event = None
 data_type = 'raw'
 showQuery = None
 dbg = False
+version = "1.0"      # Please increment for any code changes.
 
 # Check for a run type.
 rem = sys.argv[1:]
 while len(rem):
     arg = rem[0]
-    if arg == 'query':
+    if arg == '-v':
+        print(version)
+        exit(0)
+    elif arg == 'query':
         showQuery = True
     elif arg == 'debug':
         dbg = True
@@ -56,7 +69,11 @@ if run is None:
     exit(1)
 
 run_type_query = ''
-if run_type != 'all':
+if run_type == 'all':
+    if event is not None:
+        print(f"WARNING: Ignoring event number for run type \"all\".")
+        event = None
+else:
     run_type_query = f" and run_type {run_type}"
 query = f"run_number {run}{run_type_query} and data_tier {data_type}"
 if showQuery:
@@ -78,30 +95,44 @@ if event is None:
     exit(0)
 
 # Special handling for NP02 data which does not write event metatdata.
+# See https://github.com/DUNE/duneutil/issues/1
 if run_type == 'vd-coldbox-top':
-    if run < 1037:      # CRP1, CRP1B
-        ifil = (event-1)//110 + 1
-        ioff = (event-1)%110
+    if run < 1373:      # CRP1, CRP1B
+        nfevt = 110     # # events in a file
+        ifil = (event-1)//nfevt + 1
+        ioff = (event-1)%nfevt
         efnam = f"{run}_{ifil}_cb.test"
+    elif run < 1000000:              # CRP2, CRP3(?)
+        sstrs = ['a', 'b', 'c', 'd']
+        nfevt = 60            # # events in a file
+        nfstr = 4             # # file streams (= # L2 event builders)
+        nbevt = nfevt*nfstr   # # events in a block
+        iblk = (event-1)//nbevt + 1
+        istr = (event-1)%nfstr
+        sstr = sstrs[istr]
+        ioff = ((event-1)//4)%nfevt
+        efnam = f"{run}_{iblk}_{sstr}_cb.test"
+    else:
+        print(f"ERROR: Event picking is not yet supported for {run_type} run {run}", file=sys.stderr)
+        efnam = None
+    if efnam is not None:
         if efnam in files:
             print(f"{efnam} {ioff}")
         else:
             print(f"ERROR: File {efnam} is n ot found in catalog.", file=sys.stderr)
-    else:
-        print(f"ERROR: Event picking is not yet supported for {run_type} run {run}", file=sys.stderr)
-    exit(0)
 
-
-for file in files:
-    if dbg: print(f"Checking file {file}", file=sys.stderr)
-    events = samweb.getURL('/files/metadata/event_numbers', {'file_name': file}).json()
-    if not events:
-        print(f"WARNING: Event list not found for file {file}", file=sys.stderr)
-    elif len(events)==0:
-        print(f"WARNING: Event list is empty for file {file}", file=sys.stderr)
-    else:
-        if event in events :
-            ievt = events.index(event)
-            if dbg: print(f"INFO: Found event in file {file} with offset {ievt}", file=sys.stderr)
-            print(f"{file} {ievt}")
-
+# Runs with event metadata.
+# See https://github.com/DUNE/duneutil/blob/develop/scripts/getfile.py
+else:
+    for file in files:
+        if dbg: print(f"Checking file {file}", file=sys.stderr)
+        events = samweb.getURL('/files/metadata/event_numbers', {'file_name': file}).json()
+        if not events:
+            print(f"WARNING: Event list not found for file {file}", file=sys.stderr)
+        elif len(events)==0:
+            print(f"WARNING: Event list is empty for file {file}", file=sys.stderr)
+        else:
+            if event in events :
+                ievt = events.index(event)
+                if dbg: print(f"INFO: Found event in file {file} with offset {ievt}", file=sys.stderr)
+                print(f"{file} {ievt}")
