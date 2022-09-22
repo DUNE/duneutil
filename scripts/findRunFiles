@@ -10,6 +10,31 @@
 import sys
 import samweb_cli
 
+def get_run_type_list(intyp):
+    '''
+    Return a list with the sam run type and aliases for a given
+    run type or alias.
+    '''
+    rtls = [
+        ["35ton", "t35"],
+        ['protodune-sp', 'pdsp'],
+        ['iceberg', 'ib'],
+        ['hd-coldbox', 'hdcb'],
+        ['vd-coldbox-bottom', 'vdbcb'],
+        ['vd-coldbox-top', 'vdtcb']
+    ]
+    if intyp == 'SHOW':
+        print(f"{'Sam run type':>20}: Aliases")
+        for rtl in rtls:
+            sout = f"{rtl[0]:>20}:"
+            for rta in rtl[1:]:
+                 sout += f" {rta}"
+            print(sout)
+    else:
+        for rtl in rtls:
+            if intyp in rtl: return rtl
+    return []
+
 nargv = len(sys.argv)
 com = sys.argv[0].split('/')[-1]
 if nargv <= 1 or sys.argv[1] == '-h':
@@ -28,10 +53,11 @@ if nargv <= 1 or sys.argv[1] == '-h':
     print(f"  EVT is the second nummeric argument.")
     print(f"  RUN_TYPE is the first non-numeric argument that not one of the options.")
     print(f"Supported options  include.")
-    print(f"     -h: Show only this help message.")
-    print(f"     -v: Show only the version of this script.")
-    print(f"  query: Show the sam query instead of executing it.")
-    print(f"  debug: Write debugging messages to stderr.")
+    print(f"        -h: Show only this help message.")
+    print(f"        -v: Show only the version of this script.")
+    print(f"     query: Show the sam query instead of executing it.")
+    print(f"     debug: Write debugging messages to stderr.")
+    print(f"  runtypes: Display run types and their aliases.")
     exit(0)
 
 run_type = 'protodune-sp'
@@ -40,7 +66,7 @@ event = None
 data_type = 'raw'
 showQuery = None
 dbg = False
-version = "1.0"      # Please increment for any code changes.
+version = "1.1"      # Please increment for any code changes.
 
 # Check for a run type.
 rem = sys.argv[1:]
@@ -53,6 +79,9 @@ while len(rem):
         showQuery = True
     elif arg == 'debug':
         dbg = True
+    elif arg == 'runtypes':
+        get_run_type_list('SHOW')
+        exit(0)
     elif arg.isdigit():
         if run is None:
             run = int(arg)
@@ -60,8 +89,15 @@ while len(rem):
             event = int(arg)
         else:
             print(f"WARNING: Ignoring argument {arg}", file=sys.stderr)
+    elif arg == 'all':
+        run_type = arg
     else:
-        run_type = rem[0]
+        run_type_list = get_run_type_list(arg)
+        if len(run_type_list):
+            run_type = run_type_list[0]
+        else:
+            print(f"ERROR: Invalid option: {arg}")
+            exit(1)
     rem = rem[1:]
 
 if run is None:
@@ -85,7 +121,7 @@ if dbg: print(f"INFO: Executing query {query}", file=sys.stderr)
 files = samweb.listFiles(query)
 if dbg: print(f"INFO: File count is {len(files)}", file=sys.stderr)
 if not files or len(files) == 0:
-    print(f"ERROR: No files found for {query}", file=sys.stderr)
+    print(f"ERROR: No files found for query '{query}'", file=sys.stderr)
     exit(1)
 files.sort()
 
