@@ -25,6 +25,7 @@ def get_run_type_list(intyp):
     ]
     if intyp == 'SHOW':
         print(f"{'Sam run type':>20}: Aliases")
+        print(f"{'------------':>20}: -------")
         for rtl in rtls:
             sout = f"{rtl[0]:>20}:"
             for rta in rtl[1:]:
@@ -96,7 +97,7 @@ while len(rem):
         if len(run_type_list):
             run_type = run_type_list[0]
         else:
-            print(f"ERROR: Invalid option: {arg}")
+            print(f"ERROR: Invalid option: {arg}", file=sys.stderr)
             exit(1)
     rem = rem[1:]
 
