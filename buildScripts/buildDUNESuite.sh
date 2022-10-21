@@ -155,11 +155,14 @@ manifest=`ls dune-*_MANIFEST.txt`
 oldmanifest="old$manifest"
 mv $manifest $oldmanifest
 
-# add flavor and qualifier to the dunesw line
-dtline=`grep duneana $oldmanifest`
+# add flavor and qualifier to the duneana line but do it only once
+
+dtline=`grep duneana $oldmanifest | grep -v protoduneana`
 dtmodline="${dtline}    -f ${flvr}   -q   ${QUAL}:${BUILDTYPE}"
 echo $dtmodline
 echo $dtmodline > ${manifest}
+
+# do all the others
 
 for repo in dunecalib dunecore dunedataprep duneexamples duneopdet duneprototypes dunereco dunesim duneutil protoduneana dunesw
 do
@@ -242,6 +245,16 @@ dunedaqdataformats_flavor=`ups active | grep dunedaqdataformats | awk '{print $4
 echo "dunedaqdataformats flavor: $dunedaqdataformats_flavor"
 dunedaqdataformats_dot_version=`echo ${dunedaqdataformats_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
 echo "dunedaqdataformats    ${dunedaqdataformats_version}   dunedaqdataformats-${dunedaqdataformats_dot_version}-noarch.tar.bz2   -f ${dunedaqdataformats_flavor}" >> $manifest
+
+
+# add duneanaobj to the manifest
+
+duneanaobj_version=`ups active | grep duneanaobj | awk '{print $2}'`
+echo "duneanaobj version: $duneanaobj_version"
+duneanaobj_flavor=`ups active | grep duneanaobj | awk '{print $4}'`
+echo "duneanaobj flavor: $duneanaobj_flavor"
+duneanaobj_dot_version=`echo ${duneanaobj_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
+echo "duneanaobj    ${duneanaobj_version}   duneanaobj-${duneanaobj_dot_version}-${PLATFORM}-x86_64-${DASHQUAL2}-${BUILDTYPE}.tar.bz2  -f ${duneanaobj_flavor}" >> $manifest
 
 
 # Extract larsoft version from product_deps.
