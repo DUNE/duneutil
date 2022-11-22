@@ -221,6 +221,24 @@ echo "dunepdlegacy quals: $dunepdlegacy_quals"
 dunepdlegacy_dot_version=`echo ${dunepdlegacy_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
 echo "dunepdlegacy         ${dunepdlegacy_version}       dunepdlegacy-${dunepdlegacy_dot_version}-${PLATFORM}-x86_64-${DASHQUAL2}-${BUILDTYPE}.tar.bz2   -f ${dunepdlegacy_flavor}    -q  ${dunepdlegacy_quals}" >>  $manifest
 
+highfive_version=`ups active | grep highfive | awk '{print $2}'`
+echo "highfive version: $highfive_version"
+highfive_flavor=`ups active | grep highfive | awk '{print $4}'`
+echo "highfive flavor: $highfive_flavor"
+highfive_quals=`ups active | grep highfive | awk '{print $6}'`
+echo "highfive quals: $highfive_quals"
+highfive_dot_version=`echo ${highfive_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
+echo "highfive         ${highfive_version}       highfive-${highfive_dot_version}-${PLATFORM}-x86_64-${DASHQUAL2}-${BUILDTYPE}.tar.bz2   -f ${highfive_flavor}    -q  ${highfive_quals}" >>  $manifest
+
+nlohmann_json_version=`ups active | grep nlohmann_json | awk '{print $2}'`
+echo "nlohmann_json version: $nlohmann_json_version"
+nlohmann_json_flavor=`ups active | grep nlohmann_json | awk '{print $4}'`
+echo "nlohmann_json flavor: $nlohmann_json_flavor"
+nlohmann_json_quals=`ups active | grep nlohmann_json | awk '{print $6}'`
+echo "nlohmann_json quals: $nlohmann_json_quals"
+nlohmann_json_dot_version=`echo ${nlohmann_json_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
+echo "nlohmann_json         ${nlohmann_json_version}       nlohmann_json-${nlohmann_json_dot_version}-${PLATFORM}-x86_64-${DASHQUAL2}-${BUILDTYPE}.tar.bz2   -f ${nlohmann_json_flavor}    -q  ${nlohmann_json_quals}" >>  $manifest
+
 # add dune_oslibs to the manifest
 
 dune_oslibs_version=`ups active | grep dune_oslibs | awk '{print $2}'`
