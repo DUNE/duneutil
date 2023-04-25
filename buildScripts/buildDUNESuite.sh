@@ -274,6 +274,13 @@ echo "duneanaobj flavor: $duneanaobj_flavor"
 duneanaobj_dot_version=`echo ${duneanaobj_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
 echo "duneanaobj    ${duneanaobj_version}   duneanaobj-${duneanaobj_dot_version}-${PLATFORM}-x86_64-${DASHQUAL2}-${BUILDTYPE}.tar.bz2  -f ${duneanaobj_flavor}" >> $manifest
 
+# add srproxy to the manifest -- hardwire py3 and noarch.  Also keep the dots in the version string as this one's special
+
+srproxy_version=`ups active | grep srproxy | awk '{print $2}'`
+echo "srproxy version: $srproxy_version"
+srproxy_dot_version=`echo ${srproxy_version} | sed -e 's/^v//'`
+srproxy_underscore_version=`echo ${srproxy_version} | sed -e 's/\./_/g'`
+echo "srproxy    ${srproxy_underscore_version}   srproxy-${srproxy_dot_version}-noarch-py3.tar.bz2  -f NULL" >> $manifest
 
 # Extract larsoft version from product_deps.
 
