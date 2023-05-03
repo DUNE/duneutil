@@ -6,18 +6,36 @@
 # requires dot for taking the graphviz file and making a PDF graph
 
 function printdep {
-    if [ x`echo $curprod | grep geant4` = x ]; then
-	if [ x`echo $curprod | grep mrb` = x ]; then
-	    if [ x`echo $prod | grep cetpkgsupport` = x ]; then
-		if [ x`echo $prod | grep xerces_c` = x ]; then
-		    if [ x`echo $prod | grep gcc` = x ]; then
-			echo "$curprod -> $prod"
-			printprodver
-		    fi
-		fi
-	    fi
-	fi
+    if [ x`echo $curprod | grep geant4` != x ]; then
+       return
     fi
+
+    if [ x`echo $curprod | grep mrb` != x ]; then
+       return
+    fi
+
+    if [ x`echo $prod | grep cetpkgsupport` != x ]; then
+       return
+    fi
+
+    if [ x`echo $prod | grep xerces_c` != x ]; then
+       return
+    fi
+
+    if [ $prod = gcc ]; then
+       return
+    fi
+ 		       
+    if [ $prod = gh ]; then
+       return
+    fi
+
+    if [ $prod = git ]; then
+       return
+    fi
+
+    echo "$curprod -> $prod"
+    printprodver
 }
 
 function printprodver {
