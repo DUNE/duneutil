@@ -157,10 +157,6 @@ export DBIPWDFILE='~jpaley/dune/db/proddbpwd'
 
 export SSL_CERT_FILE=""
 
-# to ensure compatibility on OSG nodes missing OS libraries
-
-setup dune_oslibs v1_0_0
-
 # set up gdb and ninja out of ups
 
 setup gdb
