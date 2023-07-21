@@ -64,6 +64,15 @@ source localProducts*/setup || exit 1
 cd $MRB_SOURCE  || exit 1
 mrb g --repo-type github --github-org dune -r -t $DUNEANAOBJ_VERSION  duneanaobj || exit 1
 
+#patch buggy CMakeLists.txt files
+
+if [ $DUNEANAOBJ_VERSION = v02_04_00 ]; then
+  sed -i -e "s@duneanaobj/StandardRecord/Proxy/SRProxy@duneanaobj/duneanaobj/StandardRecord/Proxy/SRProxy@" duneanaobj/duneanaobj/StandardRecord/Proxy/CMakeLists.txt
+  sed -i -e "s@duneanaobj/StandardRecord/Proxy/FwdDeclare@duneanaobj/duneanaobj/StandardRecord/Proxy/FwdDeclare@" duneanaobj/duneanaobj/StandardRecord/Proxy/CMakeLists.txt
+  sed -i -e "s@duneanaobj/StandardRecord/Flat/FlatRecord@duneanaobj/duneanaobj/StandardRecord/Flat/FlatRecord@" duneanaobj/duneanaobj/StandardRecord/Flat/CMakeLists.txt
+  sed -i -e "s@duneanaobj/StandardRecord/Flat/FwdDeclare@duneanaobj/duneanaobj/StandardRecord/Flat/FwdDeclare@" duneanaobj/duneanaobj/StandardRecord/Flat/CMakeLists.txt
+fi
+
 cd $MRB_BUILDDIR || exit 1
 mrbsetenv || exit 1
 mrb b -j$ncores || exit 1
@@ -85,7 +94,7 @@ mv *.bz2  $WORKSPACE/copyBack/ || exit 1
 
 ls -l $WORKSPACE/copyBack/
 cd $WORKSPACE || exit 1
-rm -rf $WORKSPACE/temp || exit 1
+# rm -rf $WORKSPACE/temp || exit 1
 
 
 exit 0
