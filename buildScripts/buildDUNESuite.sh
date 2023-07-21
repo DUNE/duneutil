@@ -239,15 +239,6 @@ echo "nlohmann_json quals: $nlohmann_json_quals"
 nlohmann_json_dot_version=`echo ${nlohmann_json_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
 echo "nlohmann_json         ${nlohmann_json_version}       nlohmann_json-${nlohmann_json_dot_version}-${PLATFORM}-x86_64-${DASHQUAL2}-${BUILDTYPE}.tar.bz2   -f ${nlohmann_json_flavor}    -q  ${nlohmann_json_quals}" >>  $manifest
 
-# add dune_oslibs to the manifest
-
-dune_oslibs_version=`ups active | grep dune_oslibs | awk '{print $2}'`
-echo "dune_oslibs version: $dune_oslibs_version"
-dune_oslibs_flavor=`ups active | grep dune_oslibs | awk '{print $4}'`
-echo "dune_oslibs flavor: $dune_oslibs_flavor"
-dune_oslibs_dot_version=`echo ${dune_oslibs_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
-echo "dune_oslibs    ${dune_oslibs_version}   dune_oslibs-${dune_oslibs_dot_version}-${PLATFORM}-x86_64.tar.bz2   -f ${dune_oslibs_flavor}" >> $manifest
-
 dunedetdataformats_version=`ups active | grep dunedetdataformats | awk '{print $2}'`
 echo "dunedetdataformats version: $dunedetdataformats_version"
 dunedetdataformats_flavor=`ups active | grep dunedetdataformats | awk '{print $4}'`
