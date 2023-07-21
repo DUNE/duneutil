@@ -62,7 +62,7 @@ mrb newDev -v $DUNEANAOBJ_VERSION -q $FQUAL || exit 1
 source localProducts*/setup || exit 1
 
 cd $MRB_SOURCE  || exit 1
-mrb g -b master --repo-type github --github-org dune -r -t $DUNEANAOBJ_VERSION  duneanaobj || exit 1
+mrb g --repo-type github --github-org dune -r -t $DUNEANAOBJ_VERSION  duneanaobj || exit 1
 
 cd $MRB_BUILDDIR || exit 1
 mrbsetenv || exit 1
