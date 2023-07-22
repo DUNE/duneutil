@@ -94,7 +94,7 @@ mv *.bz2  $WORKSPACE/copyBack/ || exit 1
 
 ls -l $WORKSPACE/copyBack/
 cd $WORKSPACE || exit 1
-# rm -rf $WORKSPACE/temp || exit 1
+rm -rf $WORKSPACE/temp || exit 1
 
 
 exit 0
