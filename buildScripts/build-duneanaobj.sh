@@ -62,7 +62,16 @@ mrb newDev -v $DUNEANAOBJ_VERSION -q $FQUAL || exit 1
 source localProducts*/setup || exit 1
 
 cd $MRB_SOURCE  || exit 1
-mrb g -b master --repo-type github --github-org dune -r -t $DUNEANAOBJ_VERSION  duneanaobj || exit 1
+mrb g --repo-type github --github-org dune -r -t $DUNEANAOBJ_VERSION  duneanaobj || exit 1
+
+#patch buggy CMakeLists.txt files
+
+if [ $DUNEANAOBJ_VERSION = v02_04_00 ]; then
+  sed -i -e "s@duneanaobj/StandardRecord/Proxy/SRProxy@duneanaobj/duneanaobj/StandardRecord/Proxy/SRProxy@" duneanaobj/duneanaobj/StandardRecord/Proxy/CMakeLists.txt
+  sed -i -e "s@duneanaobj/StandardRecord/Proxy/FwdDeclare@duneanaobj/duneanaobj/StandardRecord/Proxy/FwdDeclare@" duneanaobj/duneanaobj/StandardRecord/Proxy/CMakeLists.txt
+  sed -i -e "s@duneanaobj/StandardRecord/Flat/FlatRecord@duneanaobj/duneanaobj/StandardRecord/Flat/FlatRecord@" duneanaobj/duneanaobj/StandardRecord/Flat/CMakeLists.txt
+  sed -i -e "s@duneanaobj/StandardRecord/Flat/FwdDeclare@duneanaobj/duneanaobj/StandardRecord/Flat/FwdDeclare@" duneanaobj/duneanaobj/StandardRecord/Flat/CMakeLists.txt
+fi
 
 cd $MRB_BUILDDIR || exit 1
 mrbsetenv || exit 1
