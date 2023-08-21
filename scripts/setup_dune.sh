@@ -153,10 +153,6 @@ export DBIPORT=5442
 export DBIUSER=dune_reader
 export DBIPWDFILE='~jpaley/dune/db/proddbpwd'
 
-# For ifbeam
-
-export SSL_CERT_FILE=""
-
 # set up gdb and ninja out of ups
 
 setup gdb
