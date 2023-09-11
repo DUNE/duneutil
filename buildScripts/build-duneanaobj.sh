@@ -66,7 +66,7 @@ mrb g --repo-type github --github-org dune -r -t $DUNEANAOBJ_VERSION  duneanaobj
 
 #patch buggy CMakeLists.txt files
 
-if [ $DUNEANAOBJ_VERSION = v02_04_00 ]; then
+if [[ x`echo $DUNEANAOBJ_VERSION | grep v02_04_00` != x ]]; then
   sed -i -e "s@duneanaobj/StandardRecord/Proxy/SRProxy@duneanaobj/duneanaobj/StandardRecord/Proxy/SRProxy@" duneanaobj/duneanaobj/StandardRecord/Proxy/CMakeLists.txt
   sed -i -e "s@duneanaobj/StandardRecord/Proxy/FwdDeclare@duneanaobj/duneanaobj/StandardRecord/Proxy/FwdDeclare@" duneanaobj/duneanaobj/StandardRecord/Proxy/CMakeLists.txt
   sed -i -e "s@duneanaobj/StandardRecord/Flat/FlatRecord@duneanaobj/duneanaobj/StandardRecord/Flat/FlatRecord@" duneanaobj/duneanaobj/StandardRecord/Flat/CMakeLists.txt
