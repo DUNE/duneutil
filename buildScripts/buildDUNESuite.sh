@@ -1,5 +1,71 @@
 #!/bin/bash
 
+function addStandardProductToManifest {
+  pver=`ups active | grep $1 | awk '{print $2}'`
+  echo "$1 version: $pver"
+  pflav=`ups active | grep $1 | awk '{print $4}'`
+  echo "$1 flavor: $pflav"
+  pquals=`ups active | grep $1 | awk '{print $6}'`
+  echo "$1 quals: $pquals"
+  pdv=`echo ${pver} | sed -e 's/_/./g' | sed -e 's/^v//'`
+  echo "$1         ${pver}       $1-${pdv}-${PLATFORM}-x86_64-${DASHQUAL2}-${BUILDTYPE}.tar.bz2   -f ${pflav}    -q  ${pquals}" >>  $manifest
+}
+
+function addNullFlavoredProductToManifest {
+  pver=`ups active | grep $1 | awk '{print $2}'`
+  echo "$1 version: $pver"
+  pflav=`ups active | grep $1 | awk '{print $4}'`
+  echo "$1 flavor: $pflav"
+  pdv=`echo ${pver} | sed -e 's/_/./g' | sed -e 's/^v//'`
+  echo "$1         ${pver}       $1-${pdv}-noarch.tar.bz2   -f ${pflav}" >>  $manifest
+}
+
+function addNoQualsProductToManifest {
+  pver=`ups active | grep $1 | awk '{print $2}'`
+  echo "$1 version: $pver"
+  pflav=`ups active | grep $1 | awk '{print $4}'`
+  echo "$1 flavor: $pflav"
+  pdv=`echo ${pver} | sed -e 's/_/./g' | sed -e 's/^v//'`
+  echo "$1         ${pver}       $1-${pdv}-${PLATFORM}-x86_64.tar.bz2   -f ${pflav}  " >>  $manifest
+}
+
+function manifestProductVersionUpdate {
+# edit the manifest's  version number for a product.  Modeled after a piece of the script that
+# updated artdaq_core
+
+# version of product named $1 with underscores
+ARDC_UVERSION=`ups active | grep $1 | awk '{print $2}'`
+
+# version of $1 with dots
+ARDC_DVERSION=`echo $ARDC_UVERSION | sed -e 's/_/./g' | sed -e 's/^v//'`
+
+# we're assuming the qualifiers match up between what we want and what we have for $1
+# replace $1 line in manifest with our new version
+
+if [ `grep $1 $manifest | wc -l` = 0 ]; then
+  echo "LArSoft manifest lacks an $1 line"
+  exit 1
+fi
+
+ARDCLINE=`grep $1 $manifest | head -1`
+ARDCOLDVER=`echo $ARDCLINE | awk '{print $2}'`
+ARDCOLDVERD=`echo $ARDCOLDVER | sed -e 's/_/\\\./g' | sed -e 's/^v//'`
+ARDCNEWLINE=`echo $ARDCLINE | sed -e "s/${ARDCOLDVER}/${ARDC_UVERSION}/g" | sed -e "s/${ARDCOLDVERD}/${ARDC_DVERSION}/g"`
+
+echo "Replacing $1 line the manifest:"
+echo $ARDCLINE
+echo "with this one:"
+echo $ARDCNEWLINE
+echo "and deleting others."
+
+touch newmanifest.txt || exit 1
+rm newmanifest.txt || exit 1
+grep -v $1 $manifest > newmanifest.txt || exit 1
+echo $ARDCNEWLINE >> newmanifest.txt
+mv newmanifest.txt $manifest || exit 1
+
+}
+
 # build dunetpc
 # use mrb
 # designed to work on Jenkins
@@ -174,12 +240,6 @@ done
 
 rm ${oldmanifest}
 
-# add dune_pardata to the manifest
-
-dune_pardata_version=`grep dune_pardata $MRB_SOURCE/dunecore/ups/product_deps | grep -v qualifier | awk '{print $2}'`
-dune_pardata_dot_version=`echo ${dune_pardata_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
-echo "dune_pardata         ${dune_pardata_version}       dune_pardata-${dune_pardata_dot_version}-noarch.tar.bz2  -f NULL" >>  $manifest
-
 # get platform
 OS=$(uname)
 case $OS in
@@ -212,58 +272,19 @@ echo "Compiler is: $COMPILER"
 
 cd $MRB_BUILDDIR
 
-dunepdlegacy_version=`ups active | grep dunepdlegacy | awk '{print $2}'`
-echo "dunepdlegacy version: $dunepdlegacy_version"
-dunepdlegacy_flavor=`ups active | grep dunepdlegacy | awk '{print $4}'`
-echo "dunepdlegacy flavor: $dunepdlegacy_flavor"
-dunepdlegacy_quals=`ups active | grep dunepdlegacy | awk '{print $6}'`
-echo "dunepdlegacy quals: $dunepdlegacy_quals"
-dunepdlegacy_dot_version=`echo ${dunepdlegacy_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
-echo "dunepdlegacy         ${dunepdlegacy_version}       dunepdlegacy-${dunepdlegacy_dot_version}-${PLATFORM}-x86_64-${DASHQUAL2}-${BUILDTYPE}.tar.bz2   -f ${dunepdlegacy_flavor}    -q  ${dunepdlegacy_quals}" >>  $manifest
+# some of these are already in the larsoft manifest but with
+# different versions from the ones in use in the present build
 
-highfive_version=`ups active | grep highfive | awk '{print $2}'`
-echo "highfive version: $highfive_version"
-highfive_flavor=`ups active | grep highfive | awk '{print $4}'`
-echo "highfive flavor: $highfive_flavor"
-highfive_quals=`ups active | grep highfive | awk '{print $6}'`
-echo "highfive quals: $highfive_quals"
-highfive_dot_version=`echo ${highfive_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
-echo "highfive         ${highfive_version}       highfive-${highfive_dot_version}-${PLATFORM}-x86_64-${DASHQUAL2}-${BUILDTYPE}.tar.bz2   -f ${highfive_flavor}    -q  ${highfive_quals}" >>  $manifest
-
-nlohmann_json_version=`ups active | grep nlohmann_json | awk '{print $2}'`
-echo "nlohmann_json version: $nlohmann_json_version"
-nlohmann_json_flavor=`ups active | grep nlohmann_json | awk '{print $4}'`
-echo "nlohmann_json flavor: $nlohmann_json_flavor"
-nlohmann_json_quals=`ups active | grep nlohmann_json | awk '{print $6}'`
-echo "nlohmann_json quals: $nlohmann_json_quals"
-nlohmann_json_dot_version=`echo ${nlohmann_json_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
-echo "nlohmann_json         ${nlohmann_json_version}       nlohmann_json-${nlohmann_json_dot_version}-${PLATFORM}-x86_64-${DASHQUAL2}-${BUILDTYPE}.tar.bz2   -f ${nlohmann_json_flavor}    -q  ${nlohmann_json_quals}" >>  $manifest
-
-dunedetdataformats_version=`ups active | grep dunedetdataformats | awk '{print $2}'`
-echo "dunedetdataformats version: $dunedetdataformats_version"
-dunedetdataformats_flavor=`ups active | grep dunedetdataformats | awk '{print $4}'`
-echo "dunedetdataformats flavor: $dunedetdataformats_flavor"
-dunedetdataformats_dot_version=`echo ${dunedetdataformats_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
-echo "dunedetdataformats    ${dunedetdataformats_version}   dunedetdataformats-${dunedetdataformats_dot_version}-noarch.tar.bz2   -f ${dunedetdataformats_flavor}" >> $manifest
-
-# add dunedaqdataformats to the manifest
-
-dunedaqdataformats_version=`ups active | grep dunedaqdataformats | awk '{print $2}'`
-echo "dunedaqdataformats version: $dunedaqdataformats_version"
-dunedaqdataformats_flavor=`ups active | grep dunedaqdataformats | awk '{print $4}'`
-echo "dunedaqdataformats flavor: $dunedaqdataformats_flavor"
-dunedaqdataformats_dot_version=`echo ${dunedaqdataformats_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
-echo "dunedaqdataformats    ${dunedaqdataformats_version}   dunedaqdataformats-${dunedaqdataformats_dot_version}-noarch.tar.bz2   -f ${dunedaqdataformats_flavor}" >> $manifest
-
-
-# add duneanaobj to the manifest
-
-duneanaobj_version=`ups active | grep duneanaobj | awk '{print $2}'`
-echo "duneanaobj version: $duneanaobj_version"
-duneanaobj_flavor=`ups active | grep duneanaobj | awk '{print $4}'`
-echo "duneanaobj flavor: $duneanaobj_flavor"
-duneanaobj_dot_version=`echo ${duneanaobj_version} | sed -e 's/_/./g' | sed -e 's/^v//'`
-echo "duneanaobj    ${duneanaobj_version}   duneanaobj-${duneanaobj_dot_version}-${PLATFORM}-x86_64-${DASHQUAL2}-${BUILDTYPE}.tar.bz2  -f ${duneanaobj_flavor}" >> $manifest
+addStandardProductToManifest dunepdlegacy
+addStandardProductToManifest duneanaobj
+addStandardProductToManifest highfive
+addStandardProductToManifest nlohmann_json
+addNullFlavoredProductToManifest dunedetdataformats
+addNullFlavoredProductToManifest dunedaqdataformats
+addNullFlavoredProductToManifest dune_pardata
+addNullFlavoredProductToManifest larbatch
+addNoQualsProductToManifest castxml
+addNoQualsProductToManifest valgrind
 
 # add srproxy to the manifest -- hardwire py3 and noarch.  Also keep the dots in the version string as this one's special
 
@@ -313,38 +334,8 @@ if echo $QUAL | grep -q noifdh; then
   fi
 fi
 
-# edit the manifest's artdaq_core version
-
-# version of artdaq_core with underscores
-ARDC_UVERSION=`ups active | grep artdaq_core | awk '{print $2}'`
-
-# version of artdaq_core with dots
-ARDC_DVERSION=`echo $ARDC_UVERSION | sed -e 's/_/./g' | sed -e 's/^v//'`
-
-# we're assuming the qualifiers match up between what we want and what we have for artdaq_core
-# replace artdaq_core line in manifest with our new version
-
-if [ `grep artdaq_core $manifest | wc -l` = 0 ]; then
-  echo "LArSoft manifest lacks an artdaq_core line"
-  exit 1
-fi
-
-ARDCLINE=`grep artdaq_core $manifest | head -1`
-ARDCOLDVER=`echo $ARDCLINE | awk '{print $2}'`
-ARDCOLDVERD=`echo $ARDCOLDVER | sed -e 's/_/\\\./g' | sed -e 's/^v//'`
-ARDCNEWLINE=`echo $ARDCLINE | sed -e "s/${ARDCOLDVER}/${ARDC_UVERSION}/g" | sed -e "s/${ARDCOLDVERD}/${ARDC_DVERSION}/g"`
-
-echo "Replacing artdaq_core line the manifest:"
-echo $ARDCLINE
-echo "with this one:"
-echo $ARDCNEWLINE
-echo "and deleting others."
-
-touch newmanifest.txt || exit 1
-rm newmanifest.txt || exit 1
-grep -v artdaq_core $manifest > newmanifest.txt || exit 1
-echo $ARDCNEWLINE >> newmanifest.txt
-mv newmanifest.txt $manifest || exit 1
+manifestProductVersionUpdate artdaq_core
+manifestProductVersionUpdate geant4reweight
 
 # Save artifacts.
 
