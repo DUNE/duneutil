@@ -5,7 +5,7 @@
 
 parent duneutil #v09_39_01_01
 
-defaultqual e20
+defaultqual e26
 
 # These optional lines define the installed directories where headers,
 # libraries, and executables will be found.
@@ -56,12 +56,8 @@ end_product_list
 qualifier	art_root_io	larbatch         python_future_six_request      jobsub_client	notes
 c14:debug	c14:debug	-nq-             python3.9                      -nq-
 c14:prof	c14:prof	-nq-             python3.9                      -nq-
-c7:debug	c7:debug	-nq-             python3.9                      -nq-
-c7:prof		c7:prof		-nq-             python3.9                      -nq-
 e26:debug	e26:debug	-nq-             python3.9                      -nq-
 e26:prof	e26:prof	-nq-             python3.9                      -nq-
-e20:debug	e20:debug	-nq-             python3.9                      -nq-
-e20:prof	e20:prof	-nq-             python3.9                      -nq-
 end_qualifier_list
 
 # Preserve tabs and formatting in emacs and vi / vim:
