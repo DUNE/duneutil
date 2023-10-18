@@ -65,8 +65,16 @@ elif [ $QUAL = e20 ]; then
   COMPILERVERS="gcc v9_3_0"
   COMPILERCOMMAND=g++
   CCOMPILER=gcc
+elif [ $QUAL = e26 ]; then
+  COMPILERVERS="gcc v12_1_0"
+  COMPILERCOMMAND=g++
+  CCOMPILER=gcc
 elif [ $QUAL = c7 ]; then
   COMPILERVERS="clang v7_0_0"
+  COMPILERCOMMAND=clang++
+  CCOMPILER=clang
+elif [ $QUAL = c14 ]; then
+  COMPILERVERS="clang v14_0_6c"
   COMPILERCOMMAND=clang++
   CCOMPILER=clang
 fi
@@ -193,8 +201,12 @@ elif [ $CQ = e19 ]; then
   CV="gcc v8_2_0"
 elif [ $CQ = e20 ]; then
   CV="gcc v9_3_0"
+elif [ $CQ = e26 ]; then
+  CV="gcc v12_1_0"
 elif [ $CQ = c7 ]; then
   CV="clang v7_0_0"
+elif [ $CQ = c14 ]; then
+  CV="clang v14_0_6c"
 fi
 if [ "$CV" = unknown ]; then
   echo "unknown compiler flag in COMPILERQUAL_LIST : $CQ"
@@ -254,6 +266,8 @@ cd inputdir
 git clone https://github.com/ClarkMcGrew/edep-sim.git || exit 1
 cd edep-sim || exit 1
 git checkout tags/${EDEPSIMVERSION} || exit 1
+
+find . -name "CMakeLists.txt" -exec sed -i -e "s/TreePlayer/TreePlayer EG/g" '{}' \;
 
 # copy all the source to the install directory
 
