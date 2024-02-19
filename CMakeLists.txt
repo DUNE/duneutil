@@ -12,14 +12,13 @@
 #  make package (builds distribution tarfile)
 # ======================================================================
 
-cmake_minimum_required(VERSION 3.19 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.20 FATAL_ERROR) ### MIGRATE-CHANGED (migrate-3.22.02) - VERSION 3.19 -> 3.20
+# cmake_policy(VERSION 3.19) ### MIGRATE-ACTION-COMPATIBILITY (migrate-3.22.02) - Uncomment to preserve compatibility with older CMake versions
 
-project(duneutil LANGUAGES CXX C)
+find_package(cetmodules REQUIRED) ### MIGRATE-ADDED (migrate-3.22.02) - find_package(cetmodules) must precede project()
+project(duneutil LANGUAGES CXX C) ### MIGRATE-CHANGED (migrate-3.22.02) - VERSION -> set(CMAKE_PROJECT_VERSION_STRING ...)
 set(${PROJECT_NAME}_CMAKE_PROJECT_VERSION_STRING 09.82.02d01)
 
-
-# cetbuildtools contains our cmake modules
-find_package(cetbuildtools REQUIRED)
 
 find_package(canvas_root_io)
 
@@ -32,11 +31,11 @@ cet_set_compiler_flags(DIAGS CAUTIOUS
   EXTRA_FLAGS -pedantic
 )
 
-cet_report_compiler_flags()
+cet_report_compiler_flags() ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - add args: REPORT_THRESHOLD VERBOSE
 
 # these are minimum required versions, not the actual product versions
-find_ups_product( art v1_08_00 )
-find_ups_product( art_root_io )
+find_package( art 1.08.00 REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(art v1_08_00 ...) -> find_package(art 1.08.00 REQUIRED ...)
+find_package( art_root_io REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(art_root_io ...) -> find_package(art_root_io REQUIRED ...)
 
 
 
@@ -51,7 +50,6 @@ include(BuildPlugins)
 add_subdirectory(test)
 
 # ups - table and config files
-add_subdirectory(ups)
 
 # XML project files.
 add_subdirectory(xml)
@@ -63,8 +61,8 @@ add_subdirectory(scripts)
 add_subdirectory(python)
 
 # packaging utility
-include(UseCPack)
 
 # Scripts and utilities.
 add_subdirectory(dhtools)
 
+cet_cmake_config() ### MIGRATE-ADDED (migrate-3.22.02) - required cmd
