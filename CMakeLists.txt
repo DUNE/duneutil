@@ -12,14 +12,15 @@
 #  make package (builds distribution tarfile)
 # ======================================================================
 
-cmake_minimum_required(VERSION 3.19 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.20 FATAL_ERROR)
+# cmake_policy(VERSION 3.19)
 
+find_package(cetmodules REQUIRED)
 project(duneutil LANGUAGES CXX C)
-set(${PROJECT_NAME}_CMAKE_PROJECT_VERSION_STRING 09.89.01d00)
+set(${PROJECT_NAME}_CMAKE_PROJECT_VERSION_STRING 09.89.01d01)
 
 
 # cetbuildtools contains our cmake modules
-find_package(cetbuildtools REQUIRED)
 
 find_package(canvas_root_io)
 
@@ -35,8 +36,8 @@ cet_set_compiler_flags(DIAGS CAUTIOUS
 cet_report_compiler_flags()
 
 # these are minimum required versions, not the actual product versions
-find_ups_product( art v1_08_00 )
-find_ups_product( art_root_io )
+find_package( art 1.08.00 REQUIRED )
+find_package( art_root_io REQUIRED )
 
 
 
@@ -51,7 +52,6 @@ include(BuildPlugins)
 add_subdirectory(test)
 
 # ups - table and config files
-add_subdirectory(ups)
 
 # XML project files.
 add_subdirectory(xml)
@@ -63,8 +63,8 @@ add_subdirectory(scripts)
 add_subdirectory(python)
 
 # packaging utility
-include(UseCPack)
 
 # Scripts and utilities.
 add_subdirectory(dhtools)
 
+cet_cmake_config()
