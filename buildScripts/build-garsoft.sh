@@ -8,6 +8,15 @@
 # Tom Junk, August 22, 2018
 # copied from the dune_raw_data build script in dune's artdaq_utilities repository
 
+echo "Entering script: " $0
+cat /etc/os-release
+
+if [[ `grep PRETTY /etc/os-release | grep "Scientific Linux 7"`x = x ]]; then
+    echo "Need SL7 -- starting a container with apptainer"
+    /cvmfs/oasis.opensciencegrid.org/mis/apptainer/current/bin/apptainer run -B /cvmfs /cvmfs/singularity.opensciencegrid.org/fermilab/fnal-dev-sl7:latest $0
+    exit $?
+fi
+
 echo "garsoft version: $GARSOFT_VERSION"
 echo "target qualifier: $QUAL"
 echo "build type: $BUILDTYPE"

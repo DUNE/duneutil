@@ -8,6 +8,15 @@
 # Chris Hilgenberg 8 April 2021
 # copied from garsoft build script, originally written by Tom Junk
 
+echo "Entering script: " $0
+cat /etc/os-release
+
+if [[ `grep PRETTY /etc/os-release | grep "Scientific Linux 7"`x = x ]]; then
+    echo "Need SL7 -- starting a container with apptainer"
+    /cvmfs/oasis.opensciencegrid.org/mis/apptainer/current/bin/apptainer run -B /cvmfs /cvmfs/singularity.opensciencegrid.org/fermilab/fnal-dev-sl7:latest $0
+    exit $?
+fi
+
 echo "garana version: $GARANA_VERSION"
 echo "target qualifier: $QUAL"
 echo "build type: $BUILDTYPE"
