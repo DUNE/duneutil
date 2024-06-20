@@ -1,5 +1,15 @@
 #!/bin/bash
 
+echo "Entering script: " $0
+cat /etc/os-release
+
+if [[ `grep PRETTY /etc/os-release | grep "Scientific Linux 7"`x = x ]]; then
+    echo "Need SL7 -- starting a container with apptainer"
+    /cvmfs/oasis.opensciencegrid.org/mis/apptainer/current/bin/apptainer run -B /cvmfs /cvmfs/singularity.opensciencegrid.org/fermilab/fnal-dev-sl7:latest $0
+    exit $?
+fi
+export UPS_OVERRIDE="-H Linux64bit+3.10-2.17"
+
 function addStandardProductToManifest {
   pver=`ups active | grep $1 | awk '{print $2}'`
   echo "$1 version: $pver"
@@ -216,7 +226,6 @@ else
   flvr=`ups flavor -4`
 fi
 
-
 manifest=`ls dune-*_MANIFEST.txt`
 oldmanifest="old$manifest"
 mv $manifest $oldmanifest
@@ -278,7 +287,6 @@ cd $MRB_BUILDDIR
 addStandardProductToManifest dunepdlegacy
 addStandardProductToManifest duneanaobj
 addStandardProductToManifest highfive
-addStandardProductToManifest nlohmann_json
 addNullFlavoredProductToManifest dunedetdataformats
 addNullFlavoredProductToManifest dunedaqdataformats
 addNullFlavoredProductToManifest dune_pardata
