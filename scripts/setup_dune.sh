@@ -136,8 +136,8 @@ export SAM_EXPERIMENT=dune
 
 # For Art workbook
 
-export ART_WORKBOOK_OUTPUT_BASE=/dune/data/users
-export ART_WORKBOOK_WORKING_BASE=/dune/app/users
+export ART_WORKBOOK_OUTPUT_BASE=/exp/dune/data/users
+export ART_WORKBOOK_WORKING_BASE=/exp/dune/app/users
 export ART_WORKBOOK_QUAL="s2:e5:nu"
 
 # For database
