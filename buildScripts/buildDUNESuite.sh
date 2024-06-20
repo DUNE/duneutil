@@ -1,5 +1,14 @@
 #!/bin/bash
 
+echo "Entering script: " $0
+cat /etc/os-release
+
+if [[ `grep PRETTY /etc/os-release | grep "Scientific Linux 7"`x = x ]]; then
+    echo "Need SL7 -- starting a container with apptainer"
+    /cvmfs/oasis.opensciencegrid.org/mis/apptainer/current/bin/apptainer run -B /cvmfs /cvmfs/singularity.opensciencegrid.org/fermilab/fnal-dev-sl7:latest $0
+    exit $?
+fi
+
 function addStandardProductToManifest {
   pver=`ups active | grep $1 | awk '{print $2}'`
   echo "$1 version: $pver"
