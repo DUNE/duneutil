@@ -8,7 +8,7 @@ if [[ `grep PRETTY /etc/os-release | grep "Scientific Linux 7"`x = x ]]; then
     /cvmfs/oasis.opensciencegrid.org/mis/apptainer/current/bin/apptainer run -B /cvmfs /cvmfs/singularity.opensciencegrid.org/fermilab/fnal-dev-sl7:latest $0
     exit $?
 fi
-
+export UPS_OVERRIDE="-H Linux64bit+3.10-2.17"
 
 # build edep-sim
 # input variables:  
