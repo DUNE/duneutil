@@ -6,6 +6,16 @@
 
 # Tom Junk, July 22, 2021
 
+echo "Entering script: " $0
+cat /etc/os-release
+
+if [[ `grep PRETTY /etc/os-release | grep "Scientific Linux 7"`x = x ]]; then
+    echo "Need SL7 -- starting a container with apptainer"
+    /cvmfs/oasis.opensciencegrid.org/mis/apptainer/current/bin/apptainer run -B /cvmfs /cvmfs/singularity.opensciencegrid.org/fermilab/fnal-dev-sl7:latest $0
+    exit $?
+fi
+export UPS_OVERRIDE="-H Linux64bit+3.10-2.17"
+
 echo "duneanaobj version: $DUNEANAOBJ_VERSION"
 echo "target qualifier (input): $QUAL"
 echo "build type: $BUILDTYPE"
