@@ -99,6 +99,7 @@ while getopts :b:d:E:K:f:t:M:m:Nn:p:q:hVw OPT; do
         slf*) os_array+=(SLF${OPTARG#slf}); have_swarm+=(1);;
         SLF*) os_array+=(${OPTARG}); have_swarm+=(1);;
         d*) os_array+=(OSX-10.$((${OPTARG#d} - 4))); have_swarm+=(1);;
+        ALMA*) os_array+=(${OPTARG}); have_swarm+=(1);;
         mac-10.*|OSX-10.*) os_array+=(${OPTARG/#mac/OSX})
           have_swarm+=(1);;
         *.gov|*.org|*.edu|*.com|*.[a-z][a-z]) # Node name
