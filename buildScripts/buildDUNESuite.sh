@@ -260,6 +260,13 @@ case $OS in
         ;;
 esac
 
+# only SLF7 is supported now (see container lines at the beginning of this script).
+# for some reason, uname -r exposes the host kernel version with a release platform, and not
+# the container one.  So override PLATFORM
+
+PLATFORM=slf7
+
+
 cd $MRB_SOURCE || exit 1
 
 # find our set qualifier from artdaq_core's qualifier
