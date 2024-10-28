@@ -163,3 +163,8 @@ setup ninja
 
 export IFDH_BASE_URI="https://samdune.fnal.gov:8483/sam/dune/api"
 export SAM_WEB_HOST="samdune.fnal.gov"
+
+# for UPS work in the SL7 container
+
+export ALLINEA_USE_PSEUDO_TTY=no
+export UPS_OVERRIDE="-H Linux64bit+3.10-2.17"
