@@ -66,6 +66,10 @@ CVMFS_LARSOFT_DIR="/cvmfs/larsoft.opensciencegrid.org"
 
 CVMFS_DUNE_DIR="/cvmfs/dune.opensciencegrid.org/products/dune/"
 
+# for work with the SL7 container
+
+export UPS_OVERRIDE="-H Linux64bit+3.10-2.17"
+
 # Set up ups for LArSoft
 
 for dir in $CVMFS_LARSOFT_DIR;
@@ -167,4 +171,3 @@ export SAM_WEB_HOST="samdune.fnal.gov"
 # for UPS work in the SL7 container
 
 export ALLINEA_USE_PSEUDO_TTY=no
-export UPS_OVERRIDE="-H Linux64bit+3.10-2.17"
