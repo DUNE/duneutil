@@ -66,6 +66,10 @@ CVMFS_LARSOFT_DIR="/cvmfs/larsoft.opensciencegrid.org"
 
 CVMFS_DUNE_DIR="/cvmfs/dune.opensciencegrid.org/products/dune/"
 
+# for work with the SL7 container
+
+export UPS_OVERRIDE="-H Linux64bit+3.10-2.17"
+
 # Set up ups for LArSoft
 
 for dir in $CVMFS_LARSOFT_DIR;
@@ -157,3 +161,13 @@ export DBIPWDFILE='~jpaley/dune/db/proddbpwd'
 
 setup gdb
 setup ninja
+
+# samweb.fnal.gov has been retired as of Oct 16, 2024.  These environment variables are needed
+# for compatibility with ifdhc versions before 2.7.2
+
+export IFDH_BASE_URI="https://samdune.fnal.gov:8483/sam/dune/api"
+export SAM_WEB_HOST="samdune.fnal.gov"
+
+# for UPS work in the SL7 container
+
+export ALLINEA_USE_PSEUDO_TTY=no
