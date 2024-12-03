@@ -187,7 +187,7 @@ cd $MRB_SOURCE  || exit 1
 # make sure we get a read-only copy
 # put some retry logic here instead
 
-for repo in duneana dunecalib duneutil dunecore dunedataprep duneexamples duneopdet duneprototypes dunereco dunesim protoduneana dunesw
+for repo in duneana dunetrigger dunecalib duneutil dunecore dunedataprep duneexamples duneopdet duneprototypes dunereco dunesim protoduneana dunesw
 do
   echo "Cloning $repo"
   maxtries=20
@@ -239,7 +239,7 @@ echo $dtmodline > ${manifest}
 
 # do all the others
 
-for repo in dunecalib dunecore dunedataprep duneexamples duneopdet duneprototypes dunereco dunesim duneutil protoduneana dunesw
+for repo in dunecalib dunecore dunetrigger dunedataprep duneexamples duneopdet duneprototypes dunereco dunesim duneutil protoduneana dunesw
 do
   dtline=`grep $repo $oldmanifest`
   dtmodline="${dtline}    -f ${flvr}   -q   ${QUAL}:${BUILDTYPE}"
