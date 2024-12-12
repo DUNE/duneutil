@@ -29,7 +29,7 @@ for d in dirs:
     else: print(line, end='')
    
   suite = ['dunecore', 'duneana', 'dunesw', 'dunecalib', 'dunesim', 'duneprototypes',
-           'dunereco', 'protoduneana', 'duneopdet', 'dunedataprep',
+           'dunereco', 'protoduneana', 'duneopdet', 'dunedataprep', 'dunetrigger',
            'duneexamples', 'duneutil']
   new_suite = suite
   for line in fileinput.input(d+'ups/product_deps', inplace=True):
