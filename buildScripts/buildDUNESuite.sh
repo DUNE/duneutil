@@ -307,7 +307,7 @@ srproxy_version=`ups active | grep srproxy | awk '{print $2}'`
 echo "srproxy version: $srproxy_version"
 srproxy_dot_version=`echo ${srproxy_version} | sed -e 's/^v//'`
 srproxy_underscore_version=`echo ${srproxy_version} | sed -e 's/\./_/g'`
-echo "srproxy    ${srproxy_underscore_version}   srproxy-${srproxy_dot_version}-noarch-py3.tar.bz2  -f NULL" >> $manifest
+echo "srproxy    ${srproxy_underscore_version}   srproxy-${srproxy_dot_version}-noarch.tar.bz2  -f NULL" >> $manifest
 
 # Extract larsoft version from product_deps.
 
