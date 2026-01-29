@@ -10,6 +10,18 @@ if [[ `grep PRETTY /etc/os-release | grep "Scientific Linux 7"`x = x ]]; then
 fi
 export UPS_OVERRIDE="-H Linux64bit+3.10-2.17"
 
+function addSpecialQualProductToManifest {
+  pver=`ups active | grep $1 | awk '{print $2}'`
+  echo "$1 version: $pver"
+  pflav=`ups active | grep $1 | awk '{print $4}'`
+  echo "$1 flavor: $pflav"
+  pquals=`ups active | grep $1 | awk '{print $6}'`
+  echo "$1 quals: $pquals"
+  dqlocal=`echo ${pquals} | sed -e "s/:/-/g"`
+  pdv=`echo ${pver} | sed -e 's/_/./g' | sed -e 's/^v//'`
+  echo "$1         ${pver}       $1-${pdv}-${PLATFORM}-x86_64-${dqlocal}-${BUILDTYPE}.tar.bz2   -f ${pflav}    -q  ${pquals}" >>  $manifest
+}
+
 function addStandardProductToManifest {
   pver=`ups active | grep $1 | awk '{print $2}'`
   echo "$1 version: $pver"
@@ -300,6 +312,7 @@ addNullFlavoredProductToManifest dune_pardata
 addNullFlavoredProductToManifest larbatch
 addNoQualsProductToManifest castxml
 addNoQualsProductToManifest valgrind
+addSpecialQualProductToManifest larcv2
 
 # add srproxy to the manifest -- hardwire py3 and noarch.  Also keep the dots in the version string as this one's special
 
