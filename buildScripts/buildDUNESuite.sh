@@ -19,7 +19,7 @@ function addSpecialQualProductToManifest {
   echo "$1 quals: $pquals"
   dqlocal=`echo ${pquals} | sed -e "s/:/-/g"`
   pdv=`echo ${pver} | sed -e 's/_/./g' | sed -e 's/^v//'`
-  echo "$1         ${pver}       $1-${pdv}-${PLATFORM}-x86_64-${dqlocal}-${BUILDTYPE}.tar.bz2   -f ${pflav}    -q  ${pquals}" >>  $manifest
+  echo "$1         ${pver}       $1-${pdv}-${PLATFORM}-x86_64-${dqlocal}.tar.bz2   -f ${pflav}    -q  ${pquals}" >>  $manifest
 }
 
 function addStandardProductToManifest {
