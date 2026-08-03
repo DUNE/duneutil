@@ -332,8 +332,11 @@ class expMetaData(MetaData):
 	# Make the other meta data field parameters				
         if "USERF" in os.environ:
             topmd['created_by'] = os.environ['USERF']
-        else:
-            topmd['created_by'] = os.environ['USER']
+		else:
+			if "USER" in os.environ:
+            	topmd['created_by'] = os.environ['USER']
+			else:
+				topmd['created_by'] = "unknown"
         topmd['name'] = self.inputfile.split("/")[-1]
         if 'file_size' in md0:
             topmd['size'] = md0['file_size']
