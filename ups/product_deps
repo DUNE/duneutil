@@ -87,7 +87,7 @@
 #>  define_pythonpath
 ####################################
 parent		duneutil
-defaultqual	e26
+defaultqual	e28
 ####################################
 
 ####################################
@@ -193,7 +193,7 @@ table_fragment_end
 ####################################
 
 product          version
-art_root_io     v1_13_06
+art_root_io     v1_14_02
 larbatch        v01_62_00
 jobsub_client   -               -       optional
 python_future_six_request        v1_3_1
@@ -204,10 +204,8 @@ end_product_list
 # We now define allowed qualifiers and the corresponding qualifiers for the depdencies.
 # Make a table by adding columns before "notes".
 qualifier	art_root_io	larbatch         python_future_six_request      jobsub_client	notes
-c14:debug	c14:debug	-nq-             python3.9                      -nq-
-c14:prof	c14:prof	-nq-             python3.9                      -nq-
-e26:debug	e26:debug	-nq-             python3.9                      -nq-
-e26:prof	e26:prof	-nq-             python3.9                      -nq-
+e28:debug	e28:debug	-nq-             python3.9                      -nq-
+e28:prof	e28:prof	-nq-             python3.9                      -nq-
 end_qualifier_list
 
 # Preserve tabs and formatting in emacs and vi / vim:
